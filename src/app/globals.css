@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
+/* FHQ Color tokens — mirror of the Figma "FHQ Color" collection (Light / Dark). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F3F4F7; --panel: #FFFFFF; --subtle: #F7F8FA; --paper: #FFFFFF;
+  --ink: #0E1525; --muted: #5A6475; --on-color: #FFFFFF; --on-accent: #1A1406;
+  --line: #E3E6EC; --line-strong: #C9CFD9;
+  --accent: #E9A12C; --accent-soft: #FDF4E3;
+  --sp: #3651D6; --sp-soft: #EEF1FE; --sz: #C9552E; --sz-soft: #FCF0EA;
+  --go: #13805B; --go-soft: #E8F6EF; --stop: #C9363F; --stop-soft: #FCECED;
+  --floor: #E8EBF0; --wall: #C2C8D2; --brain: #3E6FE6; --brain-soft: #E2EAFD;
+  --desk: #D6C3A5; --screen: #1F2937; --chair: #A3ABB8; --plant: #4E9A6B;
+  --room-briefing: #EEF2FB; --room-meeting: #F3EFFB; --room-approval: #FCF6E8; --room-board: #FBF0EC; --room-research: #EBF5FA;
+  --room-office: #FEF6E2; --room-work: #ECF6EF; --room-lounge: #F5F1EB; --room-customer: #FBEFF4; --room-vault: #EEF0F4;
+  --ag-ceo: #0E1525; --ag-cso: #B0512A; --ag-cpo: #2B7A6A; --ag-cfo: #8A6A1C; --ag-cto: #3D5CAB; --ag-cmo: #AD3C72;
+  --ag-coo: #4A7628; --ag-cro: #6A3D9E; --ag-cqro: #A23A3A; --ag-crew: #56606F; --skin: #C58B60; --hair: #3B2B21;
+  --persona: #D86A2C; --p-veejay: #D86A2C; --p-meera: #2F8A63; --p-rahul: #3B60C4;
+  --shadow: 0 1px 2px rgba(15, 23, 41, .04), 0 8px 24px -6px rgba(15, 23, 41, .08);
 }
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0A0E16; --panel: #111725; --subtle: #161E2E; --paper: #131A28;
+    --ink: #E8EBF1; --muted: #97A1B2; --line: #232C3D; --line-strong: #334058;
+    --accent: #F2B544; --accent-soft: #2B2213;
+    --sp: #8DA2FF; --sp-soft: #171F3A; --sz: #F08C61; --sz-soft: #2C1B14;
+    --go: #3FCB91; --go-soft: #0F2A1F; --stop: #F2747B; --stop-soft: #2F1619;
+    --floor: #0B0F17; --wall: #2A3346; --brain: #7CA3FF; --brain-soft: #1A2747;
+    --desk: #4A4136; --screen: #0A0F18; --chair: #3B4456;
+    --room-briefing: #141C2E; --room-meeting: #1C1830; --room-approval: #251F13; --room-board: #271A16; --room-research: #122431;
+    --room-office: #2A2312; --room-work: #12261A; --room-lounge: #221D18; --room-customer: #291824; --room-vault: #191F2B;
+    --ag-ceo: #E8EBF1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jetbrains);
 }
+
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font-manrope), system-ui, sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+a { color: inherit; text-decoration: none; }
+
+/* type */
+.t-title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+.t-h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+.t-h3 { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.t-small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.t-strong { font-size: 14px; font-weight: 600; }
+.t-caps { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.t-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.t-micro { font-size: 10px; font-weight: 700; letter-spacing: .02em; }
+.t-metric { font-size: 16px; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.t-log { font-family: var(--font-jetbrains), ui-monospace, monospace; font-size: 10.5px; color: var(--muted); }
+
+/* surfaces */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 9px; font-weight: 700; font-size: 13px; padding: 8px 14px; border: 1px solid var(--line); background: var(--panel); transition: transform .1s, background .15s; white-space: nowrap; }
+.btn:active { transform: translateY(1px); }
+.btn-sm { padding: 5px 10px; font-size: 12.5px; border-radius: 8px; }
+.btn-primary { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.btn-go { background: var(--go); color: var(--on-color); border-color: var(--go); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.row-hover:hover { background: var(--subtle); }
+.opt { text-align: left; border: 1.5px solid var(--line); background: var(--panel); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+.opt:hover:not(:disabled) { border-color: var(--line-strong); }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+
+/* office */
+@keyframes flow { to { stroke-dashoffset: -18; } }
+.flow { animation: flow 1.6s linear infinite; }
+@keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 50% { box-shadow: 0 0 14px 3px color-mix(in srgb, var(--accent) 55%, transparent); } }
+.glow-amber { animation: pulseGlow 2s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.03); } }
+.breathe { animation: breathe 3s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.pop { animation: pop .3s ease-out; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } }

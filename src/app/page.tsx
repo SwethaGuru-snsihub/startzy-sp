@@ -1,65 +1,66 @@
-import Image from "next/image";
+'use client';
+import Link from 'next/link';
+import { S, P, active, isOk, ev, st, def } from '@/engine/engine';
+import { STAGES } from '@/engine/model';
+import { useEngine } from '@/engine/useEngine';
+import { InboxCard, ActivityFeed } from '@/components/rail/Rail';
+import { StatusChip, ProductTag } from '@/components/ui/kit';
 
-export default function Home() {
+/* G03 · Workspace overview */
+export default function Workspace() {
+  useEngine();
+  const cur = Math.min(S.floor, 10);
+  const stageBlocks = active().filter(b => b.f === cur);
+  const done = stageBlocks.filter(b => isOk(b.id) || st(b.id) === 'skipped').length;
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="grid gap-4" style={{ gridTemplateColumns: 'minmax(0,1fr) 360px' }}>
+      <div className="flex flex-col gap-4 min-w-0">
+        <section className="panel p-6 flex flex-col gap-3">
+          <div className="t-eyebrow">Workspace · {P.pathLabel}</div>
+          <div className="t-title">{S.idea}</div>
+          <p className="t-small" style={{ fontSize: 14 }}>{S.pitch}</p>
+          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(4, minmax(0,1fr))' }}>
+            {[['Stage', `${cur + 1} · ${STAGES[cur].name}`], ['Evidence', String(ev())], [P.runwayLabel, `${S.runway.toFixed(1)} months`], ['Gates passed', `${[1, 3, 8].filter(f => S.passed[f]).length} of 3`]].map(([l, v]) => (
+              <div key={l} className="p-3 rounded-xl" style={{ background: 'var(--subtle)' }}><div className="t-caps">{l}</div><div className="t-metric">{v}</div></div>
+            ))}
+          </div>
+          <div className="flex gap-2 pt-1">
+            <Link href="/hq" className="btn btn-primary">Enter Founder HQ</Link>
+            <Link href={`/stage/${cur}`} className="btn">Open {STAGES[cur].name}</Link>
+            {S.ended && <span className="pill t-strong px-3" style={{ background: 'var(--go-soft)', color: 'var(--go)' }}>Journey complete</span>}
+          </div>
+        </section>
+        <section className="panel p-5 flex flex-col gap-3" aria-label="Current stage">
+          <div className="flex items-center justify-between"><div className="t-h3">{STAGES[cur].name}</div><span className="t-small">{done} of {stageBlocks.length} done</span></div>
+          {stageBlocks.map(b => (
+            <Link key={b.id} href={`/block/${b.id}`} className="flex items-center gap-3 p-2.5 rounded-xl row-hover" style={{ border: '1px solid var(--line)' }}>
+              <span className="flex-1 min-w-0"><span className="t-strong block">{b.name}{b.opt ? ' (optional)' : ''}</span><span className="t-small">{b.mod}</span></span>
+              <ProductTag tag={b.tag} />
+              <StatusChip s={b.kind === 'task' && st(b.id) === 'ready' ? 'task' : st(b.id)} />
+            </Link>
+          ))}
+        </section>
+        <section className="panel p-5 flex flex-col gap-2" aria-label="Journey">
+          <div className="t-h3">Journey</div>
+          <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
+            {STAGES.map((s, i) => {
+              const locked = i > S.floor; const ok = !!S.passed[i];
+              return (
+                <Link key={s.name} href={locked ? '#' : `/stage/${i}`} aria-disabled={locked} className="p-2.5 rounded-xl flex flex-col gap-0.5" style={{ background: i === cur ? 'var(--accent-soft)' : 'var(--subtle)', border: `1px solid ${i === cur ? 'var(--accent)' : 'var(--line)'}`, opacity: locked ? 0.55 : 1, pointerEvents: locked ? 'none' : undefined }}>
+                  <span className="t-caps">Stage {i + 1}{s.gate === 'you' ? ' · Gate' : ''}</span>
+                  <span className="t-strong">{s.name}</span>
+                  <span className="t-small" style={{ color: ok ? 'var(--go)' : undefined }}>{ok ? 'Passed' : i === cur ? 'In progress' : locked ? 'Locked' : ''}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+      <div className="flex flex-col gap-4">
+        <InboxCard limit={4} />
+        <ActivityFeed n={7} />
+        {S.ended && <section className="panel p-4 t-small">Final decision recorded: {def('scale').name}.</section>}
+      </div>
     </div>
   );
 }

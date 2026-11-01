@@ -1,0 +1,28 @@
+div
+  div
+    div
+      b
+        "Private limited registration"
+      span
+        "Filed with the Registrar of Companies"
+      button
+        "Sign"
+    div
+      b
+        "Founders' agreement"
+      span
+        "Equity split, vesting, roles"
+      button
+        "Sign"
+    div
+      b
+        "IP assignment"
+      span
+        "Code and brand belong to the company"
+      button
+        "Sign"
+  div
+    span
+      "0 of 3 signed"
+    button[disabled]
+      "All signed"

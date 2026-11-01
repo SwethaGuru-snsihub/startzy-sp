@@ -1,0 +1,53 @@
+div
+  div
+    button[disabled]
+      b
+        "Anita · maths tutor"
+      span
+        "“"
+        "Every month I send 30 reminders. Some parents ignore them."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Joseph · science tutor"
+      span
+        "“"
+        "I lost ₹18,000 last year to \"I already paid\"."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Sana · music teacher"
+      span
+        "“"
+        "Payments are fine. Scheduling is my problem."
+        "”"
+      span
+        "Weak signal"
+    button[disabled]
+      b
+        "Parent of two students"
+      span
+        "“"
+        "I would pay faster if I just got a link."
+        "”"
+      span
+        "Strong signal"
+    button
+      b
+        "Your friend · a tutor"
+      span
+        "Tap to call"
+    button
+      b
+        "Coaching centre owner"
+      span
+        "Tap to call"
+  div
+    span
+      "4 calls · 3 strong signals · need 4+"
+    button
+      "Done talking"

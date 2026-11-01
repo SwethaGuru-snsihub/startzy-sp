@@ -1,0 +1,56 @@
+div
+  section
+    div
+      a[href=/stage/0]
+        "←"
+        "Brief"
+      span
+        "·"
+      span
+        "Documentation Engine"
+        "·"
+        "Product & Technology Centre"
+    div
+      div
+        h1
+          "Idea Brief"
+        div
+          "SP1 Idea Definition"
+          "· v"
+          "1"
+      div
+        span
+          "Solution Planning"
+        span
+          "Drafting"
+    div
+      span
+        "Asha"
+        "is drafting…"
+        "50"
+        "%"
+      div
+        div
+    div
+      button[aria-expanded=false]
+        "Why this"
+        "document"
+        "?"
+  section[aria-label=Review trail]
+    div
+      "Review trail"
+    div
+      span
+        "Maker:"
+        "Asha"
+      span
+        "· Checker:"
+        "Quinn"
+    div
+      span[title=Asha · Strategy]
+        "CSO"
+      div
+        b
+          "Asha"
+        "·"
+        "Drafting at the Docs engine."

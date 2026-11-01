@@ -1,0 +1,49 @@
+div
+  dl
+    dt
+      "Founder"
+    dd
+      "Meera"
+      "·"
+      "Freelance developer, Pune"
+    dt
+      "Path"
+    dd
+      "Bootstrapped"
+    dt
+      "Savings"
+    dd
+      "8"
+      "months"
+  div
+    div
+      "AI team · optional agents"
+    label
+      span[title=Maya · Marketing]
+        "CMO"
+      span
+        "CMO"
+        "·"
+        "Maya · Marketing"
+      input[type=checkbox][checked]
+    label
+      span[title=Omar · Operations]
+        "COO"
+      span
+        "COO"
+        "·"
+        "Omar · Operations"
+      input[type=checkbox][checked]
+    label
+      span[title=Ravi · Revenue]
+        "CRO"
+      span
+        "CRO"
+        "·"
+        "Ravi · Revenue"
+      input[type=checkbox][checked]
+    p
+      "Switched-off agents wait in the Agent Hub and join automatically when a block needs them."
+  div
+    button
+      "Confirm profile"

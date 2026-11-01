@@ -1,0 +1,18 @@
+div
+  div
+    div
+      span
+        "QE"
+      "Who feels the waiting pain most?"
+    div
+      button
+        "Transport partners"
+      button
+        "Dock supervisors"
+      button
+        "Drivers"
+  div
+    span
+      "0 of 3 answered"
+    button[disabled]
+      "Save answers"

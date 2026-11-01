@@ -1,0 +1,49 @@
+header
+  div
+    a[href=/]
+      "Founder HQ"
+    span
+      span[title=Rahul · Founder · owner]
+        "R"
+      "Rahul"
+      "·"
+      "DockSlot"
+    div
+    span
+      span
+      "Live"
+    button
+      "Switch founder"
+  div
+    div
+      span
+        "Journey"
+      span
+        span
+      span
+        "2"
+        "/11"
+    div
+      button[aria-haspopup=menu][aria-expanded=false]
+        span
+          "Stage"
+        span
+          "Problem"
+          "◆"
+        span[aria-hidden=true]
+          "▾"
+    div
+      button[aria-haspopup=dialog][aria-expanded=false]
+        span[title=Atlas · CEO · command centre]
+          "CEO"
+        span
+          span
+            "Atlas may approve"
+          span
+            "Nothing"
+            "▾"
+    a[href=/inbox]
+      "Inbox ·"
+      "1"
+    a[href=/hq]
+      "Founder HQ"

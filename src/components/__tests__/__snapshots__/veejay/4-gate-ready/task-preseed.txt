@@ -1,0 +1,12 @@
+div
+  div
+    button
+      b
+        "Raise pre-seed now"
+      span
+        "More runway for the build. Less evidence, so a smaller cheque and more ownership given away."
+    button
+      b
+        "Wait for traction"
+      span
+        "Keep ownership. Build on savings, then raise after launch with better terms."

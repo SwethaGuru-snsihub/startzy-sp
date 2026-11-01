@@ -1,0 +1,33 @@
+div
+  div
+    button
+      "WhatsApp reminders"
+    button
+      "One-tap rebooking"
+    button
+      "Calendar sync"
+    button
+      "No-show report"
+    button
+      "Billing"
+    button
+      "Patient records"
+    button
+      "Loyalty points"
+    button
+      "Multi-branch admin"
+  p
+    b
+      "0"
+      "/4 picked."
+    "0"
+    "from interviews,"
+    "0"
+    "extra. Estimate:"
+    b
+      "3"
+      "sprints"
+    ". Affects: PRD, Roadmap, Sprints."
+  div
+    button[disabled]
+      "Lock MVP scope"

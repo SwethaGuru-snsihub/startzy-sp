@@ -1,0 +1,92 @@
+div
+  section
+    div
+      a[href=/stage/1]
+        "←"
+        "Problem"
+      span
+        "·"
+      span
+        "Documentation Engine"
+        "·"
+        "Product & Technology Centre"
+    div
+      div
+        h1
+          "Problem statement"
+        div
+          "SP2 Problem Discovery"
+          "· v"
+          "1"
+      div
+        span
+          "Solution Planning"
+        span
+          "Approved"
+    article
+      p
+        strong
+          "Problem:"
+        "Trucks wait up to 3 hours at warehouse docks because slots are booked by phone and paper. Drivers lose a trip a day."
+      p
+        strong
+          "Evidence:"
+        "4 interviews, 3 strong signals"
+      p
+        strong
+          "Best quote:"
+        "\"My phone rings 200 times a day. Half are drivers asking \"when?\"\""
+      p
+        strong
+          "MiroFish simulation:"
+        "300 simulated trucks; slot booking cut average wait to about 40 minutes"
+    div
+      button[aria-expanded=false]
+        "Why this"
+        "document"
+        "?"
+  section[aria-label=Review trail]
+    div
+      "Review trail"
+    div
+      span
+        "Maker:"
+        "Asha"
+      span
+        "· Checker:"
+        "Quinn"
+      span
+        "· Approved by"
+        "Rahul"
+    div
+      span[title=Asha · Strategy]
+        "CSO"
+      div
+        b
+          "Asha"
+        "·"
+        "Drafting at the Docs engine."
+    div
+      span[title=Quinn · Quality & risk]
+        "CQRO"
+      div
+        b
+          "Quinn"
+        "·"
+        "Checked. It rests on approved blocks and the facts match."
+    div
+      span[title=Atlas · CEO · command centre]
+        "CEO"
+      div
+        b
+          "Atlas"
+        "·"
+        "Sending to Rahul for approval."
+    div
+      span[title=Rahul · Founder · owner]
+        "R"
+      div
+        b
+          "Rahul"
+        "·"
+        "Approved."

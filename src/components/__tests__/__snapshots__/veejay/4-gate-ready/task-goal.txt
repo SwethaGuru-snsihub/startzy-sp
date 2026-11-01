@@ -1,0 +1,24 @@
+div
+  label
+    span
+      "Idea name"
+    input[value=ClinicFlow]
+  label
+    span
+      "One-line pitch"
+    input[value=Appointment reminders for dental clinics]
+  div
+    span
+      "Your goal"
+    div
+      button
+        "Build a venture-scale startup"
+      button
+        "Build a profitable small business"
+      button
+        "Launch a new product inside my company"
+      button
+        "A side project to learn"
+  div
+    button
+      "Lock goal and context"

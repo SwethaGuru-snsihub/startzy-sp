@@ -1,0 +1,18 @@
+div
+  div
+    div
+      span
+        "QE"
+      "Who feels the fee-chasing pain most?"
+    div
+      button
+        "Tutors"
+      button
+        "Parents"
+      button
+        "Coaching centres"
+  div
+    span
+      "0 of 3 answered"
+    button[disabled]
+      "Save answers"

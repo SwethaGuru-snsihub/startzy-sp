@@ -1,0 +1,45 @@
+div
+  div
+    button
+      b
+        "Arun"
+      span
+        "Full-stack developer"
+      span
+        "Built a booking app before"
+      span
+        "₹1.1 lakh"
+        "/ month"
+    button
+      b
+        "Divya"
+      span
+        "Mobile developer"
+      span
+        "Knows the WhatsApp API"
+      span
+        "₹1.1 lakh"
+        "/ month"
+    button
+      b
+        "Karthik"
+      span
+        "Sales lead"
+      span
+        "Strong, but nothing to sell yet"
+      span
+        "₹1.1 lakh"
+        "/ month"
+    button
+      b
+        "Leela"
+      span
+        "Product designer"
+      span
+        "Worked on clinic software"
+      span
+        "₹1.1 lakh"
+        "/ month"
+  div
+    button[disabled]
+      "Propose these two"

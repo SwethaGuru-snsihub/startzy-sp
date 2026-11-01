@@ -1,0 +1,45 @@
+div
+  div
+    button
+      b
+        "Rohan"
+      span
+        "Contract designer"
+      span
+        "Screens in 2 weeks"
+      span
+        "₹0.4 lakh"
+        "/ month"
+    button
+      b
+        "Ishita"
+      span
+        "Part-time support"
+      span
+        "Answers tutors on WhatsApp"
+      span
+        "₹0.4 lakh"
+        "/ month"
+    button
+      b
+        "DevWorks"
+      span
+        "Outsourced agency"
+      span
+        "Would eat months of savings"
+      span
+        "₹0.4 lakh"
+        "/ month"
+    button
+      b
+        "Kabir"
+      span
+        "Part-time tester"
+      span
+        "Tests on low-cost phones"
+      span
+        "₹0.4 lakh"
+        "/ month"
+  div
+    button[disabled]
+      "Propose these two"

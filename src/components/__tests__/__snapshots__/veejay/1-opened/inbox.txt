@@ -1,0 +1,27 @@
+div
+  section
+    div
+      div
+        "Inbox"
+      h1
+        "1 need you"
+      p
+        "Atlas sends you only what is over its approval limit, your own tasks and gate inspections."
+    div
+      div
+        "Your tasks"
+        "·"
+        "1"
+      a[href=/block/profile]
+        span
+          span
+            "Founder profile"
+          span
+            "Startzy · Onboarding"
+        span
+          "Your task"
+  section[aria-label=Recently approved]
+    div
+      "Recently approved"
+    p
+      "Nothing yet."

@@ -1,0 +1,28 @@
+div
+  div
+    div
+      b
+        "Project charter"
+      span
+        "Scope, owner, budget, success measure"
+      button
+        "Sign"
+    div
+      b
+        "Data privacy review"
+      span
+        "Driver phone numbers and retention"
+      button
+        "Sign"
+    div
+      b
+        "IT security sign-off"
+      span
+        "Single sign-on and access roles"
+      button
+        "Sign"
+  div
+    span
+      "0 of 3 signed"
+    button[disabled]
+      "All signed"

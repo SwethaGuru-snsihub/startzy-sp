@@ -1,0 +1,210 @@
+div
+  div
+    section
+      div
+        "Workspace ·"
+        "Venture-funded"
+      div
+        "ClinicFlow"
+      p
+        "Appointment reminders for dental clinics"
+      div
+        div
+          div
+            "Stage"
+          div
+            "1 · Brief"
+        div
+          div
+            "Evidence"
+          div
+            "0"
+        div
+          div
+            "Runway"
+          div
+            "12.0 months"
+        div
+          div
+            "Gates passed"
+          div
+            "0 of 3"
+      div
+        a[href=/hq]
+          "Enter Founder HQ"
+        a[href=/stage/0]
+          "Open"
+          "Brief"
+    section[aria-label=Current stage]
+      div
+        div
+          "Brief"
+        span
+          "0"
+          "of"
+          "4"
+          "done"
+      a[href=/block/profile]
+        span
+          span
+            "Founder profile"
+          span
+            "Startzy · Onboarding"
+        span
+          "Startzy"
+        span
+          "Your task"
+      a[href=/block/goal]
+        span
+          span
+            "Goal & idea context"
+          span
+            "SP1 Idea Definition"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+      a[href=/block/clarify]
+        span
+          span
+            "Clarification"
+          span
+            "Question engine"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+      a[href=/block/brief]
+        span
+          span
+            "Idea Brief"
+          span
+            "SP1 Idea Definition"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+    section[aria-label=Journey]
+      div
+        "Journey"
+      div
+        a[aria-disabled=false][href=/stage/0]
+          span
+            "Stage"
+            "1"
+          span
+            "Brief"
+          span
+            "In progress"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "2"
+            "· Gate"
+          span
+            "Problem"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "3"
+          span
+            "Market & personas"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "4"
+            "· Gate"
+          span
+            "Business case"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "5"
+          span
+            "Product definition"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "6"
+          span
+            "Design pack"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "7"
+          span
+            "Company & team"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "8"
+          span
+            "Build"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "9"
+            "· Gate"
+          span
+            "Validate"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "10"
+          span
+            "Launch"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "11"
+          span
+            "Grow & scale"
+          span
+            "Locked"
+  div
+    section[aria-label=Your inbox]
+      div
+        div
+          "Your inbox"
+        div
+          "1 need you"
+      a[href=/block/profile]
+        span
+          "Your task"
+        span
+          span
+            "Founder profile"
+          span
+            "Startzy · Onboarding"
+    section[aria-label=Activity]
+      div
+        div
+          "Activity"
+        span
+          span
+          "Live · simulated"
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          "Veejay opened Founder HQ. Atlas is in charge of the crew."

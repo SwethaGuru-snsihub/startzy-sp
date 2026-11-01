@@ -1,0 +1,258 @@
+div
+  div
+    section
+      div
+        "Workspace ·"
+        "Venture-funded"
+      div
+        "ClinicFlow"
+      p
+        "Appointment reminders for dental clinics"
+      div
+        div
+          div
+            "Stage"
+          div
+            "2 · Problem"
+        div
+          div
+            "Evidence"
+          div
+            "53"
+        div
+          div
+            "Runway"
+          div
+            "10.3 months"
+        div
+          div
+            "Gates passed"
+          div
+            "0 of 3"
+      div
+        a[href=/hq]
+          "Enter Founder HQ"
+        a[href=/stage/1]
+          "Open"
+          "Problem"
+    section[aria-label=Current stage]
+      div
+        div
+          "Problem"
+        span
+          "3"
+          "of"
+          "3"
+          "done"
+      a[href=/block/research]
+        span
+          span
+            "Desk research"
+          span
+            "SP2 Problem Discovery"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+      a[href=/block/interviews]
+        span
+          span
+            "Customer interviews"
+          span
+            "SP2 Problem Discovery"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+      a[href=/block/problem]
+        span
+          span
+            "Problem statement"
+          span
+            "SP2 Problem Discovery"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+    section[aria-label=Journey]
+      div
+        "Journey"
+      div
+        a[aria-disabled=false][href=/stage/0]
+          span
+            "Stage"
+            "1"
+          span
+            "Brief"
+          span
+            "Passed"
+        a[aria-disabled=false][href=/stage/1]
+          span
+            "Stage"
+            "2"
+            "· Gate"
+          span
+            "Problem"
+          span
+            "In progress"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "3"
+          span
+            "Market & personas"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "4"
+            "· Gate"
+          span
+            "Business case"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "5"
+          span
+            "Product definition"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "6"
+          span
+            "Design pack"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "7"
+          span
+            "Company & team"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "8"
+          span
+            "Build"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "9"
+            "· Gate"
+          span
+            "Validate"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "10"
+          span
+            "Launch"
+          span
+            "Locked"
+        a[aria-disabled=true][href=#]
+          span
+            "Stage"
+            "11"
+          span
+            "Grow & scale"
+          span
+            "Locked"
+  div
+    section[aria-label=Your inbox]
+      div
+        div
+          "Your inbox"
+        div
+          "1 need you"
+      a[href=/gate/1]
+        span
+          "Inspection"
+        span
+          span
+            "Gate 1 · Is the problem worth solving?"
+    section[aria-label=Activity]
+      div
+        div
+          "Activity"
+        span
+          span
+          "Live · simulated"
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          strong
+            "Problem"
+          "is ready for your inspection in the Strategy & Finance Centre."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          "You approved"
+          strong
+            "Problem statement"
+          "."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          strong
+            "Problem statement"
+          "is waiting for your approval."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          "Asha started"
+          strong
+            "Problem statement"
+          "at the Documentation Engine."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          "You approved"
+          strong
+            "Desk research"
+          "."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          strong
+            "Desk research"
+          "is waiting for your approval."
+      div
+        span
+        span
+          "M"
+          "2"
+        span
+          "Asha started"
+          strong
+            "Desk research"
+          "at the Research Engine."

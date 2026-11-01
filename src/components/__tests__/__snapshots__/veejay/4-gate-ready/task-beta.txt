@@ -1,0 +1,22 @@
+div
+  div
+    button
+      b
+        "People you interviewed"
+      span
+        "About 6 clinics likely to join"
+    button
+      b
+        "Their referrals"
+      span
+        "About 6 clinics likely to join"
+    button
+      b
+        "A cold list"
+      span
+        "About 3 clinics likely to join"
+  div
+    span
+      "Gate 3 needs 6; you have 0"
+    button
+      "Start a 2-week beta"

@@ -1,0 +1,113 @@
+div
+  section
+    div
+      div
+        div
+          "Stage"
+          "1"
+          "of 11"
+        h1
+          "Brief"
+        p
+          "0"
+          "of"
+          "4"
+          "required blocks approved"
+      button
+        "Let Atlas run this stage"
+    div
+      div
+    div
+      div
+        span[title=Rahul · Founder · owner]
+          "R"
+        div
+          div
+            "Founder profile"
+          div
+            "You"
+            "·"
+            "Intake"
+            "·"
+            "Discovery"
+        span
+          "Startzy"
+        span
+          "Your task"
+        a[href=/block/profile]
+          "Do it"
+      div
+        span[title=Rahul · Founder · owner]
+          "R"
+        div
+          div
+            "Goal & idea context"
+          div
+            "You"
+            "·"
+            "Intake"
+            "·"
+            "Discovery"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+        a[href=/block/goal]
+          "Open"
+      div
+        span[title=Rahul · Founder · owner]
+          "R"
+        div
+          div
+            "Clarification"
+          div
+            "You"
+            "·"
+            "Question"
+            "·"
+            "Discovery"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+        a[href=/block/clarify]
+          "Open"
+      div
+        span[title=Asha · Strategy]
+          "CSO"
+        div
+          div
+            "Idea Brief"
+          div
+            "Asha"
+            "·"
+            "Docs"
+            "·"
+            "Product & Tech"
+            "· checked by CQRO"
+        span
+          "Solution Planning"
+        span
+          "Waiting"
+        a[href=/block/brief]
+          "Open"
+    div
+      div
+        div
+          "Atlas stage check"
+        div
+          "Atlas passes this stage automatically when every required block is approved."
+  section[aria-label=Activity]
+    div
+      div
+        "Activity"
+      span
+        span
+        "Live · simulated"
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "Rahul opened Founder HQ. Atlas is in charge of the crew."

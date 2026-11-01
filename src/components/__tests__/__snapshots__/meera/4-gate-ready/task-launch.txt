@@ -1,0 +1,17 @@
+div
+  div
+    button
+      b
+        "Tutor Facebook and WhatsApp groups"
+    button
+      b
+        "Referral: free month per invite"
+    button
+      b
+        "YouTube how-to video"
+    button
+      b
+        "Instagram ads"
+  div
+    button[disabled]
+      "Launch: first 30 days"

@@ -1,0 +1,172 @@
+div
+  section
+    div
+      div
+        div
+          "Stage"
+          "1"
+          "of 11"
+        h1
+          "Brief"
+        p
+          "3"
+          "of"
+          "4"
+          "required blocks approved"
+      button[disabled]
+        "Atlas is running this stage"
+    div
+      div
+    div
+      div
+        span[title=Meera · Founder · owner]
+          "M"
+        div
+          div
+            "Founder profile"
+          div
+            "You"
+            "·"
+            "Intake"
+            "·"
+            "Discovery"
+        span
+          "Startzy"
+        span
+          "Approved"
+        a[href=/block/profile]
+          "Open"
+      div
+        span[title=Meera · Founder · owner]
+          "M"
+        div
+          div
+            "Goal & idea context"
+          div
+            "You"
+            "·"
+            "Intake"
+            "·"
+            "Discovery"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+        a[href=/block/goal]
+          "Open"
+      div
+        span[title=Meera · Founder · owner]
+          "M"
+        div
+          div
+            "Clarification"
+          div
+            "You"
+            "·"
+            "Question"
+            "·"
+            "Discovery"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+        a[href=/block/clarify]
+          "Open"
+      div
+        span[title=Asha · Strategy]
+          "CSO"
+        div
+          div
+            "Idea Brief"
+          div
+            "Asha"
+            "·"
+            "Docs"
+            "·"
+            "Product & Tech"
+            "· checked by CQRO"
+          div
+            div
+        span
+          "Solution Planning"
+        span
+          "Drafting"
+        a[href=/block/brief]
+          "Open"
+    div
+      div
+        div
+          "Atlas stage check"
+        div
+          "Atlas passes this stage automatically when every required block is approved."
+  section[aria-label=Activity]
+    div
+      div
+        "Activity"
+      span
+        span
+        "Live · simulated"
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "Asha started"
+        strong
+          "Idea Brief"
+        "at the Documentation Engine."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You handed"
+        strong
+          "Brief"
+        "to Atlas."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You changed Atlas's approval limit to level 0."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You completed"
+        strong
+          "Clarification"
+        "."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You completed"
+        strong
+          "Goal & idea context"
+        "."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You completed"
+        strong
+          "Founder profile"
+        "."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "Meera opened Founder HQ. Atlas is in charge of the crew."

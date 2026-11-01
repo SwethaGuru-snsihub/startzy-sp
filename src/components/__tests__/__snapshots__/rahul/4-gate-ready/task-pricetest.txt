@@ -1,0 +1,22 @@
+div
+  div
+    div
+      div
+        "Current price"
+      div
+        "not set"
+    div
+      div
+        "Test result"
+      div
+        "Price too far off"
+  p
+    b
+      "Finding:"
+    "Beta users mostly chose \"Savings case: shorter waits, more trips\"."
+    "Changing the price re-checks every block built on it."
+  div
+    button
+      "Keep the current price"
+    button
+      "Switch to Savings case: shorter waits, more trips"

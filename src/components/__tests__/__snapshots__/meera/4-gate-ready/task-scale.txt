@@ -1,0 +1,27 @@
+div
+  div
+    div
+      div
+        "tutors"
+      div
+        "0"
+    div
+      div
+        "Monthly revenue"
+      div
+        "₹0"
+    div
+      div
+        "Retention"
+      div
+        "64"
+        "%"
+  p
+    b
+      "Funding:"
+    "Hire one full-time developer from revenue and open Mumbai."
+  div
+    button
+      "Keep going as is"
+    button
+      "Grow from revenue"

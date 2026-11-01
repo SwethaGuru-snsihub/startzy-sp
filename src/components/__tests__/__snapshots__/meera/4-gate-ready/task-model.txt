@@ -1,0 +1,19 @@
+div
+  div
+    button
+      b
+        "₹199 per tutor per month"
+    button
+      b
+        "₹999 per tutor per month"
+    button
+      b
+        "Free, take 2% of each fee"
+  p
+    b
+      "Market:"
+    "Market: over 1 lakh home tutors in Pune"
+    ". Affects: Cost estimate, BRD, PRD, GTM."
+  div
+    button[disabled]
+      "Confirm business model"

@@ -1,0 +1,113 @@
+div
+  div
+    header
+      span[aria-hidden=true]
+        "S"
+      span
+        "Startzy"
+    section
+      div
+        h1
+          "Build your company with Startzy"
+        p
+          "Tell Atlas about your idea. We'll help you turn it into a real, structured business."
+      form
+        label
+          "Your idea"
+        textarea[placeholder=Describe your business idea, the problem you want to solve, or what you're planning to build...][aria-invalid=false]
+        div
+          div
+            span
+              "An unfinished idea is fine. You don't need a business plan."
+            span[role=alert]
+          span[aria-live=polite]
+            "0"
+            "/"
+            "4,000"
+        div
+          button[type=submit]
+            "Start building with Atlas"
+          span
+            "Ctrl + Enter to send"
+    section
+      div
+        h2
+          "Explore a demo company"
+        p
+          "See a full journey with a sample founder. These are demo companies with sample data, not your own workspace."
+      div
+        div
+          div
+            span[aria-hidden=true]
+              "V"
+            div
+              div
+                "Veejay"
+              div
+                "Project manager, Bengaluru"
+          div
+            "ClinicFlow"
+            ":"
+            "Appointment reminders for dental clinics"
+          span
+            "Venture-funded"
+          ul
+            li
+              "First-time founder leaving a job"
+            li
+              "Wants investors, but when?"
+            li
+              "Watch out: building too much, too early"
+          button
+            "Play as"
+            "Veejay"
+        div
+          div
+            span[aria-hidden=true]
+              "M"
+            div
+              div
+                "Meera"
+              div
+                "Freelance developer, Pune"
+          div
+            "TutorBooks"
+            ":"
+            "Fee tracking and reminders for home tutors"
+          span
+            "Bootstrapped"
+          ul
+            li
+              "Solo founder who keeps freelancing"
+            li
+              "No investors: grows from revenue"
+            li
+              "Watch out: running out of savings"
+          button
+            "Play as"
+            "Meera"
+        div
+          div
+            span[aria-hidden=true]
+              "R"
+            div
+              div
+                "Rahul"
+              div
+                "Innovation lead, logistics company, Chennai"
+          div
+            "DockSlot"
+            ":"
+            "Truck dock scheduling for warehouses"
+          span
+            "Enterprise innovation"
+          ul
+            li
+              "Builds a new product inside a large company"
+            li
+              "Needs budget approval, not investors"
+            li
+              "Watch out: the boss saying yes is not evidence"
+          button
+            "Play as"
+            "Rahul"

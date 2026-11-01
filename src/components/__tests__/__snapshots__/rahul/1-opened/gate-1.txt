@@ -1,0 +1,78 @@
+div
+  section
+    div
+      div
+        div
+          "Strategy & Finance ·"
+          "Problem"
+        h1
+          "Gate 1 · Is the problem worth solving?"
+      div
+        span[title=Atlas · CEO · command centre]
+          "CEO"
+        span[title=Asha · Strategy]
+          "CSO"
+        span[title=Quinn · Quality & risk]
+          "CQRO"
+        span[title=Rahul · Founder · owner]
+          "R"
+    p
+      "This gate opens once every required block in"
+      "Problem"
+      "is approved."
+      a[href=/stage/1]
+        "Open the stage"
+    ul
+      li
+        span[aria-hidden=true]
+          "!"
+        span
+          "Desk research approved"
+        span
+          "Not yet"
+      li
+        span[aria-hidden=true]
+          "!"
+        span
+          "Talked to at least 4 people"
+        span
+          "0 interviews"
+        span
+          "Not yet"
+      li
+        span[aria-hidden=true]
+          "!"
+        span
+          "At least 2 strong problem signals"
+        span
+          "0 strong"
+        span
+          "Not yet"
+      li
+        span[aria-hidden=true]
+          "!"
+        span
+          "Problem statement approved"
+        span
+          "Not yet"
+      li
+        span[aria-hidden=true]
+          "!"
+        span
+          "Evidence score 45 or more"
+        span
+          "Score 0"
+        span
+          "Not yet"
+    div
+      div
+        "Ways to fix it"
+      div
+        button
+          b
+            "Talk to more people"
+          span
+            "Half a month of interviews"
+    div
+      button[disabled]
+        "Pass the gate"

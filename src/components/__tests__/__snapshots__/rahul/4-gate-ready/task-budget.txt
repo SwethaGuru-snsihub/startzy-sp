@@ -1,0 +1,11 @@
+div
+  div
+    div
+      "DockSlot"
+    div
+      "Truck dock scheduling for warehouses"
+    span
+      "Cover"
+  div
+    button
+      "Build the deck from approved blocks"

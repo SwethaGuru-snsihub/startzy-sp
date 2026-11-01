@@ -1,0 +1,168 @@
+div
+  section
+    div
+      div
+        div
+          "Stage"
+          "2"
+          "of 11"
+        h1
+          "Problem"
+        p
+          "3"
+          "of"
+          "3"
+          "required blocks approved"
+      button[disabled]
+        "Atlas is running this stage"
+    div
+      div
+    div
+      div
+        span[title=Asha · Strategy]
+          "CSO"
+        div
+          div
+            "Desk research"
+          div
+            "Asha"
+            "·"
+            "Research"
+            "·"
+            "Research"
+            "· checked by BA"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+        a[href=/block/research]
+          "Open"
+      div
+        span[title=Rahul · Founder · owner]
+          "R"
+        div
+          div
+            "Customer interviews"
+          div
+            "You"
+            "·"
+            "Interview"
+            "·"
+            "Customer & Growth"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+        a[href=/block/interviews]
+          "Open"
+      div
+        span[title=Asha · Strategy]
+          "CSO"
+        div
+          div
+            "Problem statement"
+          div
+            "Asha"
+            "·"
+            "Docs"
+            "·"
+            "Product & Tech"
+            "· checked by CQRO"
+        span
+          "Solution Planning"
+        span
+          "Approved"
+        a[href=/block/problem]
+          "Open"
+    div
+      div
+        div
+          "Gate 1 · Is the problem worth solving?"
+        div
+          "You inspect this gate in the Strategy & Finance Centre once every required block is approved."
+      a[href=/gate/1]
+        "Start inspection"
+  section[aria-label=Activity]
+    div
+      div
+        "Activity"
+      span
+        span
+        "Live · simulated"
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        strong
+          "Problem"
+        "is ready for your inspection in the Strategy & Finance Centre."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        "You approved"
+        strong
+          "Problem statement"
+        "."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        strong
+          "Problem statement"
+        "is waiting for your approval."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        "Asha started"
+        strong
+          "Problem statement"
+        "at the Documentation Engine."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        "You approved"
+        strong
+          "Desk research"
+        "."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        strong
+          "Desk research"
+        "is waiting for your approval."
+    div
+      span
+      span
+        "M"
+        "2"
+      span
+        "Asha started"
+        strong
+          "Desk research"
+        "at the Research Engine."
+    div
+      span
+      span
+        "M"
+        "1"
+      span
+        "You completed"
+        strong
+          "Customer interviews"
+        "."

@@ -1,0 +1,53 @@
+div
+  div
+    button[disabled]
+      b
+        "Murugan · dock supervisor"
+      span
+        "“"
+        "My phone rings 200 times a day. Half are drivers asking \"when?\""
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Selvi · truck driver"
+      span
+        "“"
+        "I wait 3 hours, then miss my second trip."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Transport company owner"
+      span
+        "“"
+        "If I could book online, I would send more trucks."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Warehouse manager"
+      span
+        "“"
+        "Some days are bad. Mostly it works."
+        "”"
+      span
+        "Weak signal"
+    button
+      b
+        "Your VP · your boss"
+      span
+        "Tap to call"
+    button
+      b
+        "IT head"
+      span
+        "Tap to call"
+  div
+    span
+      "4 calls · 3 strong signals · need 4+"
+    button
+      "Done talking"

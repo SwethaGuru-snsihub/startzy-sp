@@ -1,0 +1,53 @@
+div
+  div
+    button[disabled]
+      b
+        "Dr. Kavya · clinic owner"
+      span
+        "“"
+        "Three no-shows a day. I just absorb the cost."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Sunil · receptionist"
+      span
+        "“"
+        "I call every patient the night before. It takes two hours."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Dr. Imran · owns 3 clinics"
+      span
+        "“"
+        "Nobody reads SMS any more. WhatsApp, maybe."
+        "”"
+      span
+        "Strong signal"
+    button[disabled]
+      b
+        "Priya · patient"
+      span
+        "“"
+        "I just forget. A message that morning would help."
+        "”"
+      span
+        "Weak signal"
+    button
+      b
+        "Your cousin · clinic owner"
+      span
+        "Tap to call"
+    button
+      b
+        "Dr. Rao · solo practice"
+      span
+        "Tap to call"
+  div
+    span
+      "4 calls · 3 strong signals · need 4+"
+    button
+      "Done talking"

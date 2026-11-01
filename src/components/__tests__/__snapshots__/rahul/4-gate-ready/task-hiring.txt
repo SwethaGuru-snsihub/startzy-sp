@@ -1,0 +1,45 @@
+div
+  div
+    button
+      b
+        "Lakshmi"
+      span
+        "Full-stack developer"
+      span
+        "Has built SAP integrations"
+      span
+        "₹1.5 lakh"
+        "/ month"
+    button
+      b
+        "Joel"
+      span
+        "Business analyst"
+      span
+        "Ran the last warehouse rollout"
+      span
+        "₹1.5 lakh"
+        "/ month"
+    button
+      b
+        "Vendor team"
+      span
+        "External agency"
+      span
+        "6-week contract delay"
+      span
+        "₹1.5 lakh"
+        "/ month"
+    button
+      b
+        "Priyanka"
+      span
+        "QA engineer"
+      span
+        "Knows the test environments"
+      span
+        "₹1.5 lakh"
+        "/ month"
+  div
+    button[disabled]
+      "Propose these two"

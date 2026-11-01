@@ -1,0 +1,28 @@
+div
+  div
+    div
+      b
+        "Udyam registration"
+      span
+        "Register as a small business"
+      button
+        "Sign"
+    div
+      b
+        "GST registration"
+      span
+        "Needed as revenue grows"
+      button
+        "Sign"
+    div
+      b
+        "Business bank account"
+      span
+        "Keep business money separate"
+      button
+        "Sign"
+  div
+    span
+      "0 of 3 signed"
+    button[disabled]
+      "All signed"

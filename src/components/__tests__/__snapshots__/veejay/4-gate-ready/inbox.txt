@@ -1,0 +1,59 @@
+div
+  section
+    div
+      div
+        "Inbox"
+      h1
+        "1 need you"
+      p
+        "Atlas sends you only what is over its approval limit, your own tasks and gate inspections."
+    div
+      div
+        "Inspections"
+        "·"
+        "1"
+      a[href=/gate/1]
+        span
+          span
+            "Gate 1 · Is the problem worth solving?"
+        span
+          "Inspection"
+  section[aria-label=Recently approved]
+    div
+      "Recently approved"
+    a[href=/block/problem]
+      span
+        "Problem statement"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/research]
+      span
+        "Desk research"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/interviews]
+      span
+        "Customer interviews"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/brief]
+      span
+        "Idea Brief"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/profile]
+      span
+        "Founder profile"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/goal]
+      span
+        "Goal & idea context"
+      span
+        "by"
+        "Veejay"

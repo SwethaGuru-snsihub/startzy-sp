@@ -1,0 +1,27 @@
+div
+  div
+    div
+      div
+        "clinics"
+      div
+        "0"
+    div
+      div
+        "Monthly revenue"
+      div
+        "₹0"
+    div
+      div
+        "Retention"
+      div
+        "64"
+        "%"
+  p
+    b
+      "Funding:"
+    "You raised pre-seed earlier. Your updated deck now has real traction."
+  div
+    button
+      "Keep going as is"
+    button
+      "Raise a seed round"

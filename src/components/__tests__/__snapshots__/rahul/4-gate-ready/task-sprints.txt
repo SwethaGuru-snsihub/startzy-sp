@@ -1,0 +1,31 @@
+div
+  div
+    div
+  div
+    div
+      div
+        "To do"
+        "·"
+        "2"
+      div
+        "Set up hosting"
+      div
+        "Test on real phones"
+    div
+      div
+        "Doing"
+        "·"
+        "0"
+    div
+      div
+        "Done"
+        "·"
+        "0"
+  div
+    span
+      "3 sprints planned"
+    button
+      "Run sprint"
+      "1"
+      "of"
+      "3"

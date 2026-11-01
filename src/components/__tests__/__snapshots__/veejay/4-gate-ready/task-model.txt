@@ -1,0 +1,19 @@
+div
+  div
+    button
+      b
+        "₹500 per clinic per month"
+    button
+      b
+        "₹2,000 per clinic per month"
+    button
+      b
+        "Free, paid for by ads"
+  p
+    b
+      "Market:"
+    "Market: about 9,000 private dental clinics in Karnataka"
+    ". Affects: Cost estimate, BRD, PRD, GTM."
+  div
+    button[disabled]
+      "Confirm business model"

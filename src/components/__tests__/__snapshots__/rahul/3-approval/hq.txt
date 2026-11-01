@@ -1,0 +1,632 @@
+div
+  div
+    div
+      div
+        div
+          button[aria-expanded=false]
+            "Layers ▾"
+        button
+          "All"
+        button
+          "Running · 2"
+        button
+          "Needs you · 1"
+        button
+          "Re-check · 0"
+      div
+        div
+          div
+            svg[aria-hidden=true]
+            div
+              div
+              div[role=button][aria-label=Zoom into Business Discovery Centre]
+                div
+                  div
+                    div
+                      "Discovery"
+                    div
+                      "Doing 0 · Waiting 0 · Done 0"
+            div
+              div
+              div[role=button][aria-label=Zoom into Review & Quality Centre]
+                div
+                  div
+                    div
+                      "Review & Quality"
+                    div
+                      "Doing 0 · Waiting 0 · Done 0"
+            div
+              div
+              div[role=button][aria-label=Zoom into Governance & Compliance Centre]
+                div
+                  div
+                    div
+                      "Governance"
+                    div
+                      "Doing 0 · Waiting 1 · Done 0"
+                  span
+                    "1 waiting"
+            div
+              div
+              div[role=button][aria-label=Zoom into Strategy & Finance Centre]
+                div
+                  div
+                    div
+                      "Strategy & Finance"
+                    div
+                      "Doing 0 · Waiting 0 · Done 0"
+            div
+              div
+              div[role=button][aria-label=Zoom into Research & Intelligence Centre]
+                div
+                  div
+                    div
+                      "Research"
+                    div
+                      "Doing 0 · Waiting 0 · Done 0"
+            div
+              div
+              div[role=button][aria-label=Zoom into Founder Command Office]
+                div
+                  div
+                    div
+                      "Founder Office"
+                    div
+                      "Your desk"
+                  span
+                    "1 need you"
+                span
+                span
+                span
+            div
+              div
+              div[role=button][aria-label=Zoom into Product & Technology Centre]
+                div
+                  div
+                    div
+                      "Product & Tech"
+                    div
+                      "Doing 0 · Waiting 1 · Done 0"
+                  span
+                    "1 waiting"
+            div
+              div
+              div[role=button][aria-label=Zoom into Agent Operations Hub]
+                div
+                  div
+                    div
+                      "Agent Hub"
+                    div
+                      "Switched off · 0"
+                span
+            div
+              div
+              div[role=button][aria-label=Zoom into Customer & Growth Centre]
+                div
+                  div
+                    div
+                      "Customer & Growth"
+                    div
+                      "Doing 0 · Waiting 0 · Done 0"
+            div
+              div
+              div[role=button][aria-label=Zoom into Knowledge & Document Repository]
+                div
+                  div
+                    div
+                      "Repository"
+                    div
+                      "0 approved docs"
+            div
+              div
+              div
+                span
+                  "Command Centre"
+                span
+                  "Atlas · shared memory"
+                span
+                  "18"
+                  "notes ·"
+                  "0"
+                  "docs"
+            button[aria-label=E01 Orchestrator: Running][title=E01 · Orchestrator · Running]
+              span
+                span
+                "Orchestrator"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E02 Context & Memory Engine: Running][title=E02 · Context & Memory Engine · Running]
+              span
+                span
+                "Memory"
+              span
+                span
+                span
+            button[aria-label=E03 Analytics Engine: Idle][title=E03 · Analytics Engine · Idle]
+              span
+                span
+                "Analytics"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E04 Intake Engine: Idle][title=E04 · Intake Engine · Idle]
+              span
+                span
+                "Intake"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E05 Question Engine: Idle][title=E05 · Question Engine · Idle]
+              span
+                span
+                "Question"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E06 Research Engine: Idle][title=E06 · Research Engine · Idle]
+              span
+                span
+                "Research"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E07 Simulation Engine (MiroFish): Idle][title=E07 · Simulation Engine (MiroFish) · Idle]
+              span
+                span
+                "Simulation"
+              span
+                span
+                span
+            button[aria-label=E08 Market Research Engine: Idle][title=E08 · Market Research Engine · Idle]
+              span
+                span
+                "Market"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E09 Competitor Analysis Engine: Idle][title=E09 · Competitor Analysis Engine · Idle]
+              span
+                span
+                "Competitor"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E10 Evidence Engine: Idle][title=E10 · Evidence Engine · Idle]
+              span
+                span
+                "Evidence"
+              span
+                span
+                span
+            button[aria-label=E11 Interview Engine: Idle][title=E11 · Interview Engine · Idle]
+              span
+                span
+                "Interview"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E12 GTM & Outreach Engine: Idle][title=E12 · GTM & Outreach Engine · Idle]
+              span
+                span
+                "GTM"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+            button[aria-label=E13 Validation Engine: Idle][title=E13 · Validation Engine · Idle]
+              span
+                span
+                "Validation"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E14 Documentation Engine: Waiting for you][title=E14 · Documentation Engine · Waiting for you]
+              span
+                span
+                "Docs"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+                span
+            button[aria-label=E15 Business Analysis Engine: Idle][title=E15 · Business Analysis Engine · Idle]
+              span
+                span
+                "Biz analysis"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+            button[aria-label=E16 Product Planning Engine: Idle][title=E16 · Product Planning Engine · Idle]
+              span
+                span
+                "Product"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+            button[aria-label=E17 Design Engine: Idle][title=E17 · Design Engine · Idle]
+              span
+                span
+                "Design"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E18 Architecture Engine: Idle][title=E18 · Architecture Engine · Idle]
+              span
+                span
+                "Architecture"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E19 Delivery Engine: Idle][title=E19 · Delivery Engine · Idle]
+              span
+                span
+                "Delivery"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+                span
+            button[aria-label=E20 Review Engine: Idle][title=E20 · Review Engine · Idle]
+              span
+                span
+                "Review"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+                span
+            button[aria-label=E21 Traceability Engine: Idle][title=E21 · Traceability Engine · Idle]
+              span
+                span
+                "Traceability"
+              span
+                span
+                span
+              span
+                span
+            button[aria-label=E22 Approval Engine: Waiting for you][title=E22 · Approval Engine · Waiting for you]
+              span
+                span
+                "Approval"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+                span
+            button[aria-label=E23 Compliance Engine: Idle][title=E23 · Compliance Engine · Idle]
+              span
+                span
+                "Compliance"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E24 People & Project Engine: Idle][title=E24 · People & Project Engine · Idle]
+              span
+                span
+                "People"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+            button[aria-label=E25 Finance Engine: Idle][title=E25 · Finance Engine · Idle]
+              span
+                span
+                "Finance"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+            button[aria-label=E26 Deck Engine: Idle][title=E26 · Deck Engine · Idle]
+              span
+                span
+                "Deck"
+              span
+                span
+                span
+              span
+                span
+                span
+            button[aria-label=E27 Gate Engine: Idle][title=E27 · Gate Engine · Idle]
+              span
+                span
+                "Gate"
+              span
+                span
+                span
+              span
+                span
+                span
+                span
+                span
+            button[aria-label=E28 Vault Engine: Idle][title=E28 · Vault Engine · Idle]
+              span
+                span
+                "Vault"
+              span
+                span
+                span
+            div[title=Rahul · Founder · owner]
+              div
+                svg[aria-hidden=true]
+                span
+                  "Rahul"
+            div[title=Asha · Strategy]
+              div
+                div
+                  "Needs your OK"
+                svg[aria-hidden=true]
+                span
+                  "Asha"
+            div[title=Atlas · CEO · command centre]
+              div
+                div
+                  "For Rahul."
+                svg[aria-hidden=true]
+            div[title=Neel · Product]
+              div
+                svg[aria-hidden=true]
+            div[title=PM · Product manager]
+              div
+                svg[aria-hidden=true]
+            div[title=Farah · Finance]
+              div
+                svg[aria-hidden=true]
+            div[title=Tej · Technology]
+              div
+                svg[aria-hidden=true]
+            div[title=Maya · Marketing]
+              div
+                svg[aria-hidden=true]
+            div[title=Omar · Operations]
+              div
+                svg[aria-hidden=true]
+            div[title=Ravi · Revenue]
+              div
+                svg[aria-hidden=true]
+            div[title=Quinn · Quality & risk]
+              div
+                div
+                  "Looks right."
+                svg[aria-hidden=true]
+            div[title=BA · Business analyst]
+              div
+                svg[aria-hidden=true]
+            div[title=TPM · Technical PM]
+              div
+                svg[aria-hidden=true]
+            div[title=QA · QA reviewer]
+              div
+                svg[aria-hidden=true]
+            div[title=UX · Designer]
+              div
+                svg[aria-hidden=true]
+          div
+            span
+            span
+              "M"
+              "1"
+            span
+              strong
+                "Idea Brief"
+              "is waiting for your approval."
+          div
+            div
+              button[aria-label=Zoom in]
+                "+"
+              button[aria-label=Zoom out]
+                "−"
+              button[aria-label=Reset view]
+                "⌂"
+            button
+              "Overview"
+  div
+    section[aria-label=Your inbox]
+      div
+        div
+          "Your inbox"
+        div
+          "1 need you"
+      a[href=/block/brief]
+        span
+          "Approve"
+        span
+          span
+            "Idea Brief"
+          span
+            "v1 · checked by CQRO"
+    section[aria-label=Work queue]
+      div
+        div
+          "Work queue"
+        div
+          button
+            "This stage"
+          button
+            "Whole journey"
+      div
+        button
+          "All"
+          "4"
+        button
+          "Running"
+          "0"
+        button
+          "Needs you"
+          "1"
+        button
+          "Done"
+          "3"
+      a[href=/block/profile]
+        div
+          span[title=Rahul · Founder · owner]
+            "R"
+          div
+            div
+              "Founder profile"
+            div
+              "Intake"
+              "·"
+              "Discovery"
+          span
+            "Approved"
+        div
+          div
+      a[href=/block/goal]
+        div
+          span[title=Rahul · Founder · owner]
+            "R"
+          div
+            div
+              "Goal & idea context"
+            div
+              "Intake"
+              "·"
+              "Discovery"
+          span
+            "Approved"
+        div
+          div
+      a[href=/block/clarify]
+        div
+          span[title=Rahul · Founder · owner]
+            "R"
+          div
+            div
+              "Clarification"
+            div
+              "Question"
+              "·"
+              "Discovery"
+          span
+            "Approved"
+        div
+          div
+      a[href=/block/brief]
+        div
+          span[title=Asha · Strategy]
+            "CSO"
+          div
+            div
+              "Idea Brief"
+            div
+              "Docs"
+              "·"
+              "Product & Tech"
+          span
+            "Needs you"
+        div
+          div
+    section[aria-label=Activity]
+      div
+        div
+          "Activity"
+        span
+          span
+          "Live · simulated"
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          strong
+            "Idea Brief"
+          "is waiting for your approval."
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          "Asha started"
+          strong
+            "Idea Brief"
+          "at the Documentation Engine."
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          "You handed"
+          strong
+            "Brief"
+          "to Atlas."
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          "You changed Atlas's approval limit to level 0."
+      div
+        span
+        span
+          "M"
+          "1"
+        span
+          "You completed"
+          strong
+            "Clarification"
+          "."

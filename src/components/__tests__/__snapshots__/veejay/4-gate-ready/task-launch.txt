@@ -1,0 +1,17 @@
+div
+  div
+    button
+      b
+        "Dental association WhatsApp groups"
+    button
+      b
+        "Clinic visits with a live demo"
+    button
+      b
+        "Google search ads"
+    button
+      b
+        "Launch party and press"
+  div
+    button[disabled]
+      "Launch: first 30 days"

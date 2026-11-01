@@ -1,0 +1,53 @@
+div
+  section
+    div
+      div
+        "Your idea"
+      h1
+        "Atlas has your idea"
+    figure
+      figcaption
+        "What you told Atlas"
+      blockquote
+        "A booking app for physiotherapy clinics"
+    div
+      button
+        "Edit your idea"
+      button
+        "Back"
+  section
+    h2
+      "What happens next"
+    ol
+      li
+        span[aria-hidden=true]
+          "1"
+        span
+          span
+            "Atlas summarises your idea"
+          span
+            "In your own words, so you can correct anything it got wrong."
+      li
+        span[aria-hidden=true]
+          "2"
+        span
+          span
+            "Atlas asks what it needs to know"
+          span
+            "A few clarifying questions, one at a time. Nothing is assumed for you."
+      li
+        span[aria-hidden=true]
+          "3"
+        span
+          span
+            "Your workspace is created"
+          span
+            "Your company, your documents and your AI team, ready to work."
+    p[role=status]
+      "These steps are not switched on yet. Atlas's idea understanding is not connected in this build, so nothing has been summarised or assumed from your text."
+      "Your idea is kept in this browser tab only."
+    p
+      "Want to see how a company runs on Startzy in the meantime?"
+      button
+        "Explore a demo company"
+      "."

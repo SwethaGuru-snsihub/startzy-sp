@@ -1,0 +1,95 @@
+div
+  section
+    div
+      a[href=/stage/0]
+        "←"
+        "Brief"
+      span
+        "·"
+      span
+        "Documentation Engine"
+        "·"
+        "Product & Technology Centre"
+    div
+      div
+        h1
+          "Idea Brief"
+        div
+          "SP1 Idea Definition"
+          "· v"
+          "1"
+      div
+        span
+          "Solution Planning"
+        span
+          "Needs you"
+    article
+      p
+        strong
+          "Idea:"
+        "TutorBooks: Fee tracking and reminders for home tutors"
+      p
+        strong
+          "Goal:"
+        "Build a profitable small business"
+      p
+        strong
+          "Who has the problem:"
+        "Tutors"
+      p
+        strong
+          "Today they:"
+        "a notebook"
+      p
+        strong
+          "They would switch for:"
+        "getting paid on time"
+      p
+        strong
+          "Problem:"
+        "Home tutors chase parents for fees over WhatsApp and lose track of who has paid. Many lose a month of fees a year."
+    div
+      div
+        button
+          "Send back"
+        button
+          "Approve"
+    div
+      button[aria-expanded=false]
+        "Why this"
+        "document"
+        "?"
+  section[aria-label=Review trail]
+    div
+      "Review trail"
+    div
+      span
+        "Maker:"
+        "Asha"
+      span
+        "· Checker:"
+        "Quinn"
+    div
+      span[title=Asha · Strategy]
+        "CSO"
+      div
+        b
+          "Asha"
+        "·"
+        "Drafting at the Docs engine."
+    div
+      span[title=Quinn · Quality & risk]
+        "CQRO"
+      div
+        b
+          "Quinn"
+        "·"
+        "Checked. It rests on approved blocks and the facts match."
+    div
+      span[title=Atlas · CEO · command centre]
+        "CEO"
+      div
+        b
+          "Atlas"
+        "·"
+        "Sending to Meera for approval."

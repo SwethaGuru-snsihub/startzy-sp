@@ -1,0 +1,43 @@
+div
+  section
+    div
+      div
+        "Inbox"
+      h1
+        "1 need you"
+      p
+        "Atlas sends you only what is over its approval limit, your own tasks and gate inspections."
+    div
+      div
+        "Document approvals"
+        "·"
+        "1"
+      a[href=/block/brief]
+        span
+          span
+            "Idea Brief"
+          span
+            "v1 · checked by CQRO"
+        span
+          "Approve"
+  section[aria-label=Recently approved]
+    div
+      "Recently approved"
+    a[href=/block/profile]
+      span
+        "Founder profile"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/goal]
+      span
+        "Goal & idea context"
+      span
+        "by"
+        "Veejay"
+    a[href=/block/clarify]
+      span
+        "Clarification"
+      span
+        "by"
+        "Veejay"

@@ -1,0 +1,63 @@
+div
+  section
+    div
+      div
+        div
+          "Strategy & Finance ·"
+          "Problem"
+        h1
+          "Gate 1 · Is the problem worth solving?"
+      div
+        span[title=Atlas · CEO · command centre]
+          "CEO"
+        span[title=Asha · Strategy]
+          "CSO"
+        span[title=Quinn · Quality & risk]
+          "CQRO"
+        span[title=Meera · Founder · owner]
+          "M"
+    ul
+      li
+        span[aria-hidden=true]
+          "✓"
+        span
+          "Desk research approved"
+        span
+          "Passed"
+      li
+        span[aria-hidden=true]
+          "✓"
+        span
+          "Talked to at least 4 people"
+        span
+          "4 interviews"
+        span
+          "Passed"
+      li
+        span[aria-hidden=true]
+          "✓"
+        span
+          "At least 2 strong problem signals"
+        span
+          "3 strong"
+        span
+          "Passed"
+      li
+        span[aria-hidden=true]
+          "✓"
+        span
+          "Problem statement approved"
+        span
+          "Passed"
+      li
+        span[aria-hidden=true]
+          "✓"
+        span
+          "Evidence score 45 or more"
+        span
+          "Score 53"
+        span
+          "Passed"
+    div
+      button
+        "Pass the gate"

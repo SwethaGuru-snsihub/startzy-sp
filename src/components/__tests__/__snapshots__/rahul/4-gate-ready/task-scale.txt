@@ -1,0 +1,27 @@
+div
+  div
+    div
+      div
+        "partners"
+      div
+        "0"
+    div
+      div
+        "Savings per month"
+      div
+        "₹0"
+    div
+      div
+        "Retention"
+      div
+        "64"
+        "%"
+  p
+    b
+      "Funding:"
+    "Take pilot results to the steering committee."
+  div
+    button
+      "Keep going as is"
+    button
+      "Roll out to all 14 warehouses"

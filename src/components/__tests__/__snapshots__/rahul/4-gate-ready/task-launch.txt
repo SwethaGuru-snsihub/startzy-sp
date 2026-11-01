@@ -1,0 +1,17 @@
+div
+  div
+    button
+      b
+        "Train supervisors on site"
+    button
+      b
+        "Onboarding calls with partners"
+    button
+      b
+        "Company-wide email"
+    button
+      b
+        "Posters at the gate"
+  div
+    button[disabled]
+      "Launch: first 30 days"

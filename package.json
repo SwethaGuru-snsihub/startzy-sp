@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "check:freeze": "node scripts/check-legacy-freeze.mjs",
+    "verify": "npm run check:freeze && npm run typecheck && npm run lint && npm run test"
   },
   "dependencies": {
     "framer-motion": "^12.34.0",

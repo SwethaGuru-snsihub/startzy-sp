@@ -1,0 +1,18 @@
+div
+  div
+    div
+      span
+        "QE"
+      "Who feels the no-show pain most?"
+    div
+      button
+        "Receptionists"
+      button
+        "Clinic owners"
+      button
+        "Patients"
+  div
+    span
+      "0 of 3 answered"
+    button[disabled]
+      "Save answers"

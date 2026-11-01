@@ -1,0 +1,92 @@
+div
+  section
+    div
+      a[href=/stage/1]
+        "←"
+        "Problem"
+      span
+        "·"
+      span
+        "Documentation Engine"
+        "·"
+        "Product & Technology Centre"
+    div
+      div
+        h1
+          "Problem statement"
+        div
+          "SP2 Problem Discovery"
+          "· v"
+          "1"
+      div
+        span
+          "Solution Planning"
+        span
+          "Approved"
+    article
+      p
+        strong
+          "Problem:"
+        "About 1 in 4 dental patients miss their appointment. Each empty chair costs the clinic money and staff time."
+      p
+        strong
+          "Evidence:"
+        "4 interviews, 3 strong signals"
+      p
+        strong
+          "Best quote:"
+        "\"Three no-shows a day. I just absorb the cost.\""
+      p
+        strong
+          "MiroFish simulation:"
+        "200 simulated patients; WhatsApp reminders beat SMS about 3 to 1"
+    div
+      button[aria-expanded=false]
+        "Why this"
+        "document"
+        "?"
+  section[aria-label=Review trail]
+    div
+      "Review trail"
+    div
+      span
+        "Maker:"
+        "Asha"
+      span
+        "· Checker:"
+        "Quinn"
+      span
+        "· Approved by"
+        "Veejay"
+    div
+      span[title=Asha · Strategy]
+        "CSO"
+      div
+        b
+          "Asha"
+        "·"
+        "Drafting at the Docs engine."
+    div
+      span[title=Quinn · Quality & risk]
+        "CQRO"
+      div
+        b
+          "Quinn"
+        "·"
+        "Checked. It rests on approved blocks and the facts match."
+    div
+      span[title=Atlas · CEO · command centre]
+        "CEO"
+      div
+        b
+          "Atlas"
+        "·"
+        "Sending to Veejay for approval."
+    div
+      span[title=Veejay · Founder · owner]
+        "V"
+      div
+        b
+          "Veejay"
+        "·"
+        "Approved."

@@ -1,0 +1,37 @@
+div
+  div
+    button
+      b
+        "Anita"
+      span
+        "Send offer: 3 months up front"
+    button
+      b
+        "Joseph"
+      span
+        "Send offer: 3 months up front"
+    button
+      b
+        "Rekha"
+      span
+        "Send offer: 3 months up front"
+    button
+      b
+        "Farhan"
+      span
+        "Send offer: 3 months up front"
+    button
+      b
+        "Gauri"
+      span
+        "Send offer: 3 months up front"
+    button
+      b
+        "Vikram"
+      span
+        "Send offer: 3 months up front"
+  div
+    span
+      "0 paid · send at least 3"
+    button[disabled]
+      "Use pre-sales to fund the build"

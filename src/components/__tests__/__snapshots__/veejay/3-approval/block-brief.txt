@@ -1,0 +1,95 @@
+div
+  section
+    div
+      a[href=/stage/0]
+        "←"
+        "Brief"
+      span
+        "·"
+      span
+        "Documentation Engine"
+        "·"
+        "Product & Technology Centre"
+    div
+      div
+        h1
+          "Idea Brief"
+        div
+          "SP1 Idea Definition"
+          "· v"
+          "1"
+      div
+        span
+          "Solution Planning"
+        span
+          "Needs you"
+    article
+      p
+        strong
+          "Idea:"
+        "ClinicFlow: Appointment reminders for dental clinics"
+      p
+        strong
+          "Goal:"
+        "Build a venture-scale startup"
+      p
+        strong
+          "Who has the problem:"
+        "Receptionists"
+      p
+        strong
+          "Today they:"
+        "phone calls the night before"
+      p
+        strong
+          "They would switch for:"
+        "fewer empty chairs"
+      p
+        strong
+          "Problem:"
+        "About 1 in 4 dental patients miss their appointment. Each empty chair costs the clinic money and staff time."
+    div
+      div
+        button
+          "Send back"
+        button
+          "Approve"
+    div
+      button[aria-expanded=false]
+        "Why this"
+        "document"
+        "?"
+  section[aria-label=Review trail]
+    div
+      "Review trail"
+    div
+      span
+        "Maker:"
+        "Asha"
+      span
+        "· Checker:"
+        "Quinn"
+    div
+      span[title=Asha · Strategy]
+        "CSO"
+      div
+        b
+          "Asha"
+        "·"
+        "Drafting at the Docs engine."
+    div
+      span[title=Quinn · Quality & risk]
+        "CQRO"
+      div
+        b
+          "Quinn"
+        "·"
+        "Checked. It rests on approved blocks and the facts match."
+    div
+      span[title=Atlas · CEO · command centre]
+        "CEO"
+      div
+        b
+          "Atlas"
+        "·"
+        "Sending to Veejay for approval."

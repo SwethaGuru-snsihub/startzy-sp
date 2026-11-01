@@ -1,0 +1,19 @@
+div
+  div
+    button
+      b
+        "Savings case: shorter waits, more trips"
+    button
+      b
+        "Charge partners per booking"
+    button
+      b
+        "Sell it to other companies first"
+  p
+    b
+      "Market:"
+    "Scope: 14 company warehouses, about 2,100 trucks a day"
+    ". Affects: Cost estimate, BRD, PRD, GTM."
+  div
+    button[disabled]
+      "Confirm business model"

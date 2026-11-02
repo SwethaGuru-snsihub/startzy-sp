@@ -31,7 +31,7 @@
 031 2026-01-05T09:31 SJ acknowledged        support by FOUNDER (human) N/A acknowledged
 032 2026-01-05T09:32 SJ started             profile by CEO (simulated)
 033 2026-01-05T09:33 SJ submitted           profile by CEO (simulated)
-034 2026-01-05T09:35 SJ approved            profile v1 by CEO (simulated)
+034 2026-01-05T09:35 SJ approved            profile v1 by FOUNDER (human)
 035 2026-01-05T09:36 SP started             goal by FOUNDER (human)
 036 2026-01-05T09:37 SP submitted           goal by FOUNDER (human)
 037 2026-01-05T09:39 SP approved            goal v1 by FOUNDER (human)
@@ -41,82 +41,82 @@
 041 2026-01-05T09:44 SP started             brief by CSO (simulated)
 042 2026-01-05T09:45 SP submitted           brief by CSO (simulated)
 043 2026-01-05T09:46 SP reviewed            brief by CQRO (simulated) passed
-044 2026-01-05T09:48 SP approved            brief v1 by CEO (simulated)
+044 2026-01-05T09:48 SP approved            brief v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 045 2026-01-05T09:49 SP started             research by CSO (simulated)
 046 2026-01-05T09:50 SP submitted           research by CSO (simulated)
 047 2026-01-05T09:51 SP reviewed            research by BA (simulated) passed
-048 2026-01-05T09:53 SP approved            research v1 by CEO (simulated)
+048 2026-01-05T09:53 SP approved            research v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 049 2026-01-05T09:54 SP declined            interviews by FOUNDER (human)
 050 2026-01-05T09:55 SP started             problem by CSO (simulated)
 051 2026-01-05T09:56 SP submitted           problem by CSO (simulated)
 052 2026-01-05T09:57 SP reviewed            problem by CQRO (simulated) passed
-053 2026-01-05T09:59 SP approved            problem v1 by CEO (simulated)
+053 2026-01-05T09:59 SP approved            problem v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 054 2026-01-05T10:00 SP declined            market by FOUNDER (human)
 055 2026-01-05T10:01 SP started             personas by CPO (simulated)
 056 2026-01-05T10:02 SP submitted           personas by CPO (simulated)
 057 2026-01-05T10:03 SP reviewed            personas by CMO (simulated) passed
-058 2026-01-05T10:05 SP approved            personas v1 by CEO (simulated)
+058 2026-01-05T10:05 SP approved            personas v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 059 2026-01-05T10:06 SP declined            competitors by FOUNDER (human)
 060 2026-01-05T10:08 SP decided             gate1 v1 by FOUNDER (human) pass
 061 2026-01-05T10:09 SP started             solution by CPO (simulated)
 062 2026-01-05T10:10 SP submitted           solution by CPO (simulated)
 063 2026-01-05T10:11 SP reviewed            solution by CQRO (simulated) passed
-064 2026-01-05T10:13 SP approved            solution v1 by CEO (simulated)
+064 2026-01-05T10:13 SP approved            solution v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 065 2026-01-05T10:14 SJ declined            validation by FOUNDER (human)
 066 2026-01-05T10:16 SJ decided             sj8 v1 by FOUNDER (human) go
 067 2026-01-05T10:17 SP started             estimate by CFO (simulated)
-068 2026-01-05T10:18 SP submitted           estimate by CFO (simulated)
+068 2026-01-05T10:18 SP submitted           estimate by CFO (simulated) spend ₹5 lakh
 069 2026-01-05T10:19 SP reviewed            estimate by CTO (simulated) passed
-070 2026-01-05T10:21 SP approved            estimate v1 by CEO (simulated)
+070 2026-01-05T10:21 SP approved            estimate v1 by CEO (simulated) on the founder's behalf: ₹5 lakh, within the ₹10 lakh limit
 071 2026-01-05T10:23 SP decided             gate2 v1 by FOUNDER (human) pass
 072 2026-01-05T10:24 SP started             mvp by CPO (simulated)
 073 2026-01-05T10:25 SP submitted           mvp by CPO (simulated)
-074 2026-01-05T10:27 SP approved            mvp v1 by CEO (simulated)
+074 2026-01-05T10:27 SP approved            mvp v1 by FOUNDER (human)
 075 2026-01-05T10:28 SP started             reqs by CPO (simulated)
 076 2026-01-05T10:29 SP submitted           reqs by CPO (simulated)
 077 2026-01-05T10:30 SP reviewed            reqs by CQRO (simulated) passed
-078 2026-01-05T10:32 SP approved            reqs v1 by CEO (simulated)
+078 2026-01-05T10:32 SP approved            reqs v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 079 2026-01-05T10:33 SP started             prd by CPO (simulated)
 080 2026-01-05T10:34 SP submitted           prd by CPO (simulated)
 081 2026-01-05T10:35 SP reviewed            prd by CQRO (simulated) passed
-082 2026-01-05T10:37 SP approved            prd v1 by CEO (simulated)
+082 2026-01-05T10:37 SP approved            prd v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 083 2026-01-05T10:38 SP started             srs by CTO (simulated)
 084 2026-01-05T10:39 SP submitted           srs by CTO (simulated)
 085 2026-01-05T10:40 SP reviewed            srs by CQRO (simulated) passed
-086 2026-01-05T10:42 SP approved            srs v1 by CEO (simulated)
+086 2026-01-05T10:42 SP approved            srs v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 087 2026-01-05T10:43 SP started             sad by CTO (simulated)
 088 2026-01-05T10:44 SP submitted           sad by CTO (simulated)
 089 2026-01-05T10:45 SP reviewed            sad by CQRO (simulated) passed
-090 2026-01-05T10:47 SP approved            sad v1 by CEO (simulated)
+090 2026-01-05T10:47 SP approved            sad v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 091 2026-01-05T10:48 SP started             wires by CXO (simulated)
 092 2026-01-05T10:49 SP submitted           wires by CXO (simulated)
 093 2026-01-05T10:50 SP reviewed            wires by CQRO (simulated) passed
-094 2026-01-05T10:52 SP approved            wires v1 by CEO (simulated)
+094 2026-01-05T10:52 SP approved            wires v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 095 2026-01-05T10:53 SP started             tech by CTO (simulated)
 096 2026-01-05T10:54 SP submitted           tech by CTO (simulated)
 097 2026-01-05T10:55 SP reviewed            tech by CQRO (simulated) passed
-098 2026-01-05T10:57 SP approved            tech v1 by CEO (simulated)
+098 2026-01-05T10:57 SP approved            tech v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 099 2026-01-05T10:58 SP started             designreview by CQRO (simulated)
 100 2026-01-05T10:59 SP submitted           designreview by CQRO (simulated)
 101 2026-01-05T11:00 SP reviewed            designreview by CPO (simulated) passed
-102 2026-01-05T11:02 SP approved            designreview v1 by CEO (simulated)
+102 2026-01-05T11:02 SP approved            designreview v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 103 2026-01-05T11:04 SP decided             gate3 v1 by FOUNDER (human) pass
 104 2026-01-05T11:05 SP started             stories by CPO (simulated)
 105 2026-01-05T11:06 SP submitted           stories by CPO (simulated)
 106 2026-01-05T11:07 SP reviewed            stories by CQRO (simulated) passed
-107 2026-01-05T11:09 SP approved            stories v1 by CEO (simulated)
+107 2026-01-05T11:09 SP approved            stories v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 108 2026-01-05T11:10 SP started             roadmap by CTO (simulated)
 109 2026-01-05T11:11 SP submitted           roadmap by CTO (simulated)
 110 2026-01-05T11:12 SP reviewed            roadmap by CFO (simulated) passed
-111 2026-01-05T11:14 SP approved            roadmap v1 by CEO (simulated)
+111 2026-01-05T11:14 SP approved            roadmap v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 112 2026-01-05T11:15 SJ started             team by COO (simulated)
 113 2026-01-05T11:16 SJ submitted           team by COO (simulated)
 114 2026-01-05T11:17 SJ reviewed            team by CTO (simulated) passed
-115 2026-01-05T11:19 SJ approved            team v1 by CEO (simulated)
+115 2026-01-05T11:19 SJ approved            team v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 116 2026-01-05T11:20 SP started             testplan by CTO (simulated)
 117 2026-01-05T11:21 SP submitted           testplan by CTO (simulated)
 118 2026-01-05T11:22 SP reviewed            testplan by CQRO (simulated) passed
-119 2026-01-05T11:24 SP approved            testplan v1 by CEO (simulated)
+119 2026-01-05T11:24 SP approved            testplan v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 120 2026-01-05T11:25 SP started             handoff by CTO (simulated)
 121 2026-01-05T11:26 SP submitted           handoff by CTO (simulated)
 122 2026-01-05T11:27 SP reviewed            handoff by CQRO (simulated) passed
@@ -126,11 +126,11 @@
 126 2026-01-05T11:33 SJ phase14-unlocked    sprints package v1
 127 2026-01-05T11:34 SJ started             sprints by CTO (simulated)
 128 2026-01-05T11:35 SJ submitted           sprints by CTO (simulated)
-129 2026-01-05T11:37 SJ approved            sprints v1 by CEO (simulated)
+129 2026-01-05T11:37 SJ approved            sprints v1 by FOUNDER (human)
 130 2026-01-05T11:38 SJ started             qa by CTO (simulated)
 131 2026-01-05T11:39 SJ submitted           qa by CTO (simulated)
 132 2026-01-05T11:40 SJ reviewed            qa by CQRO (simulated) passed
-133 2026-01-05T11:42 SJ approved            qa v1 by CEO (simulated)
+133 2026-01-05T11:42 SJ approved            qa v1 by CEO (simulated) on the founder's behalf: document, within delegation level 1
 134 2026-01-05T11:43 SJ declined            beta by FOUNDER (human)
 135 2026-01-05T11:45 SJ decided             sj16gate v1 by FOUNDER (human) pass
 136 2026-01-05T11:47 SJ decided             golive v1 by FOUNDER (human) pass
@@ -139,4 +139,4 @@
 139 2026-01-05T11:50 SJ started             learneval by CEO (simulated)
 140 2026-01-05T11:51 SJ submitted           learneval by CEO (simulated)
 141 2026-01-05T11:52 SJ reviewed            learneval by CQRO (simulated) passed
-142 2026-01-05T11:55 SJ approved            learneval v1 by CEO (simulated)
+142 2026-01-05T11:55 SJ approved            learneval v1 by FOUNDER (human)

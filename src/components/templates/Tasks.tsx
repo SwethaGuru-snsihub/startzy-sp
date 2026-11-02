@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { S, P, B, def, mutate, completeTask, strong, fit, priceLabel, priceVal, coreCount, growth, lakh, inr, ev, crackFrom, isOk, spendMonths, log, finish, toast, type Block } from '@/engine/engine';
 import { GOALS } from '@/engine/personas';
 import { Avatar } from '@/components/ui/kit';
+import { useHref } from '@/components/shell/ProjectBase';
 import { useRouter } from 'next/navigation';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -183,9 +184,9 @@ function Launch({ done }: TP) {
   </>);
 }
 function Scale() {
-  const router = useRouter(); const g = growth(); const funded = P.path === 'funded';
+  const router = useRouter(); const href = useHref(); const g = growth(); const funded = P.path === 'funded';
   const note = funded ? (S.deferred ? `You waited. With ${g.end} ${P.unit} and ${g.ret}% retention, investors offer better terms than at the business case.` : `You raised ${S.raised || 'pre-seed'} earlier. Your updated deck now has real traction.`) : P.scaleNote;
-  const end = (m: string) => { log(m, 'founder'); finish(); router.push('/'); };
+  const end = (m: string) => { log(m, 'founder'); finish(); router.push(href('/')); };
   return (<>
     <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
       <div className="p-3 rounded-xl" style={{ background: 'var(--subtle)' }}><div className="t-caps">{P.unit}</div><div className="t-metric" style={{ fontSize: 22 }}>{g.end}</div></div>
@@ -202,8 +203,8 @@ const MAP: Record<string, (p: TP) => React.ReactNode> = {
   presell: Presell, mvp: Mvp, company: Company, hiring: Hiring, sprints: Sprints, beta: Beta, pricetest: PriceTest, launch: Launch, scale: () => <Scale />,
 };
 export default function TaskBody({ id }: { id: string }) {
-  const b = def(id); const router = useRouter();
-  const done = () => { completeTask(id); router.push(b.chain ? `/block/${id}` : '/hq'); };
+  const b = def(id); const router = useRouter(); const href = useHref();
+  const done = () => { completeTask(id); router.push(href(b.chain ? `/block/${id}` : '/hq')); };
   const C = MAP[b.task!];
   return <div className="flex flex-col gap-3">{C({ b, done })}</div>;
 }

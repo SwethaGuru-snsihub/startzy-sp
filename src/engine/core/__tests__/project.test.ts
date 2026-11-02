@@ -138,7 +138,7 @@ describe('context changes re-evaluate only what reads the changed facts', () => 
     play(core, p, { takeUp: ['preseed'], stopAt: x => x.workflows.SJ.tasks.legal.state === 'approved' && core.readyTasks(x).includes('preseed') });
     const approvedBefore = TASKS.filter(t => core.state(p, t.id) === 'approved').map(t => t.id);
     core.startTask(p, 'preseed', 'simulated'); core.submitTask(p, 'preseed');
-    core.approveTask(p, 'preseed', { by: 'CEO', facts: { raise: 'committed' } });
+    core.approveTask(p, 'preseed', { by: 'FOUNDER', facts: { raise: 'committed' } });
     expect(p.context.raise).toMatchObject({ value: 'committed', source: 'artifact' });
     expect(core.state(p, 'legal')).toBe('needs-revalidation');
     expect(approvedBefore.filter(id => id !== 'legal' && core.state(p, id) !== 'approved')).toEqual([]);

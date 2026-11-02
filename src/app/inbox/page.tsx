@@ -2,11 +2,12 @@
 import Link from 'next/link';
 import { inboxItems, reinspectAll, active, B, isOk, nm } from '@/engine/engine';
 import { useEngine } from '@/engine/useEngine';
+import { useHref } from '@/components/shell/ProjectBase';
 
 /* G07 · Inbox */
 const GROUPS: [string, string[]][] = [['Inspections', ['gate']], ['Spend approvals', ['money']], ['Document approvals', ['doc']], ['Your tasks', ['task']], ['Re-checks', ['crack']]];
 export default function Inbox() {
-  useEngine();
+  useEngine(); const href = useHref();
   const items = inboxItems();
   const recent = active().filter(b => isOk(b.id) && B[b.id].doneAt).sort((a, b) => B[b.id].doneAt! - B[a.id].doneAt!).slice(0, 6);
   return (
@@ -21,7 +22,7 @@ export default function Inbox() {
               <div className="t-caps">{title} · {g.length}</div>
               {g.map((x, i) => x.ty === 'crack'
                 ? <button key={i} onClick={() => reinspectAll()} className="flex items-center justify-between gap-3 p-3 rounded-xl text-left row-hover" style={{ border: '1px solid var(--line)' }}><span><span className="t-strong block">{x.n}</span><span className="t-small">Traceability re-checks each one; blocks that mention the price get updated.</span></span><span className="btn btn-sm btn-primary">Re-check all</span></button>
-                : <Link key={i} href={x.href} className="flex items-center justify-between gap-3 p-3 rounded-xl row-hover" style={{ border: '1px solid var(--line)' }}><span><span className="t-strong block">{x.n}</span>{x.s && <span className="t-small">{x.s}</span>}</span><span className="btn btn-sm">{x.t}</span></Link>)}
+                : <Link key={i} href={href(x.href)} className="flex items-center justify-between gap-3 p-3 rounded-xl row-hover" style={{ border: '1px solid var(--line)' }}><span><span className="t-strong block">{x.n}</span>{x.s && <span className="t-small">{x.s}</span>}</span><span className="btn btn-sm">{x.t}</span></Link>)}
             </div>
           );
         })}
@@ -29,7 +30,7 @@ export default function Inbox() {
       <section className="panel p-4 flex flex-col gap-2" aria-label="Recently approved">
         <div className="t-h3">Recently approved</div>
         {!recent.length && <p className="t-small">Nothing yet.</p>}
-        {recent.map(b => <Link key={b.id} href={`/block/${b.id}`} className="flex justify-between gap-2 p-2 rounded-lg row-hover"><span className="t-strong">{b.name}</span><span className="t-small">by {nm(B[b.id].by!)}</span></Link>)}
+        {recent.map(b => <Link key={b.id} href={href(`/block/${b.id}`)} className="flex justify-between gap-2 p-2 rounded-lg row-hover"><span className="t-strong">{b.name}</span><span className="t-small">by {nm(B[b.id].by!)}</span></Link>)}
       </section>
     </div>
   );

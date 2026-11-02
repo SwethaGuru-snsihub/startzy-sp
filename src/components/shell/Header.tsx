@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { S, P, ev, active, isOk, inboxItems, setDelegation, getSpeed, setSpeed, def, lakh, B } from '@/engine/engine';
 import { STAGES } from '@/engine/model';
 import { Avatar } from '@/components/ui/kit';
+import { useHref, useProjectBase } from './ProjectBase';
 
 const DELEG = [
   { t: 'Nothing', d: 'Every document and spend comes to you.' },
@@ -26,7 +27,7 @@ function usePopover() {
 }
 
 export default function Header() {
-  const router = useRouter();
+  const router = useRouter(); const href = useHref(); const base = useProjectBase();
   const { open: stageOpen, setOpen: setStageOpen, ref: stageRef } = usePopover(); const { open: dgOpen, setOpen: setDgOpen, ref: dgRef } = usePopover();
   const req = active().filter(b => !b.opt); const done = req.filter(b => isOk(b.id)).length;
   const inbox = inboxItems().length;
@@ -39,11 +40,11 @@ export default function Header() {
   return (
     <header className="px-6 pt-3 pb-3 flex flex-col gap-2.5">
       <div className="flex items-center gap-4 flex-wrap">
-        <Link href="/" className="t-h2">Founder HQ</Link>
+        <Link href={href('/')} className="t-h2">Founder HQ</Link>
         <span className="pill pl-1 pr-2.5 py-1 t-small" style={{ background: 'var(--panel)', border: '1px solid var(--line)', color: 'var(--ink)' }}><Avatar id="YOU" size={22} />{P.name} · {S.idea}</span>
         <div className="flex-1" />
         <span className="pill t-micro px-2.5 py-1.5" style={{ background: 'var(--go-soft)', color: 'var(--go)', fontSize: 11 }}><span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--go)' }} />Live</span>
-        <button className="btn btn-sm" onClick={() => { location.reload(); }}>Switch founder</button>
+        <button className="btn btn-sm" onClick={() => { if (base) router.push('/dashboard'); else location.reload(); }}>{base ? 'All startups' : 'Switch founder'}</button>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
@@ -63,7 +64,7 @@ export default function Header() {
                 const doneS = !!S.passed[i]; const now = i === cur; const locked = i > S.floor;
                 const gateTag = st.gate === 'you' ? (doneS ? '◆ Gate passed' : now ? `◆ Gate · ${active().filter(b => b.f === i && !b.opt && !isOk(b.id)).length} left` : '◆ Gate') : null;
                 return (
-                  <button key={st.name} role="menuitem" disabled={locked} onClick={() => { setStageOpen(false); router.push(`/stage/${i}`); }}
+                  <button key={st.name} role="menuitem" disabled={locked} onClick={() => { setStageOpen(false); router.push(href(`/stage/${i}`)); }}
                     className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left row-hover disabled:cursor-default" style={{ background: now ? 'var(--accent-soft)' : undefined, color: locked ? 'var(--muted)' : undefined }}>
                     {locked ? <span aria-hidden className="w-2.5 text-[11px]">🔒</span> : <span className="w-2.5 h-2.5 rounded-full" style={{ background: doneS ? 'var(--go)' : 'var(--panel)', border: now ? '3px solid var(--accent)' : undefined }} />}
                     <span className={now ? 't-strong flex-1' : 'flex-1'} style={{ fontSize: now ? 14 : 13 }}>{st.name}</span>
@@ -71,7 +72,7 @@ export default function Header() {
                   </button>
                 );
               })}
-              <div className="flex justify-end pt-1"><button className="btn btn-sm" onClick={() => { setStageOpen(false); router.push(`/stage/${cur}`); }}>Open stage overview</button></div>
+              <div className="flex justify-end pt-1"><button className="btn btn-sm" onClick={() => { setStageOpen(false); router.push(href(`/stage/${cur}`)); }}>Open stage overview</button></div>
             </div>
           )}
         </div>
@@ -96,8 +97,8 @@ export default function Header() {
             </div>
           )}
         </div>
-        <Link href="/inbox" className="pill px-3 py-1.5 t-strong" style={{ background: inbox ? 'var(--accent)' : 'var(--panel)', color: inbox ? 'var(--on-accent)' : 'var(--ink)', border: inbox ? '1px solid var(--accent)' : '1px solid var(--line)' }}>Inbox · {inbox}</Link>
-        <Link href="/hq" className="btn btn-sm">Founder HQ</Link>
+        <Link href={href('/inbox')} className="pill px-3 py-1.5 t-strong" style={{ background: inbox ? 'var(--accent)' : 'var(--panel)', color: inbox ? 'var(--on-accent)' : 'var(--ink)', border: inbox ? '1px solid var(--accent)' : '1px solid var(--line)' }}>Inbox · {inbox}</Link>
+        <Link href={href('/hq')} className="btn btn-sm">Founder HQ</Link>
         {S.ended && <span className="t-small">Journey complete · {def('scale').name} done</span>}
       </div>
     </header>

@@ -5,10 +5,11 @@ import { STAGES } from '@/engine/model';
 import { useEngine } from '@/engine/useEngine';
 import { InboxCard, ActivityFeed } from '@/components/rail/Rail';
 import { StatusChip, ProductTag } from '@/components/ui/kit';
+import { useHref } from '@/components/shell/ProjectBase';
 
 /* G03 · Workspace overview */
 export default function Workspace() {
-  useEngine();
+  useEngine(); const href = useHref();
   const cur = Math.min(S.floor, 10);
   const stageBlocks = active().filter(b => b.f === cur);
   const done = stageBlocks.filter(b => isOk(b.id) || st(b.id) === 'skipped').length;
@@ -25,15 +26,15 @@ export default function Workspace() {
             ))}
           </div>
           <div className="flex gap-2 pt-1">
-            <Link href="/hq" className="btn btn-primary">Enter Founder HQ</Link>
-            <Link href={`/stage/${cur}`} className="btn">Open {STAGES[cur].name}</Link>
+            <Link href={href('/hq')} className="btn btn-primary">Enter Founder HQ</Link>
+            <Link href={href(`/stage/${cur}`)} className="btn">Open {STAGES[cur].name}</Link>
             {S.ended && <span className="pill t-strong px-3" style={{ background: 'var(--go-soft)', color: 'var(--go)' }}>Journey complete</span>}
           </div>
         </section>
         <section className="panel p-5 flex flex-col gap-3" aria-label="Current stage">
           <div className="flex items-center justify-between"><div className="t-h3">{STAGES[cur].name}</div><span className="t-small">{done} of {stageBlocks.length} done</span></div>
           {stageBlocks.map(b => (
-            <Link key={b.id} href={`/block/${b.id}`} className="flex items-center gap-3 p-2.5 rounded-xl row-hover" style={{ border: '1px solid var(--line)' }}>
+            <Link key={b.id} href={href(`/block/${b.id}`)} className="flex items-center gap-3 p-2.5 rounded-xl row-hover" style={{ border: '1px solid var(--line)' }}>
               <span className="flex-1 min-w-0"><span className="t-strong block">{b.name}{b.opt ? ' (optional)' : ''}</span><span className="t-small">{b.mod}</span></span>
               <ProductTag tag={b.tag} />
               <StatusChip s={b.kind === 'task' && st(b.id) === 'ready' ? 'task' : st(b.id)} />
@@ -46,7 +47,7 @@ export default function Workspace() {
             {STAGES.map((s, i) => {
               const locked = i > S.floor; const ok = !!S.passed[i];
               return (
-                <Link key={s.name} href={locked ? '#' : `/stage/${i}`} aria-disabled={locked} className="p-2.5 rounded-xl flex flex-col gap-0.5" style={{ background: i === cur ? 'var(--accent-soft)' : 'var(--subtle)', border: `1px solid ${i === cur ? 'var(--accent)' : 'var(--line)'}`, opacity: locked ? 0.55 : 1, pointerEvents: locked ? 'none' : undefined }}>
+                <Link key={s.name} href={locked ? '#' : href(`/stage/${i}`)} aria-disabled={locked} className="p-2.5 rounded-xl flex flex-col gap-0.5" style={{ background: i === cur ? 'var(--accent-soft)' : 'var(--subtle)', border: `1px solid ${i === cur ? 'var(--accent)' : 'var(--line)'}`, opacity: locked ? 0.55 : 1, pointerEvents: locked ? 'none' : undefined }}>
                   <span className="t-caps">Stage {i + 1}{s.gate === 'you' ? ' · Gate' : ''}</span>
                   <span className="t-strong">{s.name}</span>
                   <span className="t-small" style={{ color: ok ? 'var(--go)' : undefined }}>{ok ? 'Passed' : i === cur ? 'In progress' : locked ? 'Locked' : ''}</span>

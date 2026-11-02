@@ -1,5 +1,6 @@
 // Project state for the new core. Plain data only (no Set, Map, class or function), so a project
 // can be saved and restored as JSON. Approved versions and decisions are frozen when created.
+import type { DelegationLevel } from './approvals';
 import type { Context } from './context';
 import type { DemoPresetId } from './presets';
 import type { DirectionLog } from './direction';
@@ -24,13 +25,16 @@ export type ArtifactVersion = Readonly<{
   approval: Readonly<{ by: Approver; method: ExecutionMethod }>;
   outcome?: 'pass';
 }>;
-export type TaskRuntime = { state: ExecState; method: ExecutionMethod | null; versions: ArtifactVersion[]; reworks: number; atRisk: boolean };
+export type TaskRuntime = {
+  state: ExecState; method: ExecutionMethod | null; versions: ArtifactVersion[]; reworks: number; atRisk: boolean;
+  spendLakh?: number;   // spend tasks: the amount stated on submission, which routes the approval
+};
 export type WorkflowInstance = { id: Workflow; tasks: Record<string, TaskRuntime> };
 
 export type EventType =
   | 'created' | 'fact' | 'acknowledged' | 'started' | 'submitted' | 'reviewed' | 'approved' | 'declined' | 'decided'
   | 'package' | 'accepted' | 'returned' | 'phase14-unlocked' | 'reopened' | 'needs-revalidation' | 'needs-reconfirmation'
-  | 'paused' | 'at-risk' | 'notice' | 'no-longer-applicable' | 'archived' | 'resumed' | 'evidence';
+  | 'paused' | 'at-risk' | 'notice' | 'no-longer-applicable' | 'archived' | 'resumed' | 'evidence' | 'delegation' | 'restored';
 export type ProjectEvent = {
   seq: number; at: string; type: EventType; workflow?: Workflow; task?: string; version?: number;
   by?: Approver | string; method?: ExecutionMethod; detail?: string;
@@ -47,9 +51,12 @@ export type Project = {
   context: Context;
   acknowledged: string[];
   archived: boolean;
+  delegation: DelegationLevel;  // what Atlas may approve on the founder's behalf (approvals.ts)
   workflows: Record<Workflow, WorkflowInstance>;
   direction: DirectionLog;
-  pivotSnapshot: { workflows: Record<Workflow, WorkflowInstance>; packages: PackageVersion[]; approvalsAt: number } | null;
+  // task states under the Go, just before the open pivot, and the event ranges [first, last seq]
+  // the pivot decisions themselves emitted: every other event since then happened under the pivot
+  pivotSnapshot: { workflows: Record<Workflow, WorkflowInstance>; packages: PackageVersion[]; pivotEvents: [number, number][] } | null;
   packages: PackageVersion[];
   phase14: Phase14;
   evidence: EvidenceItem[];

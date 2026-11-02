@@ -6,6 +6,7 @@
 // Deterministic by construction: no timers, and time comes only from the injected clock.
 // Every action records an event that says who acted and how (simulated, AI or human).
 import { evaluate, factsUsedBy, type ApplicabilityMap } from './applicability';
+import { DEFAULT_DELEGATION, DELEGATION_LEVELS, SPEND_LIMIT_LAKH, SPEND_TASKS, routeApproval, type DelegationLevel, type Route } from './approvals';
 import type { Context, Fact, FactKey, FactSource } from './context';
 import { CONTAINS, SJ_PHASES, SP_STEPS, type Workflow } from './definitions';
 import { currentGo, directionState, emptyDirectionLog, recordDirection, type PivotTarget } from './direction';
@@ -123,6 +124,43 @@ export function createCore(clock: Clock) {
     if (next !== p.phase14) { p.phase14 = next; emit(p, { type: 'phase14-unlocked', workflow: 'SJ', task: 'sprints', detail: `package v${next.unlockedAt}` }); }
   }
 
+  // ---------------------------------------------------------------- withdrawing a pivot
+  // The earlier Go is current again. Nothing is deleted and nothing approved under the pivot is
+  // silently treated as approved under the Go:
+  //   untouched since the pivot   back to its state under the Go, unless an input moved on since
+  //   approved under the pivot    keeps every version; needs revalidation (gates: reconfirmation)
+  //   started under the pivot     paused
+  //   anything else since         (declined, flagged by a fact change) stays as it is
+  // Packages stay stale history; a current handoff needs a new founder-approved package.
+  function withdrawPivot(p: Project, snap: NonNullable<Project['pivotSnapshot']>, go: number) {
+    const byPivot = (seq: number) => snap.pivotEvents.some(([a, b]) => seq >= a && seq <= b);
+    const touched = new Set(p.events.filter(e => e.task && e.seq > snap.pivotEvents[0][0] && !byPivot(e.seq)).map(e => e.task!));
+    const pinsCurrent = (id: string) => Object.entries(rt(p, id).versions.at(-1)?.pins ?? {}).every(([x, v]) => v === latest(p, x));
+    const flagged = (id: string) => (isDecision(id) ? 'needs-reconfirmation' : 'needs-revalidation') satisfies ExecState & ProjectEvent['type'];
+    const set = (id: string, s: ExecState, type: ProjectEvent['type'], detail: string) => { rt(p, id).state = s; emit(p, { type, workflow: wfOf(id), task: id, detail }); };
+
+    for (const t of TASKS) {
+      if (t.id === 'sj8') continue;
+      const r = rt(p, t.id), before = snap.workflows[t.workflow].tasks[t.id];
+      r.atRisk = r.atRisk && before.atRisk;
+      if (!touched.has(t.id)) {
+        if (before.state === 'approved' && !pinsCurrent(t.id)) set(t.id, flagged(t.id), flagged(t.id), `pivot withdrawn; an input changed under the pivot`);
+        else if (r.state !== before.state) set(t.id, before.state, 'restored', `pivot withdrawn; ${before.state} under Go v${go}`);
+        continue;
+      }
+      if (r.versions.length > before.versions.length && r.state === 'approved') set(t.id, flagged(t.id), flagged(t.id), `v${r.versions.length} was approved under the withdrawn pivot; check it against Go v${go}`);
+      else if (IN_PROGRESS.includes(r.state)) set(t.id, 'paused', 'paused', 'started under the withdrawn pivot');
+    }
+
+    p.packages = p.packages.map((k, i) => {
+      if (i < snap.packages.length || k.stale) return k;
+      emit(p, { type: 'package', workflow: 'SP', task: 'handoff', version: k.v, detail: 'made under the withdrawn pivot; stale history' });
+      return { ...k, stale: true };
+    });
+    if (state(p, 'handoff') === 'approved' && p.packages.at(-1)?.stale)
+      set('handoff', 'needs-revalidation', 'needs-revalidation', 'stale packages stay history: the founder approves a new package version');
+  }
+
   // ---------------------------------------------------------------- context
   function setFactInternal(p: Project, key: FactKey, f: Fact) {
     const before = applicability(p);
@@ -144,7 +182,7 @@ export function createCore(clock: Clock) {
   function blank(origin: Project['origin'], idea: string, id?: string): Project {
     const p: Project = {
       schema: 1, id: id ?? `project-${++projects}`, origin, ruleset: 'rev7-1', idea, createdAt: clock.now(),
-      context: {}, acknowledged: [], archived: false,
+      context: {}, acknowledged: [], archived: false, delegation: DEFAULT_DELEGATION,
       workflows: { SJ: newInstance('SJ'), SP: newInstance('SP') },
       direction: emptyDirectionLog(), pivotSnapshot: null, packages: [], phase14: { unlockedAt: null }, evidence: [], events: [],
     };
@@ -186,6 +224,18 @@ export function createCore(clock: Clock) {
       if (!p.acknowledged.includes(id)) p.acknowledged.push(id);
       emit(p, { type: 'acknowledged', workflow: wfOf(id), task: id, by: 'FOUNDER', method: 'human', detail: 'N/A acknowledged' });
     },
+
+    /** The founder sets what Atlas may approve on their behalf. Work already approved is unaffected. */
+    setDelegation(p: Project, level: DelegationLevel) {
+      assertOpen(p);
+      if (!DELEGATION_LEVELS.includes(level)) fail(`delegation level must be one of ${DELEGATION_LEVELS.join(', ')}`);
+      p.delegation = level;
+      const limit = SPEND_LIMIT_LAKH[level];
+      emit(p, { type: 'delegation', by: 'FOUNDER', method: 'human', detail: `level ${level}: ${limit == null ? 'nothing delegated' : `documents and spend up to ₹${limit} lakh`}` });
+    },
+
+    /** Who approves this task now, and why: the founder, or Atlas within the delegation limit. */
+    approverFor: (p: Project, id: string): Route => routeApproval(id, p.delegation, rt(p, id).spendLakh),
 
     awaitingAcknowledgement: (p: Project) => TASKS.filter(t => applicability(p)[t.id].why === 'founder acknowledgement of N/A').map(t => t.id),
 
@@ -252,12 +302,17 @@ export function createCore(clock: Clock) {
       emit(p, { type: 'started', workflow: t.workflow, task: id, by: t.owner, method });
     },
 
-    submitTask(p: Project, id: string) {
+    /** Spend tasks state their amount (₹ lakh) on every submission; it decides who may approve them. */
+    submitTask(p: Project, id: string, opts: { spendLakh?: number } = {}) {
       assertOpen(p);
       const r = rt(p, id), t = TASK[id];
       if (r.state !== 'in-progress') fail(`${id} is not in progress`);
+      const spend = SPEND_TASKS.includes(id);
+      if (spend && !(typeof opts.spendLakh === 'number' && opts.spendLakh >= 0)) fail(`${id} commits spend: state the amount in ₹ lakh`);
+      if (!spend && opts.spendLakh != null) fail(`${id} does not commit spend`);
+      if (spend) r.spendLakh = opts.spendLakh;
       r.state = t.reviewer ? 'in-review' : 'awaiting-approval';
-      emit(p, { type: 'submitted', workflow: t.workflow, task: id, by: t.owner, method: r.method! });
+      emit(p, { type: 'submitted', workflow: t.workflow, task: id, by: t.owner, method: r.method!, ...(spend ? { detail: `spend ₹${opts.spendLakh} lakh` } : {}) });
     },
 
     reviewTask(p: Project, id: string, opts: { passed: boolean; note?: string }) {
@@ -274,8 +329,9 @@ export function createCore(clock: Clock) {
       const r = rt(p, id), t = TASK[id];
       if (r.state === 'in-review') fail(`${id} needs a passed review before approval`);
       if (r.state !== 'awaiting-approval') fail(`${id} is not waiting for approval`);
-      if ((t.owner === 'FOUNDER' || t.kind === 'package') && opts.by !== 'FOUNDER') fail(`${id} is approved by the founder only`);
       if (opts.by === 'SOLUTION_BUILDER') fail('Solution Builder only accepts or returns the handoff package');
+      const route = routeApproval(id, p.delegation, r.spendLakh);
+      if (opts.by === 'CEO' && route.approver !== 'CEO') fail(`${id} is approved by the founder: ${route.reason}`);
       const app = applicability(p);
       if (t.kind === 'package') {
         const validity = Object.fromEntries(TASKS.map(x => [x.id, (state(p, x.id) === 'declined' ? 'declined' : satisfied(p, app, x.id) ? 'valid' : 'invalid') as InputValidity]));
@@ -289,7 +345,7 @@ export function createCore(clock: Clock) {
         if (why.length) fail(`learning evaluation is not complete: ${why.join('; ')}`);
       }
       const v = newVersion(p, id, r.method!, opts.by);
-      emit(p, { type: 'approved', workflow: t.workflow, task: id, version: v.v, by: opts.by, method: methodOf(opts.by) });
+      emit(p, { type: 'approved', workflow: t.workflow, task: id, version: v.v, by: opts.by, method: methodOf(opts.by), ...(opts.by === 'CEO' ? { detail: `on the founder's behalf: ${route.reason}` } : {}) });
       for (const [k, value] of Object.entries(opts.facts ?? {})) setFactInternal(p, k as FactKey, { value: value!, source: 'artifact', from: { task: id, version: v.v } });
       if (t.kind === 'package') {
         p.packages.push({ v: p.packages.length + 1, state: 'founder-approved', stale: false, pins: { ...v.pins } });
@@ -327,15 +383,13 @@ export function createCore(clock: Clock) {
       if (d.kind === 'go' && !d.resume) assertReady(p, 'sj8');
       const revises = d.kind === 'go' && dstate === 'pivot' ? p.direction.versions.at(-1)!.v : undefined;
       const restores = d.kind === 'pivot-withdrawn' ? currentGo(p.direction) ?? undefined : undefined;
-      if (d.kind === 'pivot-withdrawn') {
-        const snap = p.pivotSnapshot;
-        if (!snap || p.events.filter(e => e.type === 'approved' || e.type === 'decided').length !== snap.approvalsAt) fail('work has been redone since the pivot; record a revised Go instead');
-      }
+      if (d.kind === 'pivot-withdrawn' && !p.pivotSnapshot) fail('there is no open pivot to withdraw');
+      const startSeq = p.events.length + 1;
       p.direction = recordDirection(p.direction, { kind: d.kind, at, by: 'FOUNDER', ...(d.target ? { target: d.target } : {}), ...(revises ? { revises } : {}), ...(restores ? { restores } : {}), ...(d.resume ? { resume: true } : {}) });
       const ver = p.direction.versions.at(-1)!.v;
       emit(p, { type: 'decided', workflow: 'SJ', task: 'sj8', version: ver, by: 'FOUNDER', method: 'human', detail: [d.kind, d.target, revises && `revises v${revises}`, d.resume && 'resume'].filter(Boolean).join(' ') });
 
-      if (d.kind === 'stop') { p.archived = true; emit(p, { type: 'archived', detail: 'both workflows read-only' }); return; }
+      if (d.kind === 'stop') { p.archived = true; p.pivotSnapshot = null; emit(p, { type: 'archived', detail: 'both workflows read-only' }); return; }
       if (d.resume) { p.archived = false; emit(p, { type: 'resumed', by: 'FOUNDER', method: 'human' }); }
       if (d.kind === 'go') {
         sj8.versions.push(Object.freeze({ v: sj8.versions.length + 1, at, method: 'human', pins: pinsFor(p, 'sj8'), approval: Object.freeze({ by: 'FOUNDER', method: 'human' }), outcome: 'pass' }) as ArtifactVersion);
@@ -344,13 +398,14 @@ export function createCore(clock: Clock) {
         return;
       }
       if (d.kind === 'pivot-withdrawn') {
-        const snap = p.pivotSnapshot!;
-        p.workflows = snap.workflows; p.packages = snap.packages; p.pivotSnapshot = null;
         emit(p, { type: 'notice', detail: `pivot withdrawn; Go v${restores} is current again` });
+        withdrawPivot(p, p.pivotSnapshot!, restores!);
+        p.pivotSnapshot = null; sj8.state = 'approved';
         return;
       }
-      // pivot: reopen only the target, flag what depends on it, keep everything else
-      p.pivotSnapshot = { workflows: JSON.parse(JSON.stringify(p.workflows)), packages: JSON.parse(JSON.stringify(p.packages)), approvalsAt: p.events.filter(e => e.type === 'approved' || e.type === 'decided').length - 1 };
+      // pivot: reopen only the target, flag what depends on it, keep everything else. A pivot that
+      // follows a pivot keeps the first snapshot: withdrawal returns to the state under the Go.
+      p.pivotSnapshot ??= { workflows: JSON.parse(JSON.stringify(p.workflows)), packages: JSON.parse(JSON.stringify(p.packages)), pivotEvents: [] };
       const status = Object.fromEntries(TASKS.map(t => [t.id, state(p, t.id)]));
       const impact = pivotImpact(d.target!, status);
       const flag = (ids: string[], s: ExecState, type: ProjectEvent['type']) => ids.forEach(id => { rt(p, id).state = s; emit(p, { type, workflow: wfOf(id), task: id, detail: `pivot to ${d.target}` }); });
@@ -363,6 +418,7 @@ export function createCore(clock: Clock) {
       sj8.state = 'needs-reconfirmation';
       p.packages = p.packages.map(k => (k.stale ? k : { ...k, stale: true }));
       if (p.packages.length) emit(p, { type: 'package', workflow: 'SP', task: 'handoff', detail: 'every package is now stale history' });
+      p.pivotSnapshot.pivotEvents.push([startSeq, p.events.length]);
     },
 
     // ---------------------------------------------------------------- Solution Builder (simulated adapter)

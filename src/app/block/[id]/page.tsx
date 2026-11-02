@@ -7,13 +7,15 @@ import { engineById, ROOMS, STAGES } from '@/engine/model';
 import { useEngine } from '@/engine/useEngine';
 import { Avatar, Rich, StatusChip, ProductTag } from '@/components/ui/kit';
 import TaskBody from '@/components/templates/Tasks';
+import { useHref } from '@/components/shell/ProjectBase';
 
 const REASONS = ['Missing evidence', 'Numbers look wrong', 'Not clear enough'];
 
 /* T5 document viewer · founder task template */
 export default function BlockPage() {
   useEngine();
-  const id = useParams<{ id: string }>().id; const redo = useSearchParams().get('redo') === '1';
+  const params = useParams<{ id: string; blockId?: string }>(); const href = useHref();
+  const id = params.blockId ?? params.id; const redo = useSearchParams().get('redo') === '1';
   const router = useRouter();
   const b = def(id); const s = b ? st(id) : 'locked';
   const showTask = !!b && b.kind === 'task' && (s === 'ready' || redo);
@@ -25,7 +27,7 @@ export default function BlockPage() {
   return (
     <div className="grid gap-4 items-start" style={{ gridTemplateColumns: 'minmax(0,1fr) 340px' }}>
       <section className="panel p-6 flex flex-col gap-4 min-w-0">
-        <div className="flex items-center gap-2 t-small"><Link href={`/stage/${b.f}`} className="hover:underline">← {STAGES[b.f].name}</Link><span>·</span><span>{e.full} · {ROOMS[e.room].full}</span></div>
+        <div className="flex items-center gap-2 t-small"><Link href={href(`/stage/${b.f}`)} className="hover:underline">← {STAGES[b.f].name}</Link><span>·</span><span>{e.full} · {ROOMS[e.room].full}</span></div>
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div><h1 className="t-title">{b.name}</h1><div className="t-small mt-1">{b.mod} · v{r.ver}</div></div>
           <div className="flex items-center gap-2"><ProductTag tag={b.tag} /><StatusChip s={showTask ? 'task' : s} /></div>
@@ -64,7 +66,7 @@ export default function BlockPage() {
             {back ? (
               <div className="flex flex-wrap gap-1.5 items-center"><span className="t-small mr-1">Why?</span>{REASONS.map(x => <button key={x} className="btn btn-sm" onClick={() => { sendBack(id, x); setBack(false); }}>{x}</button>)}<button className="btn btn-sm" onClick={() => setBack(false)}>Cancel</button></div>
             ) : (
-              <div className="flex gap-2 justify-end"><button className="btn" onClick={() => setBack(true)}>Send back</button><button className="btn btn-go" onClick={() => { founderApprove(id); router.push('/hq'); }}>Approve</button></div>
+              <div className="flex gap-2 justify-end"><button className="btn" onClick={() => setBack(true)}>Send back</button><button className="btn btn-go" onClick={() => { founderApprove(id); router.push(href('/hq')); }}>Approve</button></div>
             )}
           </div>
         )}

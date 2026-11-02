@@ -16,6 +16,8 @@
   --ag-coo: #4A7628; --ag-cro: #6A3D9E; --ag-cqro: #A23A3A; --ag-crew: #56606F; --skin: #C58B60; --hair: #3B2B21;
   --persona: #D86A2C; --p-veejay: #D86A2C; --p-meera: #2F8A63; --p-rahul: #3B60C4;
   --shadow: 0 1px 2px rgba(15, 23, 41, .04), 0 8px 24px -6px rgba(15, 23, 41, .08);
+  /* app shell (Stage C): Solution Builder layer accent and shell dimensions */
+  --sb: #0F7C8A; --sb-soft: #E6F4F6; --shell-side: 264px; --shell-ctx: 320px; --shell-top: 56px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -29,6 +31,7 @@
     --room-briefing: #141C2E; --room-meeting: #1C1830; --room-approval: #251F13; --room-board: #271A16; --room-research: #122431;
     --room-office: #2A2312; --room-work: #12261A; --room-lounge: #221D18; --room-customer: #291824; --room-vault: #191F2B;
     --ag-ceo: #E8EBF1;
+    --sb: #4FC3D1; --sb-soft: #10282C;
   }
 }
 

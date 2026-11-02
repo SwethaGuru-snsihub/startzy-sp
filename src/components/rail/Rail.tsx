@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { S, B, active, inboxItems, engineState, isOk, st, nm, reinspectAll } from '@/engine/engine';
 import { ENGINES, engineById, ROOMS, AGENTS } from '@/engine/model';
 import { Avatar, PanelHead, Rich, StatusChip } from '@/components/ui/kit';
+import { useHref } from '@/components/shell/ProjectBase';
 
 const TY: Record<string, [string, string]> = {
   gate: ['var(--stop-soft)', 'var(--stop)'], money: ['var(--sz-soft)', 'var(--sz)'], doc: ['var(--go-soft)', 'var(--go)'],
@@ -11,6 +12,7 @@ const TY: Record<string, [string, string]> = {
 };
 
 export function InboxCard({ limit }: { limit?: number }) {
+  const href = useHref();
   const items = inboxItems(); const shown = limit ? items.slice(0, limit) : items;
   return (
     <section className="panel p-4 flex flex-col gap-2" aria-label="Your inbox">
@@ -19,15 +21,16 @@ export function InboxCard({ limit }: { limit?: number }) {
       {shown.map((x, i) => (
         x.ty === 'crack'
           ? <button key={i} onClick={() => reinspectAll()} className="flex items-center gap-2.5 p-2.5 rounded-xl text-left row-hover" style={{ background: 'var(--subtle)', border: '1px solid var(--line)' }}><Badge ty={x.ty} t={x.t} /><span><span className="t-strong block">{x.n}</span><span className="t-small">Traceability will re-check them</span></span></button>
-          : <Link key={i} href={x.href} className="flex items-center gap-2.5 p-2.5 rounded-xl row-hover" style={{ background: 'var(--subtle)', border: '1px solid var(--line)' }}><Badge ty={x.ty} t={x.t} /><span className="min-w-0"><span className="t-strong block">{x.n}</span>{x.s && <span className="t-small block truncate">{x.s}</span>}</span></Link>
+          : <Link key={i} href={href(x.href)} className="flex items-center gap-2.5 p-2.5 rounded-xl row-hover" style={{ background: 'var(--subtle)', border: '1px solid var(--line)' }}><Badge ty={x.ty} t={x.t} /><span className="min-w-0"><span className="t-strong block">{x.n}</span>{x.s && <span className="t-small block truncate">{x.s}</span>}</span></Link>
       ))}
-      {limit && items.length > limit && <Link href="/inbox" className="t-small underline">View all {items.length}</Link>}
+      {limit && items.length > limit && <Link href={href('/inbox')} className="t-small underline">View all {items.length}</Link>}
     </section>
   );
 }
 function Badge({ ty, t }: { ty: string; t: string }) { const [bg, fg] = TY[ty]; return <span className="pill t-micro px-2 py-0.5 flex-none" style={{ background: bg, color: fg }}>{t}</span>; }
 
 export function WorkQueue() {
+  const href = useHref();
   const [scope, setScope] = useState<'stage' | 'all'>('stage');
   const [filter, setFilter] = useState<'all' | 'running' | 'you' | 'done'>('all');
   let rows = active().filter(b => scope === 'all' ? b.f <= S.floor : b.f === Math.min(S.floor, 10));
@@ -48,7 +51,7 @@ export function WorkQueue() {
         const prog = s === 'approved' ? 100 : s === 'building' ? r.p : s === 'review' ? 70 : s === 'approving' || s === 'inbox' ? 100 : 0;
         const bar = s === 'approved' ? 'var(--go)' : s === 'inbox' ? 'var(--accent)' : ['building', 'review', 'approving'].includes(s) ? 'var(--sp)' : 'var(--line-strong)';
         return (
-          <Link key={b.id} href={`/block/${b.id}`} className="flex flex-col gap-1.5 p-2.5 rounded-xl row-hover" style={{ background: 'var(--subtle)' }}>
+          <Link key={b.id} href={href(`/block/${b.id}`)} className="flex flex-col gap-1.5 p-2.5 rounded-xl row-hover" style={{ background: 'var(--subtle)' }}>
             <div className="flex items-center gap-2"><Avatar id={b.kind === 'task' ? 'YOU' : b.owner} /><div className="flex-1 min-w-0"><div className="t-strong truncate">{b.name}</div><div className="t-small truncate" style={{ fontSize: 11 }}>{engineById(b.engine).name} · {ROOMS[engineById(b.engine).room].name}</div></div><StatusChip s={isTask ? 'task' : s} /></div>
             <div className="h-1 rounded" style={{ background: 'var(--line)' }}><div className="h-1 rounded" style={{ width: `${prog}%`, background: bar, transition: 'width .3s' }} /></div>
           </Link>
@@ -60,6 +63,7 @@ export function WorkQueue() {
 }
 
 export function EngineDetail({ id, onClose }: { id: string; onClose: () => void }) {
+  const href = useHref();
   const e = engineById(id); const es = engineState(id);
   const operators = (Object.keys(AGENTS) as (keyof typeof AGENTS)[]).filter(k => AGENTS[k].home === id);
   const outs = active().filter(b => b.engine === id);
@@ -72,9 +76,9 @@ export function EngineDetail({ id, onClose }: { id: string; onClose: () => void 
         <dt className="t-caps pt-0.5">Skill</dt><dd>{e.skill}</dd>
         <dt className="t-caps pt-0.5">Seats</dt><dd>{e.seats || 'None (automated)'}</dd>
         <dt className="t-caps pt-0.5">Current job</dt><dd>{es.job ? `${es.job.name} · v${B[es.job.id].ver}` : '—'}</dd>
-        <dt className="t-caps pt-0.5">Outputs</dt><dd className="flex flex-col gap-0.5">{outs.length ? outs.map(b => <Link key={b.id} href={`/block/${b.id}`} className="underline-offset-2 hover:underline">{isOk(b.id) ? '✓' : '◐'} {b.name}</Link>) : '—'}</dd>
+        <dt className="t-caps pt-0.5">Outputs</dt><dd className="flex flex-col gap-0.5">{outs.length ? outs.map(b => <Link key={b.id} href={href(`/block/${b.id}`)} className="underline-offset-2 hover:underline">{isOk(b.id) ? '✓' : '◐'} {b.name}</Link>) : '—'}</dd>
       </dl>
-      {es.job && <div className="flex justify-end"><Link className="btn btn-sm btn-primary" href={`/block/${es.job.id}`}>Open block</Link></div>}
+      {es.job && <div className="flex justify-end"><Link className="btn btn-sm btn-primary" href={href(`/block/${es.job.id}`)}>Open block</Link></div>}
     </section>
   );
 }

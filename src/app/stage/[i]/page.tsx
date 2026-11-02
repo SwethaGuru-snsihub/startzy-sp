@@ -6,10 +6,11 @@ import { STAGES, engineById, ROOMS } from '@/engine/model';
 import { useEngine } from '@/engine/useEngine';
 import { Avatar, StatusChip, ProductTag } from '@/components/ui/kit';
 import { ActivityFeed } from '@/components/rail/Rail';
+import { useHref } from '@/components/shell/ProjectBase';
 
 /* G10 · Stage overview */
 export default function StagePage() {
-  useEngine();
+  useEngine(); const href = useHref();
   const i = Number(useParams<{ i: string }>().i); const F = STAGES[i];
   if (!F) return <p className="t-small">No such stage.</p>;
   const blocks = active().filter(b => b.f === i);
@@ -39,7 +40,7 @@ export default function StagePage() {
                 <ProductTag tag={b.tag} />
                 <StatusChip s={isTask ? 'task' : s} />
                 {s === 'ready' && b.kind === 'auto' ? <button className="btn btn-sm btn-primary" onClick={() => startBlock(b.id)}>Start</button>
-                  : <Link className="btn btn-sm" href={`/block/${b.id}`}>{isTask ? 'Do it' : s === 'inbox' ? 'Review' : 'Open'}</Link>}
+                  : <Link className="btn btn-sm" href={href(`/block/${b.id}`)}>{isTask ? 'Do it' : s === 'inbox' ? 'Review' : 'Open'}</Link>}
               </div>
             );
           })}
@@ -48,7 +49,7 @@ export default function StagePage() {
           <div className="p-4 rounded-xl flex items-center gap-3" style={{ background: 'var(--subtle)', border: `1px solid ${F.gate === 'you' ? 'var(--accent)' : 'var(--line)'}` }}>
             <div className="flex-1"><div className="t-h3">{F.gate === 'you' ? F.gateName : 'Atlas stage check'}</div>
               <div className="t-small">{S.passed[i] ? 'Passed.' : F.gate === 'you' ? 'You inspect this gate in the Strategy & Finance Centre once every required block is approved.' : 'Atlas passes this stage automatically when every required block is approved.'}</div></div>
-            {F.gate === 'you' && (S.pending[i] === true || S.passed[i]) && <Link href={`/gate/${gateNo}`} className={`btn ${S.passed[i] ? '' : 'btn-primary'}`}>{S.passed[i] ? 'View gate' : 'Start inspection'}</Link>}
+            {F.gate === 'you' && (S.pending[i] === true || S.passed[i]) && <Link href={href(`/gate/${gateNo}`)} className={`btn ${S.passed[i] ? '' : 'btn-primary'}`}>{S.passed[i] ? 'View gate' : 'Start inspection'}</Link>}
           </div>
         )}
       </section>

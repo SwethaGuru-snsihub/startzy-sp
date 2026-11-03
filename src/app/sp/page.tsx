@@ -20,7 +20,7 @@ export default function SpEntry() {
     <div className="sp-login">
       <form className="sp-lcard" onSubmit={e => { e.preventDefault(); const f = new FormData(e.currentTarget); login(String(f.get('email') || 'founder@startzy.ai')); }}>
         <div><span className="sp-sim">PROTOTYPE · MOCK SIGN-IN</span></div>
-        <div><h1>Solution Planning HQ</h1><p className="t-small" style={{ margin: '4px 0 0' }}>Your AI planning office. Sign in to bring an idea to the agents.</p></div>
+        <div><h1>Solution Planning</h1><p className="t-small" style={{ margin: '4px 0 0' }}>Your AI planning office. Sign in to bring an idea to the agents.</p></div>
         <div className="t-caps">Quick sign in (demo accounts)</div>
         <div className="sp-demo">
           {DEMO_USERS.map(u => (

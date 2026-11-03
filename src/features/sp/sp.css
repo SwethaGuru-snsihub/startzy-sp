@@ -1,4 +1,4 @@
-/* Solution Planning HQ. Uses the app's own tokens (globals.css), so the Agent Office looks the same
+/* Solution Planning. Uses the app's own tokens (globals.css), so the Agent Office looks the same
    as the rest of Founder HQ. Every class is prefixed sp- to stay out of the legacy screens' way. */
 .sp-wrap { max-width: 1500px; margin: 0 auto; padding: 0 16px 28px; }
 .sp-muted { color: var(--muted); }
@@ -151,3 +151,44 @@
 .sp-lnk { border: 0; background: transparent; padding: 0; text-decoration: underline; font-weight: 700; color: var(--brain); text-align: left; }
 .sp-flowrow { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
 .sp-flowrow i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--panel); display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+
+/* Workflow tab: the step and its features on the left, one focused card on the right */
+.sp-wf { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .sp-wf { grid-template-columns: minmax(0, 1fr); } }
+.sp-wf-tree { padding: 8px; gap: 2px; position: sticky; top: 130px; }
+@media (max-width: 860px) { .sp-wf-tree { position: static; } }
+.sp-wf-phase { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px 4px; font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.sp-wf-step { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; font-weight: 700; }
+.sp-wf-step.locked { color: var(--muted); opacity: .75; font-weight: 600; }
+.sp-wf-feats { list-style: none; margin: 0 0 6px 18px; padding: 0 0 0 10px; border-left: 2px solid var(--line); display: grid; gap: 1px; }
+.sp-wf-feat { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: center; width: 100%; text-align: left; border: 0; background: transparent; padding: 8px 10px; border-radius: 10px; }
+.sp-wf-feat:hover { background: var(--subtle); } .sp-wf-feat[aria-current="true"] { background: var(--brain-soft); }
+.sp-wf-feat .t { font-weight: 600; font-size: 13px; line-height: 1.3; } .sp-wf-feat .s { font-size: 11.5px; color: var(--muted); }
+.sp-wf-ico { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 10px; font-weight: 800; border: 2px solid var(--line-strong); color: var(--muted); background: var(--panel); flex: none; }
+.sp-wf-ico.done { background: var(--go); border-color: var(--go); color: #fff; } .sp-wf-ico.needs { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.sp-wf-ico.recheck { background: var(--stop-soft); border-color: var(--stop); color: var(--stop); } .sp-wf-ico.working, .sp-wf-ico.review, .sp-wf-ico.ready { border-color: var(--brain); color: var(--brain); }
+.sp-wf-ico.working { border-top-color: transparent; animation: spWfSpin 1s linear infinite; }
+@keyframes spWfSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .sp-wf-ico.working { animation: none; } }
+.sp-wf-main { display: grid; gap: 14px; min-width: 0; }
+.sp-wf-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 16px 12px 12px; }
+.sp-wf-node { display: grid; justify-items: center; gap: 6px; text-align: center; position: relative; padding: 0 6px; border: 0; background: transparent; }
+.sp-wf-node::before { content: ""; position: absolute; top: 15px; left: -50%; width: 100%; height: 2px; background: var(--line-strong); }
+.sp-wf-node:first-child::before { display: none; } .sp-wf-node.reached::before { background: var(--go); }
+.sp-wf-node .sp-wf-ico { width: 32px; height: 32px; font-size: 13px; position: relative; z-index: 1; }
+.sp-wf-node .l { font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--muted); } .sp-wf-node[aria-current="true"] .l { color: var(--ink); font-weight: 700; }
+.sp-wf-node[aria-current="true"] .sp-wf-ico { box-shadow: 0 0 0 4px var(--brain-soft); }
+.sp-wf-body { padding: 16px; display: grid; gap: 14px; }
+.sp-quote { margin: 0; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 10px 10px 0; font-size: 15px; line-height: 1.6; }
+.sp-quote mark, .sp-table mark { border-radius: 4px; padding: 1px 3px; color: inherit; }
+mark.who { background: color-mix(in srgb, var(--brain) 22%, transparent); } mark.doing { background: color-mix(in srgb, var(--accent) 38%, transparent); }
+.sp-kv { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 8px 16px; font-size: 13px; margin: 0; } .sp-kv dt { color: var(--muted); } .sp-kv dd { margin: 0; }
+.sp-tw { overflow-x: auto; } .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.sp-table th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--subtle); }
+.sp-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; } .sp-table tr:last-child td { border-bottom: 0; }
+.sp-qa { display: grid; } .sp-qa-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); } .sp-qa-row:first-child { padding-top: 0; }
+.sp-qa-q { color: var(--muted); font-size: 13px; } @media (max-width: 720px) { .sp-qa-row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.sp-io { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--subtle); font-size: 13px; }
+.sp-banner.ok { border-color: var(--go); background: var(--go-soft); }
+
+.sp-link { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }

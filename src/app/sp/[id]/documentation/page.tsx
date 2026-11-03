@@ -6,6 +6,7 @@ import type { Section } from '@/features/sp/content';
 import { agentLook, DISCOVER_TASKS } from '@/features/sp/model';
 import { useSp } from '@/features/sp/SpContext';
 import { recheckScope, STATUS_LABEL, statusTone } from '@/features/sp/viewModel';
+import { FEATURES_OF_TASK } from '@/features/sp/workflow';
 
 type Tab = 'content' | 'versions' | 'feeds' | 'how';
 const PHASE_OF = (n: number) => (n <= 5 ? 'Discover' : n <= 8 ? 'Define' : n <= 12 ? 'Design' : 'Delivery');
@@ -165,6 +166,7 @@ export default function DocumentationPage() {
             <span className="sp-row"><span className={`sp-pill ${row ? statusTone(row.status) : ''}`}>{status}</span>{latestV > 0 && <span className="sp-pill">v{latestV}</span>}{isDiscover && <span className="sp-sim">SIMULATED</span>}</span>
           </div>
           <div className="t-small" style={{ marginTop: 4 }}>Made by {owners}{t.reviewer ? ` · reviewed by ${agentLook(t.reviewer).name}` : ''} · approved by you</div>
+          {FEATURES_OF_TASK[sel] && <div className="t-small" style={{ marginTop: 2 }}>Feature{FEATURES_OF_TASK[sel].length > 1 ? 's' : ''}: {FEATURES_OF_TASK[sel].join(', ')}</div>}
         </div>
         {isDiscover && (
           <div className="sp-row">

@@ -22,7 +22,7 @@ export type TaskStatus =
   | 'done' | 'declined' | 'na';
 
 export const STATUS_LABEL: Record<TaskStatus, string> = {
-  blocked: 'Waiting', ready: 'Ready', working: 'Working', review: 'In review', needs: 'Needs you', optional: 'Optional', recheck: 'Needs re-check',
+  blocked: 'Waiting', ready: 'Ready', working: 'In progress', review: 'In review', needs: 'Needs you', optional: 'Optional', recheck: 'Needs re-check',
   reconfirm: 'Confirm again', paused: 'Paused', awaiting: 'Needs an answer', done: 'Done', declined: 'Declined', na: 'Not applicable',
 };
 export const statusTone = (s: TaskStatus) => (s === 'done' ? 'go' : s === 'working' || s === 'review' ? 'run' : s === 'needs' || s === 'optional' ? 'you' : s === 'recheck' || s === 'reconfirm' || s === 'paused' ? 'bad' : '');
@@ -185,5 +185,12 @@ export function describeEvent(e: ProjectEvent): string {
 }
 /** The activity feed: newest first, about the Discover work only. */
 export function activity(p: Project, limit = 40): { seq: number; at: string; text: string }[] {
-  return [...p.events].reverse().filter(e => !e.task || e.task === 'profile' || (DISCOVER_TASKS as readonly string[]).includes(e.task)).slice(0, limit).map(e => ({ seq: e.seq, at: e.at, text: describeEvent(e) }));
+  const out: { seq: number; at: string; text: string }[] = [];
+  for (const e of [...p.events].reverse()) {
+    if (e.task && e.task !== 'profile' && !(DISCOVER_TASKS as readonly string[]).includes(e.task)) continue;
+    // The key fields are read from the idea the moment it is recorded; the core has no event for that, so say it here.
+    if (e.type === 'approved' && e.task === 'goal') out.push({ seq: e.seq + 0.5, at: e.at, text: 'Asha detected the key fields in your idea: who it is for, what it does and the topic' });
+    out.push({ seq: e.seq, at: e.at, text: describeEvent(e) });
+  }
+  return out.slice(0, limit);
 }

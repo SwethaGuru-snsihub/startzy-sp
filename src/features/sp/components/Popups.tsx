@@ -5,29 +5,15 @@
 import { useState } from 'react';
 import { TASK } from '@/engine/core/register';
 import { approve, approveRecheck, declineOptional, decideGate, gateChecksNow, reconfirm, saveInterviews, sendBack, takeUp } from '../actions';
-import { parseInterviews, resultOf, type Section } from '../content';
+import { parseInterviews, resultOf } from '../content';
 import { agentLook, ROOM, type SpRoomId } from '../model';
 import { useSp } from '../SpContext';
 import { recheckScope, STATUS_LABEL, statusTone, type TaskRow } from '../viewModel';
+import { FEATURES_OF_TASK } from '../workflow';
 import { Face } from './Avatar';
 import Modal from './Modal';
+import { Sections } from './Sections';
 
-function Sections({ secs, prev }: { secs: Section[]; prev?: Section[] }) {
-  return (
-    <>
-      {secs.map(s => {
-        const changed = prev && prev.find(x => x.h === s.h)?.b !== s.b;
-        return (
-          <div key={s.h} className="sp-sec">
-            <h5>{s.h}{s.edited && <span className="sp-pill you" style={{ marginLeft: 8 }}>Edited by you</span>}{changed && <span className="sp-pill run" style={{ marginLeft: 8 }}>Changed</span>}</h5>
-            {s.hint && <div className="t-small" style={{ fontSize: 11.5 }}>{s.hint}</div>}
-            <p>{s.b}</p>
-          </div>
-        );
-      })}
-    </>
-  );
-}
 const Err = ({ text }: { text: string | null }) => (text ? <div className="sp-error" role="alert">{text}</div> : null);
 
 export default function Popups() {
@@ -220,6 +206,7 @@ function TaskPopup({ row }: { row: TaskRow }) {
       <div className="sp-row"><span className="sp-pill sp">{row.step}</span><span className={`sp-pill ${statusTone(row.status)}`}>{STATUS_LABEL[row.status]}</span></div>
       <div><div className="t-caps">{TASK[row.id].home} · {TASK[row.id].kind === 'gate' ? 'Gate decision' : 'Document'}</div><h2>{row.artifact}</h2></div>
       <div className="t-small">Made by {agentLook(row.owner).name}{row.support.length ? ` with ${row.support.map(a => agentLook(a).name).join(', ')}` : ''}{row.reviewer ? ` · reviewed by ${agentLook(row.reviewer).name}` : ''} · {ROOM[row.room].name}</div>
+      {FEATURES_OF_TASK[row.id] && <div className="t-small">Feature{FEATURES_OF_TASK[row.id].length > 1 ? 's' : ''}: {FEATURES_OF_TASK[row.id].join(', ')}</div>}
       {(row.status === 'working' || row.status === 'review') && <div className="sp-bar blue" style={{ height: 8 }}><i style={{ width: `${runner.progress(row.id)}%` }} /></div>}
       {row.status === 'done' && ctx && <div className="sp-sec"><h5>Result <span className="sp-sim">SIMULATED</span></h5><p>{resultOf(row.id, ctx)}</p></div>}
       <div className="sp-foot">

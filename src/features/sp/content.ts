@@ -46,7 +46,7 @@ export function genSections(task: string, ctx: ContentCtx): Section[] {
   const start = START_OPTIONS.find(o => o.id === idea.option)?.title ?? idea.option;
   switch (task) {
     case 'goal': return [{ h: 'Idea', b: idea.text }, { h: 'Where you started', b: start, locked: true }, { h: 'Working name', b: idea.name }];
-    case 'clarify': return [{ h: 'Who it is for', b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', hint: 'Venture-scale startup, Profitable small business, New product inside my company, or A side project to learn', b: idea.answers.a3 }];
+    case 'clarify': { const q = c.questions; return [{ h: 'Who it is for', hint: q[0].q, b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', hint: q[2].q, b: idea.answers.a3 }]; }
     case 'brief': return [
       { h: 'Idea', b: idea.text }, { h: 'Working name', b: idea.name }, { h: 'Who it is for', b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', b: idea.answers.a3 },
       { h: 'Starting assumptions', b: `• ${cap(w)} will change how they ${c.doing} if the new way is clearly better.\n• The problem is frequent enough to pay for.` }];

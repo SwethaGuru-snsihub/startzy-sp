@@ -89,6 +89,7 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
   const started = isStarted(core, project);
   const steps = discoverSteps(core, project);
   const done = rows.filter(r => r.status === 'done').length;
+  const stepsDone = steps.filter(s => s.status === 'complete').length;
   const base = `/sp/${id}`;
 
   const env: Env = {
@@ -113,11 +114,11 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
       <div className="sp-wrap">
         <header className="sp-head">
           <div className="sp-row">
-            <span className="sp-logo">Solution Planning HQ</span>
+            <span className="sp-logo">Solution Planning</span>
             <span className="sp-chip" title="The project you are planning"><span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--persona, var(--accent))' }} />{record.name}</span>
             <div className="sp-phases" aria-label="Phases">{PHASES.map(ph => <span key={ph.name} className={ph.open ? 'cur' : 'lock'}>{ph.name}</span>)}</div>
             <div className="sp-row" aria-label="Discover steps">{steps.map(s => <span key={s.id} className={`sp-step ${s.status === 'complete' ? 'done' : s.status === 'in-progress' ? 'on' : ''}`}>{s.label}</span>)}</div>
-            <div className="sp-meter"><span>{done} / {rows.length} tasks</span><span className="sp-bar"><i style={{ width: `${(done / rows.length) * 100}%` }} /></span></div>
+            <div className="sp-meter"><span>Discover · {stepsDone} of {steps.length} steps done</span><span className="sp-bar"><i style={{ width: `${(stepsDone / steps.length) * 100}%` }} /></span></div>
             <span style={{ flex: 1 }} />
             <span className="sp-sim">SIMULATED OUTPUTS</span>
             <div className="sp-filter" role="group" aria-label="Office speed">{[1, 3].map(n => <button key={n} type="button" aria-pressed={speed === n} onClick={() => setSpeed(n)}>{n}×</button>)}</div>
@@ -127,6 +128,7 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
         </header>
         <nav className="sp-tabs" aria-label="Sections">
           {tab(base, 'Agent Office')}
+          {tab(`${base}/workflow`, 'Workflow')}
           {tab(`${base}/documentation`, 'Documentation', <span className="sp-pill">{done}</span>)}
         </nav>
         <div className="sp-main">

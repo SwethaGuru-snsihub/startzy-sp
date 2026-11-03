@@ -355,6 +355,32 @@ export function createCore(clock: Clock) {
       tryUnlock(p);
     },
 
+    /** The founder sends an artifact that waits for their approval back for changes. Nothing was approved, so nothing downstream moves. */
+    returnTask(p: Project, id: string, note: string) {
+      assertOpen(p);
+      const r = rt(p, id), t = TASK[id];
+      if (r.state !== 'awaiting-approval') fail(`${id} is not waiting for approval`);
+      r.state = 'in-progress'; r.reworks++;
+      emit(p, { type: 'returned', workflow: t.workflow, task: id, by: 'FOUNDER', method: 'human', detail: `sent back: ${note.trim() || 'changes requested'}` });
+    },
+
+    /**
+     * The founder edits an artifact that is already approved. Their edit is the approval of a new
+     * version: it pins the current inputs, and whatever was approved on the old version is flagged
+     * for re-check (decisions: for confirmation again), exactly as for any new version. Decisions
+     * change by deciding again, not by editing.
+     */
+    reviseTask(p: Project, id: string, opts: { by: 'FOUNDER' }) {
+      assertOpen(p);
+      const r = rt(p, id), t = TASK[id];
+      if (isDecision(id) || t.kind === 'external' || t.kind === 'package') fail(`${id} changes by deciding again, not by editing`);
+      if (r.state !== 'approved' && r.state !== 'needs-revalidation') fail(`${id} has no approved version to revise`);
+      const v = newVersion(p, id, r.method ?? 'human', opts.by);
+      emit(p, { type: 'approved', workflow: t.workflow, task: id, version: v.v, by: opts.by, method: methodOf(opts.by), detail: 'revised by the founder' });
+      cascade(p, id);
+      tryUnlock(p);
+    },
+
     declineTask(p: Project, id: string) {
       assertOpen(p);
       if (applicability(p)[id].status !== 'optional') fail(`${id} is not optional`);

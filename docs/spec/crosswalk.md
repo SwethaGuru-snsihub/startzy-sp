@@ -7,8 +7,8 @@ Sources: Google Sheet "Slots mapped" (`Sheet2` epics, `Mapping` tasks) and `src/
 | Sheet epic | Engine home | Engine tasks today | Note |
 |---|---|---|---|
 | 1 Idea Understanding & Brief | SP1 (in SJ2) | goal, clarify, brief | Sheet has 11 tasks, engine has 3 |
-| 3 Problem Discovery & Validation | SP2 (in SJ3) | research, interviews, problem | Sheet lists it third, but runs before Opportunity |
-| 2 Opportunity, Market & Customer Discovery | SP3 (in SJ4), Gate 1 | market, personas, competitors, gate1 | Sheet T21 is Gate 1 (Go, Needs refinement, Stop) |
+| 2 Problem Discovery & Validation | SP2 (in SJ3) | research, interviews, problem | Renumbered to epic 2 on 2026-11-06 (sheet had it as epic 3) |
+| 3 Opportunity, Market & Customer Discovery | SP3 (in SJ4), Gate 1 | market, personas, competitors, gate1 | Renumbered to epic 3 (sheet had it as epic 2). Its T21 is Gate 1 |
 | 4 Solution Discovery | SP4 (in SJ6) | solution | |
 | 5 Business Model & Feasibility | SP5 (in SJ9) | model, estimate, gate2 | Sheet has no Gate 2; engine does |
 | 6 Product Definition | SP6 (in SJ10) | mvp | |
@@ -36,7 +36,7 @@ Sources: Google Sheet "Slots mapped" (`Sheet2` epics, `Mapping` tasks) and `src/
 
 ## Decisions (founder, 2026-11-06)
 
-1. Epic 2 and 3 order: follow the engine run order. SP2 is Problem Discovery (sheet epic 3), SP3 is Opportunity & Market (sheet epic 2). The crosswalk absorbs the sheet numbering.
+1. Epic order: Problem Discovery & Validation is epic 2 and Opportunity, Market & Customer Discovery is epic 3, matching the engine (SP2, SP3). `spec.json` renumbers them (field `sheetEpic` keeps the original number, task ids use the new number). The Google Sheet itself is unchanged.
 2. Gate 1 "Needs refinement": rework inside SP3. Gate 1 gets a "return for rework" outcome. Pivot stays at SJ8 only.
 3. Gate 2 and Gate 3: keep the engine gates. The sheet's confirm tasks (5.T13, 23.5) map onto them.
 4. Missing epics: add an SP15 epic to the sheet. SJ12 to SJ18 wait until after the Solution Planning UI.

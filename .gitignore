@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Source spreadsheet export (binary; spec.json is the parsed copy)
+docs/spec/*.xlsx

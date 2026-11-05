@@ -3,8 +3,11 @@
 // task statuses and never stored, so the screens cannot disagree with the core. Steps the engine does not
 // have (classify, allocate, extract, questions, CEO sign-off) are marked 'ui': they are simulated and
 // shown as done once the work they belong to has moved on.
-import type { TaskStatus } from '../viewModel';
+import type { Core } from '@/engine/core/project';
+import type { Project } from '@/engine/core/types';
+import { taskStatus, type StatusCtx, type TaskStatus } from '../viewModel';
 import type { FeatureId } from '../workflow';
+import { epicOf } from '.';
 
 export type EngineTaskId = 'goal' | 'clarify' | 'brief';
 export type StepBacking = 'core' | 'ui';
@@ -57,4 +60,23 @@ export function epic1Statuses({ goal, clarify, brief }: EngineStatuses): Record<
 export function featureStatus(f: FeatureId, statuses: Record<string, TaskStatus>): TaskStatus {
   const seq = stepsOfFeature(f).map(s => statuses[s.id]);
   return seq.find(s => s !== 'done') ?? 'done';
+}
+
+/** The 11 statuses of a project, read from its core instance. */
+export function epic1StatusesOf(core: Core, p: Project, ctx: StatusCtx = {}): Record<string, TaskStatus> {
+  return epic1Statuses({ goal: taskStatus(core, p, 'goal', ctx), clarify: taskStatus(core, p, 'clarify', ctx), brief: taskStatus(core, p, 'brief', ctx) });
+}
+
+export type TimelineRow = {
+  id: string; label: string; title: string; responsible: string; process: string; status: TaskStatus;
+  byAgents: boolean;          // an agent does this step, so its output is simulated
+  simulatedStep: boolean;     // the engine has no task for it; the screen shows it from the sheet
+};
+/** The rows of one feature's timeline, in the order the sheet runs them, worded as the sheet words them. */
+export function epic1Rows(feature: FeatureId, statuses: Record<string, TaskStatus>): TimelineRow[] {
+  const tasks = epicOf(1).tasks;
+  return stepsOfFeature(feature).map(s => {
+    const t = tasks.find(x => x.id === s.id)!;
+    return { id: s.id, label: s.id.split('.')[1], title: t.output || t.process, responsible: t.responsible, process: t.process, status: statuses[s.id], byAgents: t.responsible !== 'User', simulatedStep: s.backing === 'ui' };
+  });
 }

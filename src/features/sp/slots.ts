@@ -80,3 +80,12 @@ export function slotOwners(slot: SlotId): { owner: string; supporting: string } 
   const s = epicOf(1).slots.find(x => x.slot === slot);
   return { owner: s?.owner ?? '', supporting: s?.supporting ?? '' };
 }
+
+export const SLOT_LABEL: Record<SlotId, string> = { idea: 'Idea', problem: 'Problem', target_users: 'Target users', expected_outcome: 'Expected outcome', constraints: 'Constraints' };
+export const PROVENANCE_LABEL: Record<Provenance, string> = { explicit: 'From your words', inferred: 'Inferred', confirmed: 'Confirmed by you', assumption: 'Assumption', empty: 'Not known' };
+
+/** The slots as a screen shows them: extracted from the idea, and once the questions are answered, confirmed with assumptions filled in. */
+export function slotsFor(idea: { option: StartOption; text: string; answers: { a1: string; a2: string } }, clarified: boolean): SlotValue[] {
+  const extracted = extractSlots(idea.text, idea.option);
+  return clarified ? resolveAssumptions(applyAnswers(extracted, idea.option, idea.answers)) : extracted;
+}

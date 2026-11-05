@@ -7,19 +7,24 @@ import { useState } from 'react';
 import { TASK } from '@/engine/core/register';
 import { approve, approveRecheck, saveDocEdit, sendBack } from '../actions';
 import { useSp } from '../SpContext';
+import { slotsFor } from '../slots';
+import { epic1Rows, epic1StatusesOf } from '../spec/epic1';
 import { actionFor, recheckScope, STATUS_LABEL, statusTone, type TaskStatus } from '../viewModel';
-import { answersOf, defaultItem, detect, doneIn, featureOf, itemOf, itemStatuses, questionsOf, STEP_LABEL, STEPS, stepStates, type Item } from '../workflow';
+import { answersOf, defaultItem, detect, doneIn, featureOf, itemOf, itemStatuses, questionsOf, STEP_LABEL, STEPS, stepStates, type FeatureId, type Item } from '../workflow';
+import EpicTimeline from './EpicTimeline';
 import { Sections } from './Sections';
+import SlotsPanel from './SlotsPanel';
 
 const mark = (s: TaskStatus, n: number) => (s === 'done' ? '✓' : s === 'needs' || s === 'recheck' || s === 'reconfirm' ? '!' : String(n));
 const clock = (iso: string) => { const d = new Date(iso); return isNaN(+d) ? '' : `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
 const HEADING: Record<string, string> = { capture: 'Your idea', extract: 'What was detected', clarify: 'Questions and answers', brief: 'Idea brief' };
 
-export default function WorkflowView() {
+export default function WorkflowView({ initial }: { initial?: string } = {}) {
   const { core, project, docs, record, runner, rows, open, openTask, goDoc } = useSp();
-  const [pick, setPick] = useState<string | null>(null);
+  const [pick, setPick] = useState<string | null>(initial ?? null);
   const idea = record.idea;
   const status = itemStatuses(core, project, { takenUp: docs.takenUp(), rechecks: docs.rechecks() });
+  const e1 = epic1StatusesOf(core, project, { takenUp: docs.takenUp(), rechecks: docs.rechecks() });
   if (!idea) return <section className="sp-card"><div className="sp-empty">Start your idea to see how Idea Definition runs.</div></section>;
 
   const states = stepStates(core, project);
@@ -79,8 +84,11 @@ export default function WorkflowView() {
           <div className="sp-wf-body">
             {sel.key === 'capture' && <Capture />}
             {sel.key === 'extract' && <Extract />}
+            {sel.key === 'extract' && <SlotsPanel slots={slotsFor(idea, false)} />}
             {sel.key === 'clarify' && <Clarify status={status.clarify} />}
+            {sel.key === 'clarify' && <SlotsPanel slots={slotsFor(idea, e1['1.T6'] === 'done')} />}
             {sel.key === 'brief' && <Brief status={status.brief} progress={pct} />}
+            {sel.kind === 'feature' && <EpicTimeline rows={epic1Rows(sel.key as FeatureId, e1)} />}
             {sel.kind === 'task' && row && <TaskCard item={sel} status={status[sel.key]} progress={pct} onAct={() => openTask(row)} canAct={!!actionFor(row)} />}
           </div>
         </section>
@@ -224,7 +232,7 @@ function Brief({ status, progress }: { status: TaskStatus; progress: number }) {
   }
   return (
     <>
-      <div className="sp-row"><span className="sp-pill go">Confirmed</span><b>Idea brief v{cur.v}</b></div>
+      <div className="sp-row"><span className="sp-pill go">Confirmed</span><b>Idea brief v{cur.v}</b><span className="sp-pill go">Idea brief v{cur.v} locked</span></div>
       <Sections secs={cur.secs} prev={prev?.secs} />
       <div className="sp-tw">
         <table className="sp-table"><thead><tr><th>Version</th><th>By</th><th>Note</th><th>When</th></tr></thead>

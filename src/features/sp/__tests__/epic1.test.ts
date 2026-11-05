@@ -7,7 +7,7 @@ import { approve, saveDocEdit, startProject, type Env } from '../actions';
 import { createDocStore } from '../docStore';
 import { EXAMPLE_IDEA, ideaContext, type IdeaInput } from '../idea';
 import { createRunner } from '../runner';
-import { EPIC1_STEPS, epic1Statuses, featureStatus, stepsOfFeature } from '../spec/epic1';
+import { EPIC1_STEPS, epic1Rows, epic1Statuses, featureStatus, stepsOfFeature } from '../spec/epic1';
 import { epicOf } from '../spec';
 import { taskStatus, type TaskStatus } from '../viewModel';
 import { SP1_FEATURES } from '../workflow';
@@ -115,5 +115,19 @@ describe('against the real project', () => {
     const r = epic1Statuses(o.eng());
     expect(r['1.T10']).toBe('recheck');
     expect(r['1.T11']).toBe('blocked');
+  });
+});
+
+describe('the rows a timeline shows', () => {
+  it('lists the steps of a feature with the sheet\'s wording, who does them and whether they are simulated', () => {
+    const r = epic1Rows('brief', st('done', 'done', 'needs'));
+    expect(r.map(x => x.label)).toEqual(['T7', 'T8', 'T9', 'T10', 'T11']);
+    expect(r[0]).toMatchObject({ id: '1.T7', title: 'Idea Brief Draft', status: 'done', simulatedStep: false });
+    expect(r[2]).toMatchObject({ title: 'Strategically Approved Brief', simulatedStep: true });
+    expect(r[3]).toMatchObject({ title: 'User-Confirmed Idea Brief', status: 'needs' });
+    expect(r.every(x => x.responsible && x.process)).toBe(true);
+  });
+  it('covers all 11 steps across the four features', () => {
+    expect(SP1_FEATURES.flatMap(f => epic1Rows(f.id, st('blocked', 'blocked', 'blocked'))).map(x => x.id)).toEqual(ids);
   });
 });

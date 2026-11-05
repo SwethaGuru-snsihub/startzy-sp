@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EXAMPLE_IDEA } from '../idea';
-import { applyAnswers, extractSlots, MAX_ROUNDS, QUESTIONS_PER_ROUND, rankQuestions, resolveAssumptions, SLOT_IDS, slotOwners, type SlotValue } from '../slots';
+import { applyAnswers, extractSlots, MAX_ROUNDS, PROVENANCE_LABEL, QUESTIONS_PER_ROUND, rankQuestions, resolveAssumptions, SLOT_IDS, SLOT_LABEL, slotOwners, slotsFor, type SlotValue } from '../slots';
 
 const by = (s: SlotValue[], id: string) => s.find(x => x.slot === id)!;
 
@@ -77,5 +77,23 @@ describe('who fills each slot', () => {
     expect(slotOwners('idea')).toEqual({ owner: 'CEO', supporting: 'CPO' });
     expect(slotOwners('constraints').owner).toBe('CTO');
     for (const id of SLOT_IDS) expect(slotOwners(id).owner, id).not.toBe('');
+  });
+});
+
+describe('the slots as the screens show them', () => {
+  const idea = { option: 'idea' as const, text: EXAMPLE_IDEA, answers: { a1: 'Students', a2: 'Manually or in spreadsheets' } };
+  it('shows only the extracted values until the founder has answered', () => {
+    const s = slotsFor(idea, false);
+    expect(by(s, 'target_users').provenance).toBe('explicit');
+    expect(by(s, 'constraints').provenance).toBe('empty');
+  });
+  it('shows confirmed values and assumptions once the questions are answered', () => {
+    const s = slotsFor(idea, true);
+    expect(by(s, 'target_users')).toMatchObject({ provenance: 'confirmed', value: 'Students' });
+    expect(by(s, 'constraints').provenance).toBe('assumption');
+  });
+  it('has a plain label for every provenance and slot', () => {
+    for (const id of SLOT_IDS) expect(SLOT_LABEL[id], id).toBeTruthy();
+    for (const p of ['explicit', 'inferred', 'confirmed', 'assumption', 'empty'] as const) expect(PROVENANCE_LABEL[p], p).toBeTruthy();
   });
 });

@@ -3,6 +3,7 @@
 // Nothing here calls a model: the questions are shaped from the founder's own text, and any content
 // built from this idea elsewhere is labelled simulated.
 import type { FactKey } from '@/engine/core/context';
+import type { IdeaBrief } from './ai/briefSchema';
 
 export type StartOption = 'idea' | 'problem' | 'opportunity' | 'define';
 export type AnswerKey = 'a1' | 'a2' | 'a3';
@@ -12,6 +13,7 @@ export type IdeaInput = {
   name: string;
   q2: string;                                  // the wording of the second question the founder was asked
   answers: Record<AnswerKey, string>;
+  brief?: IdeaBrief;                           // what the Idea Definition provider wrote from the founder's words, when it ran
 };
 
 export const START_OPTIONS: { id: StartOption; title: string; hint: string; placeholder: string }[] = [

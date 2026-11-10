@@ -8,7 +8,7 @@ const CONFIDENCE = { high: 'High confidence', medium: 'Medium confidence', low: 
 export default function SlotsPanel({ slots }: { slots: SlotValue[] }) {
   return (
     <section className="sp-slots" aria-label="Slots">
-      <div className="sp-row"><h4 style={{ margin: 0 }}>Slots</h4><span className="sp-sim">SIMULATED</span></div>
+      <div className="sp-row"><h4 style={{ margin: 0 }}>Slots</h4>{slots.some(s => s.simulated) ? <span className="sp-sim">SIMULATED</span> : <span className="sp-pill go" title="Written by Claude through the local Claude Code CLI">AI-GENERATED · Claude CLI (local)</span>}</div>
       {slots.map(s => {
         const o = slotOwners(s.slot);
         return (

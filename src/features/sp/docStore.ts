@@ -104,7 +104,7 @@ export function createDocStore(adapter: KeyValueAdapter, projectId: string, now:
     putAi(record: AiRecord, onlyIf?: (current: AiRecord | null) => boolean): boolean {
       const d = fresh();
       if (onlyIf && !onlyIf(d.ai[record.key] ?? null)) return false;
-      write({ ...d, ai: pruneRecords({ ...d.ai, [record.key]: record }) });
+      write({ ...d, ai: pruneRecords({ ...d.ai, [record.key]: record }, undefined, undefined, record.key) });
       return true;
     },
     removeAi(aiKey: string) { const d = fresh(); if (d.ai[aiKey]) { const ai = { ...d.ai }; delete ai[aiKey]; write({ ...d, ai }); } },

@@ -120,6 +120,24 @@ describe('one request per key', () => {
   });
 });
 
+describe('overlapping requests for one task', () => {
+  it('keeps the failure of one visible while two others are still running (found by a live run)', async () => {
+    const { s, svc, c } = setup();
+    const a = { word: 'a-word' }, b = { word: 'b-word' }, third = { word: 'third-word' };
+    svc.ensure(echo, a); svc.ensure(echo, b); svc.ensure(echo, third);
+    s.calls[2].fail(429, 'Claude is busy.'); await c.tick();
+    await c.advance(TIMING.retryDelayMs);
+    s.calls[3].fail(429, 'Claude is busy.'); await c.tick();                // the one automatic retry is also turned away
+    expect(svc.peek(echo, third)).toMatchObject({ status: 'failed', error: 'Claude is busy.', retryable: true });
+    expect(svc.peek(echo, a).status).toBe('pending');
+    expect(svc.peek(echo, b).status).toBe('pending');
+    s.calls[0].ok(); s.calls[1].ok(); await c.tick();
+    expect(svc.peek(echo, a).status).toBe('ready');
+    expect(svc.peek(echo, b).status).toBe('ready');
+    expect(svc.peek(echo, third).status).toBe('failed');                    // still there for whoever retries
+  });
+});
+
 describe('stale and late answers', () => {
   it('abandons a request when the input moved on: it is aborted, forgotten, and its late answer is never stored', async () => {
     const { s, svc, store, c } = setup();

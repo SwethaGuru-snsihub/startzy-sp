@@ -63,19 +63,31 @@ export function cleanRecords(raw: unknown): Record<string, AiRecord> {
 }
 
 export const MAX_RECORDS_PER_TASK = 2;
+export const MAX_FAILED_PER_TASK = 10;
 
 /**
- * Keeps the newest few records of each task (by request time) so old inputs do not pile up in browser
- * storage. A pending record is never dropped: someone may be waiting on it.
+ * Keeps the store small without ever losing something someone is relying on:
+ * - every pending record (someone may be waiting on it);
+ * - the newest few answers of each task (by when they settled), so old inputs do not pile up in browser storage;
+ * - the newest failures of each task, under a separate and larger cap. A failure is tiny, and one that
+ *   vanished would read as "nothing asked yet", so the same request would be made again without anyone
+ *   choosing to retry it.
+ * Pending records and failures never take an answer's place, and answers never take theirs. The record just
+ * written (`protect`) is always kept: a write must never evict itself, whatever the order of the others.
  */
-export function pruneRecords(records: Record<string, AiRecord>, keep = MAX_RECORDS_PER_TASK): Record<string, AiRecord> {
+export function pruneRecords(records: Record<string, AiRecord>, keep = MAX_RECORDS_PER_TASK, keepFailed = MAX_FAILED_PER_TASK, protect?: string): Record<string, AiRecord> {
   const byTask = new Map<string, AiRecord[]>();
   for (const r of Object.values(records)) byTask.set(r.task, [...(byTask.get(r.task) ?? []), r]);
+  const when = (r: AiRecord) => r.settledAt ?? r.requestedAt;
+  const newest = (list: AiRecord[]) => [...list].sort((a, b) => (a.key === protect ? -1 : b.key === protect ? 1 : 0) || when(b).localeCompare(when(a)) || a.key.localeCompare(b.key));
   const out: Record<string, AiRecord> = {};
   for (const list of byTask.values()) {
-    const settled = list.filter(r => r.status !== 'pending').sort((a, b) => b.requestedAt.localeCompare(a.requestedAt) || a.key.localeCompare(b.key));
-    const pending = list.filter(r => r.status === 'pending');
-    for (const r of [...pending, ...settled.slice(0, Math.max(0, keep - pending.length))]) out[r.key] = r;
+    const kept = [
+      ...list.filter(r => r.status === 'pending'),
+      ...newest(list.filter(r => r.status === 'ready')).slice(0, keep),
+      ...newest(list.filter(r => r.status === 'failed')).slice(0, keepFailed),
+    ];
+    for (const r of kept) out[r.key] = r;
   }
   return out;
 }

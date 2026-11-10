@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { MemoryAdapter } from '@/services/coreStorage';
-import { cleanRecords, isAiRecord, MAX_RECORDS_PER_TASK, pruneRecords, type AiRecord } from '../ai/records';
+import { cleanRecords, isAiRecord, MAX_FAILED_PER_TASK, MAX_RECORDS_PER_TASK, pruneRecords, type AiRecord } from '../ai/records';
 import { createDocStore, DOC_KEY_PREFIX } from '../docStore';
 
 const rec = (over: Partial<AiRecord> = {}): AiRecord => ({
   key: 'research:aaa', task: 'research', status: 'ready', requestId: 'r1', attempts: 1, requestedAt: '2026-11-10T10:00:00.000Z',
-  value: { facts: [] }, provider: 'claude-cli', settledAt: '2026-11-10T10:00:20.000Z', ...over,
+  value: { facts: [] }, provider: 'claude-cli', ...over,
 });
 const pending = (over: Partial<AiRecord> = {}): AiRecord => rec({ status: 'pending', value: undefined, provider: undefined, settledAt: undefined, session: 's1', heartbeatAt: '2026-11-10T10:00:00.000Z', deadline: '2026-11-10T10:03:20.000Z', ...over });
 const seed = (data: unknown, id = 'p1') => { const a = new MemoryAdapter(); a.set(`${DOC_KEY_PREFIX}${id}`, JSON.stringify(data)); return a; };
@@ -45,14 +45,54 @@ describe('keeping the store small', () => {
     expect(Object.keys(out).sort()).toEqual(['market:m0', 'research:k2', 'research:k3']);
     expect(MAX_RECORDS_PER_TASK).toBe(2);
   });
-  it('never drops a pending record, however old', () => {
+  it('never drops a pending record, however old, and a pending record takes no settled record place', () => {
     const all = {
       'research:old': pending({ key: 'research:old', requestedAt: '2026-01-01T00:00:00.000Z' }),
       'research:a': rec({ key: 'research:a', requestedAt: '2026-11-10T09:00:00.000Z' }),
       'research:b': rec({ key: 'research:b', requestedAt: '2026-11-10T10:00:00.000Z' }),
       'research:c': rec({ key: 'research:c', requestedAt: '2026-11-10T11:00:00.000Z' }),
     };
-    expect(Object.keys(pruneRecords(all)).sort()).toEqual(['research:c', 'research:old']);   // the pending one uses one of the two places
+    expect(Object.keys(pruneRecords(all)).sort()).toEqual(['research:b', 'research:c', 'research:old']);
+  });
+  it('keeps failures beyond the answer quota, up to their own larger cap, newest first', () => {
+    const failed = (i: number) => rec({ key: `research:f${String(i).padStart(2, '0')}`, status: 'failed', value: undefined, provider: undefined, error: 'busy', retryable: true, requestedAt: `2026-11-10T10:${String(i).padStart(2, '0')}:00.000Z` });
+    const all: Record<string, AiRecord> = {};
+    for (let i = 0; i < MAX_FAILED_PER_TASK + 3; i++) all[failed(i).key] = failed(i);
+    for (const h of ['09', '10', '11']) all[`research:r${h}`] = rec({ key: `research:r${h}`, requestedAt: `2026-11-10T${h}:00:00.000Z` });
+    const out = Object.keys(pruneRecords(all));
+    expect(out.filter(k => k.startsWith('research:f'))).toHaveLength(MAX_FAILED_PER_TASK);
+    expect(out).toContain('research:f12');                      // the newest failure stays
+    expect(out).not.toContain('research:f00');                  // the oldest goes
+    expect(out.filter(k => k.startsWith('research:r')).sort()).toEqual(['research:r10', 'research:r11']);
+  });
+  it('lets a failure survive two answers arriving after it', () => {
+    const all = {
+      'research:failed': rec({ key: 'research:failed', status: 'failed', value: undefined, provider: undefined, error: 'busy', retryable: true, requestedAt: '2026-11-10T12:00:00.000Z' }),
+      'research:r1': rec({ key: 'research:r1', requestedAt: '2026-11-10T09:00:00.000Z' }), 'research:r2': rec({ key: 'research:r2', requestedAt: '2026-11-10T10:00:00.000Z' }), 'research:r3': rec({ key: 'research:r3', requestedAt: '2026-11-10T11:00:00.000Z' }),
+    };
+    expect(Object.keys(pruneRecords(all))).toContain('research:failed');
+  });
+  it('orders answers by when they settled, so the newest answer is the one kept', () => {
+    const all = {
+      'research:a': rec({ key: 'research:a', requestedAt: '2026-11-10T09:00:00.000Z', settledAt: '2026-11-10T12:00:00.000Z' }),   // asked first, answered last
+      'research:b': rec({ key: 'research:b', requestedAt: '2026-11-10T10:00:00.000Z', settledAt: '2026-11-10T10:00:05.000Z' }),
+      'research:c': rec({ key: 'research:c', requestedAt: '2026-11-10T11:00:00.000Z', settledAt: '2026-11-10T11:00:05.000Z' }),
+    };
+    expect(Object.keys(pruneRecords(all)).sort()).toEqual(['research:a', 'research:c']);
+  });
+  it('never evicts the record being written, even when every record looks the same age (found by a live run)', () => {
+    const same = (key: string) => rec({ key, requestedAt: '2026-11-10T10:00:00.000Z', settledAt: '2026-11-10T10:00:10.000Z' });
+    const all = { 'research:aaaa': same('research:aaaa'), 'research:bbbb': same('research:bbbb'), 'research:zzzz': same('research:zzzz') };
+    expect(Object.keys(pruneRecords(all, 2, 10, 'research:zzzz'))).toContain('research:zzzz');       // it sorts last, and used to be the one dropped
+    expect(Object.keys(pruneRecords(all, 2, 10, 'research:aaaa'))).toContain('research:aaaa');
+    expect(Object.keys(pruneRecords(all, 2, 10, 'research:zzzz'))).toHaveLength(2);
+  });
+  it('keeps a record that has just settled, however many other requests are still running', () => {
+    const all = {
+      'research:p1': pending({ key: 'research:p1' }), 'research:p2': pending({ key: 'research:p2' }), 'research:p3': pending({ key: 'research:p3' }),
+      'research:failed': rec({ key: 'research:failed', status: 'failed', value: undefined, provider: undefined, error: 'Claude is busy.', retryable: true }),
+    };
+    expect(Object.keys(pruneRecords(all)).sort()).toEqual(['research:failed', 'research:p1', 'research:p2', 'research:p3']);
   });
 });
 
@@ -94,6 +134,14 @@ describe('AI records in the document store', () => {
     expect(s.getVersion()).toBe(v0 + 2);
     s.removeAi('research:aaa');                       // nothing to remove: no noise
     expect(heard).toHaveBeenCalledTimes(2);
+  });
+  it('keeps the record it has just saved even if it would otherwise sort out', () => {
+    const s = createDocStore(new MemoryAdapter(), 'p1');
+    const at = { requestedAt: '2026-11-10T10:00:00.000Z', settledAt: '2026-11-10T10:00:10.000Z' };
+    s.putAi(rec({ key: 'research:aaaa', ...at })); s.putAi(rec({ key: 'research:bbbb', ...at }));
+    s.putAi(rec({ key: 'research:zzzz', ...at }));
+    expect(s.aiRecord('research:zzzz')).not.toBeNull();
+    expect(s.aiRecords('research')).toHaveLength(2);
   });
   it('prunes old settled records as new ones arrive', () => {
     const s = createDocStore(new MemoryAdapter(), 'p1');

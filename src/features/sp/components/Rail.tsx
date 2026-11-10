@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import type { Notice } from '../aiNotices';
 import { agentLook } from '../model';
 import { actionFor, needsYou, STATUS_LABEL, statusTone, type TaskRow } from '../viewModel';
 
@@ -10,9 +11,11 @@ const KIND: Record<string, string> = { review: 'Artifact review', input: 'Your i
 
 /* The right rail, the same on every tab: what needs the founder, the work queue, and live activity.
    Everything comes from the core instance; nothing here is a separate list. Cards and rows are clickable. */
-export default function Rail({ rows, feed, started, progress, onOpen, onTask }: {
+export default function Rail({ rows, feed, started, progress, onOpen, onTask, notices = [] }: {
   rows: TaskRow[]; feed: { seq: number; at: string; text: string }[]; started: boolean;
   progress: (task: string) => number; onOpen: (r: TaskRow) => void; onTask: (r: TaskRow) => void;
+  /** Notices about the AI: waiting for Claude, a failure on hold, a simulated fallback. */
+  notices?: Notice[];
 }) {
   const [filter, setFilter] = useState<Filter>('All');
   const need = needsYou(rows);
@@ -21,6 +24,7 @@ export default function Rail({ rows, feed, started, progress, onOpen, onTask }: 
     <aside className="sp-rail" aria-label="Notifications and activity">
       <section className="sp-card">
         <h3>Notifications {need.length > 0 && <span className="sp-badge">{need.length}</span>}</h3>
+        {notices.map(n => <div key={n.id} className={`sp-banner ${n.tone === 'bad' ? 'bad' : ''}`} role="status"><span>{n.text}</span></div>)}
         {need.length ? need.map(r => {
           const a = actionFor(r);
           return (

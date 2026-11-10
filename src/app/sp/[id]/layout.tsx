@@ -4,13 +4,17 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useReducer, useState, useSyncExternalStore } from 'react';
 import { useMockAuth } from '@/context/MockAuthContext';
 import { startProject, type Env } from '@/features/sp/actions';
+import { AI_BINDINGS } from '@/features/sp/ai/bindings';
+import { createAiGate } from '@/features/sp/ai/gate';
+import { createAiService } from '@/features/sp/ai/service';
+import { aiNotices } from '@/features/sp/aiNotices';
 import Popups from '@/features/sp/components/Popups';
 import Rail from '@/features/sp/components/Rail';
 import StartPopup from '@/features/sp/components/StartPopup';
 import { getDocStore } from '@/features/sp/docStore';
 import type { IdeaInput } from '@/features/sp/idea';
 import { PHASES } from '@/features/sp/model';
-import { providerOf } from '@/features/sp/provenance';
+import { providerOf, versionFallback } from '@/features/sp/provenance';
 import { createRunner } from '@/features/sp/runner';
 import { SpContext, type ModalSpec, type SpValue } from '@/features/sp/SpContext';
 import { isStarted } from '@/features/sp/startIdea';
@@ -46,7 +50,11 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
   const [, bump] = useReducer((n: number) => n + 1, 0);
 
   const ideaNow = useCallback((): IdeaInput | null => getSpStore(userId).byId(id)?.idea ?? null, [userId, id]);
-  const [runner] = useState(() => createRunner({ rt, id, docs, idea: ideaNow }));
+  // The AI service and gate for this project. No workflow task is AI-gated yet (AI_BINDINGS is empty), so the
+  // runner behaves exactly as it did; later epics add bindings and nothing here changes.
+  const [aiService] = useState(() => createAiService({ store: docs }));
+  const [runner] = useState(() => createRunner({ rt, id, docs, idea: ideaNow, ai: createAiGate({ service: aiService, docs, idea: ideaNow, bindings: AI_BINDINGS }) }));
+  useEffect(() => () => { for (const key of aiService.inFlight()) aiService.cancel(key); }, [aiService]);   // leaving the project ends its requests
 
   useEffect(() => {
     if (!user) { router.replace('/sp'); return; }
@@ -136,7 +144,8 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
         </nav>
         <div className="sp-main">
           <div style={{ minWidth: 0 }}>{children}</div>
-          <Rail rows={rows} feed={activity(project)} started={started} progress={tid => runner.progress(tid)} onOpen={openTask} onTask={r => setModal({ kind: 'task', id: r.id })} />
+          <Rail rows={rows} feed={activity(project)} started={started} progress={tid => runner.progress(tid)} onOpen={openTask} onTask={r => setModal({ kind: 'task', id: r.id })}
+            notices={aiNotices(rows, { phases: runner.phases(), ai: tid => runner.aiState(tid), fallbackOf: tid => versionFallback(docs.latest(tid)) ?? null })} />
         </div>
       </div>
       {!started && <StartPopup userName={user.name} onStart={value.start} />}

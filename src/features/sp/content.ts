@@ -2,11 +2,14 @@
 // from the documents it depends on. No model is called: this is deterministic template text, and every
 // screen that shows it says it is simulated. Pure functions, so they are testable and reusable.
 import { ideaContext, START_OPTIONS, type IdeaInput } from './idea';
-import { providerOf, usableBrief } from './provenance';
+import type { AiFallback } from './ai/records';
+import { providerOf, usableBrief, type Provider } from './provenance';
 
 export type Section = { h: string; b: string; hint?: string; edited?: boolean; locked?: boolean };
 export type Interviews = { n: number; strong: number; notes: string };
-export type ContentCtx = { idea: IdeaInput; interviews: Interviews };
+/** An AI answer a draft may be built from: the validated value, who produced it, and whether it is a fallback. */
+export type AiDraft = { value: unknown; provider: Provider; fallback?: AiFallback };
+export type ContentCtx = { idea: IdeaInput; interviews: Interviews; ai?: AiDraft };
 export type GateCheck = { label: string; ok: boolean; detail: string };
 
 export const NO_INTERVIEWS: Interviews = { n: 0, strong: 0, notes: '' };

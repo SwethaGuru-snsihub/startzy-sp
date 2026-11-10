@@ -114,8 +114,11 @@ export function roomCards(rows: TaskRow[]): RoomCard[] {
   });
 }
 
-/** The runner's timing for one task: walking to the desk, working, or being reviewed. Presentation only. */
-export type RunPhase = 'walk' | 'work' | 'review';
+/**
+ * The runner's timing for one task: walking to the desk, waiting for the AI's answer (the task has not started
+ * yet), working, or being reviewed. Presentation only.
+ */
+export type RunPhase = 'walk' | 'wait' | 'work' | 'review';
 export type AgentSpot = { id: CoreAgentId; x: number; y: number; state: 'idle' | 'walking' | 'working' | 'review' | 'you'; bubble: string; room: SpRoomId | 'centre' };
 
 /** Where each agent is and what it is doing. Agents sit at their home seat; those at work walk to their task's room. */
@@ -124,6 +127,7 @@ export function agentSpots(rows: TaskRow[], phases: Record<string, RunPhase> = {
   for (const r of rows) {
     const ph = phases[r.id];
     if (r.status === 'ready' && ph === 'walk') [r.owner, ...r.support].forEach(a => want.set(a, { room: r.room, state: 'walking', bubble: 'on my way' }));
+    else if (r.status === 'ready' && ph === 'wait') [r.owner, ...r.support].forEach((a, i) => want.set(a, { room: r.room, state: 'working', bubble: i === 0 ? 'waiting for Claude…' : 'standing by' }));
     else if (r.status === 'working') [r.owner, ...r.support].forEach((a, i) => want.set(a, { room: r.room, state: 'working', bubble: i === 0 ? 'working…' : 'helping' }));
     else if (r.status === 'review' && r.reviewer) want.set(r.reviewer, { room: 'quality', state: 'review', bubble: 'reviewing' });
   }

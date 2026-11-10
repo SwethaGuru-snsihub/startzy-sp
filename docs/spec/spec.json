@@ -1,0 +1,4335 @@
+{
+ "source": "Slots mapped.xlsx (Google Sheet \"Slots mapped\")",
+ "epics": [
+  {
+   "epic": 1,
+   "name": "Idea Understanding & Brief",
+   "mappingTitle": "Idea Definition",
+   "features": [
+    "Idea Capture",
+    "Key fields Extraction/ intent detection",
+    "Targeted Clarifying Questions",
+    "Idea Brief Review & Confirmation"
+   ],
+   "tasks": [
+    {
+     "id": "1.T1",
+     "row": 4,
+     "group": null,
+     "responsible": "User",
+     "input": "Free-text idea",
+     "slots": "None",
+     "process": "User submits the idea",
+     "flow": "User → Domain Classifier",
+     "output": "",
+     "prompt": "None"
+    },
+    {
+     "id": "1.T2",
+     "row": 5,
+     "group": null,
+     "responsible": "Domain Classifier",
+     "input": "Raw Idea",
+     "slots": "None (context fields: domain, capabilities)",
+     "process": "Identify the business domain and the capabilities needed. If confidence is low, use the generic core team and mark the domain as an assumption",
+     "flow": "After T1. Classifier → CEO",
+     "output": "Domain + Capabilities",
+     "prompt": "domain_classifier"
+    },
+    {
+     "id": "1.T3",
+     "row": 6,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Raw Idea + Domain + Capabilities",
+     "slots": "None",
+     "process": "Understand the idea, identify the starting point, give it a working name, assign the relevant agents",
+     "flow": "After T2. CEO → CSO",
+     "output": "Idea Record + Agent Team",
+     "prompt": "ceo_allocate"
+    },
+    {
+     "id": "1.T4",
+     "row": 7,
+     "group": null,
+     "responsible": "CSO + BA",
+     "input": "Idea Record",
+     "slots": "idea, \nproblem, \ntarget_users,\nexpected_outcome, \nconstraints",
+     "process": "Extract explicit values with supporting quotes. Label inferred values separately, with rationale and confidence. Leave unknowns empty",
+     "flow": "After T3. CSO ↔ BA",
+     "output": "Slot Values + Evidence (quote) + Confidence",
+     "prompt": "cso_extractor"
+    },
+    {
+     "id": "1.T5",
+     "row": 8,
+     "group": null,
+     "responsible": "Slot Owners + CSO",
+     "input": "Empty or low-confidence slots",
+     "slots": "Missing slots",
+     "process": "Each slot owner writes a question for its slot. CSO ranks them, asks the top 3, and marks the rest as assumptions",
+     "flow": "After T4. CSO ↔ Slot Owners",
+     "output": "Prioritized Questions + Assumptions",
+     "prompt": "slot_question, cso_ranker"
+    },
+    {
+     "id": "1.T6",
+     "row": 9,
+     "group": null,
+     "responsible": "User",
+     "input": "Prioritized Questions",
+     "slots": "Asked slots",
+     "process": "User answers. The matching slots become confirmed. Maximum 2 clarification rounds; remaining unknowns are marked as assumptions",
+     "flow": "After T5. CSO → User. Unfilled slots return to T5 (round 2 only)",
+     "output": "Confirmed Slot Values",
+     "prompt": "None"
+    },
+    {
+     "id": "1.T7",
+     "row": 10,
+     "group": null,
+     "responsible": "CSO",
+     "input": "Confirmed Slots + Assumptions",
+     "slots": "All 5 slots",
+     "process": "Generate the Idea Brief draft from the collected context",
+     "flow": "After T6. CSO uses the brief template",
+     "output": "Idea Brief Draft",
+     "prompt": "cso_brief_writer"
+    },
+    {
+     "id": "1.T8",
+     "row": 11,
+     "group": null,
+     "responsible": "Assigned Domain Agents + CQRO",
+     "input": "Idea Brief Draft",
+     "slots": "The sections built from the slots each reviewer owns",
+     "process": "Domain agents review their own sections. CQRO checks completeness, consistency, assumptions and risk",
+     "flow": "After T7. CSO → Specialists → CQRO. A fail returns to T7",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "1.T9",
+     "row": 12,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Idea Brief + Review Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T8. CSO → CEO. Changes return to T7",
+     "output": "Strategically Approved Brief",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "1.T10",
+     "row": 13,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Idea Brief",
+     "slots": "All 5 slots",
+     "process": "User reviews, then confirms or requests changes",
+     "flow": "After T9. CEO → User. Changes return to T7 and repeat T8 and T9 before the User confirms again",
+     "output": "User-Confirmed Idea Brief",
+     "prompt": "None"
+    },
+    {
+     "id": "1.T11",
+     "row": 14,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Brief + Context",
+     "slots": "All 5 slots",
+     "process": "Lock Idea Brief v1 and hand the confirmed context to Problem Discovery",
+     "flow": "After T10. CSO → Problem Discovery",
+     "output": "Next Component Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "idea",
+     "owner": "CEO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "problem",
+     "owner": "CCO",
+     "supporting": "CPO, CSO + BA"
+    },
+    {
+     "slot": "target_users",
+     "owner": "CMO",
+     "supporting": "CCO"
+    },
+    {
+     "slot": "expected_outcome",
+     "owner": "CPO",
+     "supporting": "CFO, CMO"
+    },
+    {
+     "slot": "constraints",
+     "owner": "CTO",
+     "supporting": "CFO, COO"
+    }
+   ],
+   "sheetEpic": 1
+  },
+  {
+   "epic": 2,
+   "name": "Problem Discovery & Validation",
+   "mappingTitle": "Problem Discovery & Validation",
+   "features": [
+    "Current-State Fact Gathering",
+    "Root Cause Building",
+    "Problem Framing Selection",
+    "Evidence Validation",
+    "Working Assumption Labelling"
+   ],
+   "tasks": [
+    {
+     "id": "2.T1",
+     "row": 18,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Idea Brief + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the agent team from Phase 1, and add specialists if the problem needs them",
+     "flow": "Starts after Phase 1 handoff. CSO → CEO if a new agent is needed",
+     "output": "Agent Team for this phase",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "2.T2",
+     "row": 19,
+     "group": null,
+     "responsible": "CSO + BA, with CCO, CMO, CFO",
+     "input": "Idea Brief (problem, target_users)",
+     "slots": "problem, affected_users, pain_points, current_process, frequency, severity, business_impact",
+     "process": "Fill: gather current-state facts from sources. Each fact gets a source, date, confidence and a provenance label (ai_estimated or sourced). Leave unknowns empty",
+     "flow": "After T1. CSO ↔ slot owners",
+     "output": "Fact Sheet (with sources)",
+     "prompt": "fact_gatherer, source_checker"
+    },
+    {
+     "id": "2.T3",
+     "row": 20,
+     "group": null,
+     "responsible": "Slot Owners + CSO",
+     "input": "Empty or low-confidence fact slots",
+     "slots": "Missing slots",
+     "process": "Ask: each owner writes a question or evidence request for its slot. CSO ranks them and asks the top 3. The rest become assumptions",
+     "flow": "After T2. CSO ↔ slot owners",
+     "output": "Prioritized Questions + Evidence Requests",
+     "prompt": "slot_question, cso_ranker"
+    },
+    {
+     "id": "2.T4",
+     "row": 21,
+     "group": null,
+     "responsible": "User",
+     "input": "Questions + Evidence Requests",
+     "slots": "Asked slots",
+     "process": "Ask: User answers, and can add their own evidence (interview notes, links, documents). Only the answered slots become confirmed. Maximum 2 rounds; remaining unknowns are marked as assumptions",
+     "flow": "After T3. CSO → User. Unfilled slots return to T3 (round 2 only)",
+     "output": "Updated Slot Values + User Evidence",
+     "prompt": "None"
+    },
+    {
+     "id": "2.T5",
+     "row": 22,
+     "group": null,
+     "responsible": "CSO, CPO, with CXO",
+     "input": "Fact Sheet + User Evidence",
+     "slots": "root_causes",
+     "process": "Generate: build the root causes behind the problem. Each cause links to a fact",
+     "flow": "After T4",
+     "output": "Root Cause Tree",
+     "prompt": "root_cause_builder"
+    },
+    {
+     "id": "2.T6",
+     "row": 23,
+     "group": null,
+     "responsible": "CSO",
+     "input": "The 8 input slots. problem and affected_users are mandatory",
+     "slots": "None",
+     "process": "Generate: draft 2 to 3 framings of the problem statement. Block the draft unless problem and affected_users are explicit, inferred (with rationale) or confirmed. Other slots may be assumed, and appear in the statement as assumptions. CPO and CMO each comment on the options",
+     "flow": "After T5. CSO → CPO, CMO. If blocked, CSO → User",
+     "output": "Framing Options",
+     "prompt": "framing_generator"
+    },
+    {
+     "id": "2.T7",
+     "row": 24,
+     "group": null,
+     "responsible": "User",
+     "input": "Framing Options",
+     "slots": "problem_statement",
+     "process": "Confirm: User picks one framing, and may edit it",
+     "flow": "After T6. CSO → User",
+     "output": "Selected Problem Statement",
+     "prompt": "None"
+    },
+    {
+     "id": "2.T8",
+     "row": 25,
+     "group": null,
+     "responsible": "CQRO + CDO, with CFO for business impact",
+     "input": "Fact Sheet + Selected Problem Statement + User Evidence",
+     "slots": "Evidence metadata for the 7 fact slots, and evidence links for root_causes",
+     "process": "Review: check that each fact has evidence, check source quality and date, flag conflicts, and give an evidence score. Root causes and the problem statement must trace back to the facts they cite. Pass, or needs more evidence",
+     "flow": "After T7. A fail for missing evidence returns to T3. A fail for the wrong framing returns to T6",
+     "output": "Evidence Report + Score",
+     "prompt": "evidence_validator, cqro_reviewer"
+    },
+    {
+     "id": "2.T9",
+     "row": 26,
+     "group": null,
+     "responsible": "CSO + CQRO",
+     "input": "Evidence Report + all slots",
+     "slots": "assumptions (register)",
+     "process": "Fill: label every unvalidated item as an assumption, ranked riskiest first",
+     "flow": "After T8",
+     "output": "Assumption Register",
+     "prompt": "assumption_labeller"
+    },
+    {
+     "id": "2.T10",
+     "row": 27,
+     "group": null,
+     "responsible": "CSO",
+     "input": "Fact Sheet + Root Cause Tree + Selected Problem Statement + Evidence Report + Assumption Register",
+     "slots": "All 8 input slots + problem_statement",
+     "process": "Generate: draft the Problem Discovery document",
+     "flow": "After T9. CSO uses the template",
+     "output": "Problem Discovery Draft",
+     "prompt": "cso_problem_doc_writer"
+    },
+    {
+     "id": "2.T11",
+     "row": 28,
+     "group": null,
+     "responsible": "Assigned Domain Agents + CQRO",
+     "input": "Draft",
+     "slots": "The sections built from the slots each reviewer owns",
+     "process": "Review: domain agents check their sections. CQRO checks completeness, consistency, evidence labels and risk",
+     "flow": "After T10. A fail returns to T10",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "2.T12",
+     "row": 29,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Document + Review Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T11. Changes return to T10",
+     "output": "Approved Document",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "2.T13",
+     "row": 30,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Document",
+     "slots": "All slots",
+     "process": "Confirm, or request changes",
+     "flow": "After T12. Wording changes return to T10 and repeat T11 and T12. A different framing returns to T6",
+     "output": "User-Confirmed Document",
+     "prompt": "None"
+    },
+    {
+     "id": "2.T14",
+     "row": 31,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Document + Context",
+     "slots": "All slots",
+     "process": "Handoff: lock the document and pass the confirmed context on",
+     "flow": "After T13. CSO → Opportunity & Market",
+     "output": "Next Component Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "problem",
+     "owner": "CCO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "affected_users",
+     "owner": "CMO",
+     "supporting": "CCO"
+    },
+    {
+     "slot": "pain_points",
+     "owner": "CCO",
+     "supporting": "CXO"
+    },
+    {
+     "slot": "current_process",
+     "owner": "CMO",
+     "supporting": "CCO"
+    },
+    {
+     "slot": "frequency",
+     "owner": "CCO",
+     "supporting": "CXO"
+    },
+    {
+     "slot": "severity",
+     "owner": "CCO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "business_impact",
+     "owner": "CFO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "root_causes",
+     "owner": "CPO",
+     "supporting": "CXO, CSO"
+    },
+    {
+     "slot": "problem_statement",
+     "owner": "CSO",
+     "supporting": "CPO"
+    }
+   ],
+   "sheetEpic": 3
+  },
+  {
+   "epic": 3,
+   "name": "Opportunity, Market & Customer Discovery",
+   "mappingTitle": "Opportunity, Market & Customer Discovery",
+   "features": [
+    "One-Click Opportunity Analysis",
+    "Market Gap Identification",
+    "Opportunity Scoring (problem fit, market size, urgency, feasibility)",
+    "Go / No-Go Signal with Rationale",
+    "Strategic Positioning and Value Hypothesis",
+    "Market Sizing: TAM, SAM, SOM with editable assumptions",
+    "Market Growth and Trends",
+    "Regulation, Compliance and Risk Scan",
+    "Industry Structure (PESTLE or Five Forces)",
+    "Sourced Market Research (multi-query)",
+    "Cited Market Brief",
+    "Source Quality, Date and Conflict Flags",
+    "Add Your Own Sources (links, documents)",
+    "Refresh Stale Research",
+    "Competitor Discovery (direct, indirect, substitutes)",
+    "Competitor Profiles",
+    "Feature Comparison Matrix",
+    "Pricing Comparison Table",
+    "SWOT and Differentiation Summary",
+    "Competitor Change Alerts",
+    "Editable Customer Segments",
+    "Segment Prioritisation and Ideal Customer Profile (ICP)",
+    "Editable Personas",
+    "Jobs-to-be-Done per Persona",
+    "Buyer vs User vs Decision-Maker Roles",
+    "Assumption Register (riskiest first)",
+    "Confidence and AI-Provenance Labels",
+    "Persona Label (Synthetic )",
+    "Discovery Summary Export and Hand-off to later phases"
+   ],
+   "tasks": [
+    {
+     "id": "3.T1",
+     "row": 36,
+     "group": "Setup",
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Problem Discovery doc + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team, add specialists (market, regulation)",
+     "flow": "After Phase 2 handoff",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "3.T2",
+     "row": 38,
+     "group": "Component 1: Market Research & Sources",
+     "responsible": "CSO + BA, CDO, CMO",
+     "input": "problem_statement, affected_users",
+     "slots": "market_findings, sources",
+     "process": "Fill: multi-query sourced research. Every source gets quality, date and conflict flags",
+     "flow": "After T1",
+     "output": "Sourced Research Pack",
+     "prompt": "market_researcher, source_checker"
+    },
+    {
+     "id": "3.T3",
+     "row": 39,
+     "group": "Component 1: Market Research & Sources",
+     "responsible": "User (optional)",
+     "input": "Research Pack",
+     "slots": "sources",
+     "process": "Ask: add your own sources (links, documents). They are merged and flagged like the others",
+     "flow": "After T2. CSO → User",
+     "output": "Merged Source List",
+     "prompt": "None"
+    },
+    {
+     "id": "3.T4",
+     "row": 40,
+     "group": "Component 1: Market Research & Sources",
+     "responsible": "CDO",
+     "input": "Merged Source List",
+     "slots": "sources",
+     "process": "Refresh: re-run sources older than the age limit (default 90 days, configurable), or on demand",
+     "flow": "Triggered by source age or by the User",
+     "output": "Refreshed Sources",
+     "prompt": "source_refresher"
+    },
+    {
+     "id": "3.T5",
+     "row": 41,
+     "group": "Component 1: Market Research & Sources",
+     "responsible": "CSO + CMO",
+     "input": "Research Pack + Merged / Refreshed Source List",
+     "slots": "market_findings",
+     "process": "Generate: the cited market brief. Use refreshed sources when available",
+     "flow": "After T2, T3 and T4 (if run)",
+     "output": "Cited Market Brief",
+     "prompt": "market_brief_writer"
+    },
+    {
+     "id": "3.T6",
+     "row": 43,
+     "group": "Component 2: Market Sizing & Trends",
+     "responsible": "CFO + CSO",
+     "input": "Cited Market Brief",
+     "slots": "market_size (TAM, SAM, SOM, plus assumptions)",
+     "process": "Fill: size the market. Every assumption is editable",
+     "flow": "After T5. User edits return here",
+     "output": "Market Sizing Sheet",
+     "prompt": "market_sizer"
+    },
+    {
+     "id": "3.T7",
+     "row": 44,
+     "group": "Component 2: Market Sizing & Trends",
+     "responsible": "CMO, CISO or COO, CSO",
+     "input": "Cited Market Brief",
+     "slots": "market_trends, regulatory_risks, industry_structure",
+     "process": "Fill: growth and trends (CMO), regulation and compliance scan (CISO or COO), industry structure with PESTLE or Five Forces (CSO). The scan is a regulatory risk scan, not legal advice",
+     "flow": "After T5. Runs parallel with T6",
+     "output": "Trends, Risk Scan, Industry Structure",
+     "prompt": "trend_analyst, risk_scanner, industry_structurer"
+    },
+    {
+     "id": "3.T8",
+     "row": 46,
+     "group": "Component 3: Competitor Analysis",
+     "responsible": "CMO + CSO",
+     "input": "Cited Market Brief, problem_statement",
+     "slots": "competitors",
+     "process": "Fill: discover direct, indirect and substitute competitors",
+     "flow": "After T5. Runs parallel with T6",
+     "output": "Competitor List",
+     "prompt": "competitor_finder"
+    },
+    {
+     "id": "3.T9",
+     "row": 47,
+     "group": "Component 3: Competitor Analysis",
+     "responsible": "CMO, CPO, CFO",
+     "input": "Competitor List",
+     "slots": "competitor_profiles, feature_matrix, pricing_table",
+     "process": "Fill: profiles, feature comparison matrix, pricing table",
+     "flow": "After T8",
+     "output": "Profiles, Matrix, Pricing Table",
+     "prompt": "competitor_profiler"
+    },
+    {
+     "id": "3.T10",
+     "row": 48,
+     "group": "Component 3: Competitor Analysis",
+     "responsible": "CSO",
+     "input": "Profiles + Matrix + Pricing",
+     "slots": "swot_differentiation",
+     "process": "Generate: SWOT and differentiation summary",
+     "flow": "After T9",
+     "output": "SWOT + Differentiation",
+     "prompt": "swot_writer"
+    },
+    {
+     "id": "3.T11",
+     "row": 49,
+     "group": "Component 3: Competitor Analysis",
+     "responsible": "CDO",
+     "input": "Competitor List",
+     "slots": "None",
+     "process": "Monitor: competitor change alerts (ongoing, not a one-time task)",
+     "flow": "Scheduled",
+     "output": "Change Alerts",
+     "prompt": "competitor_monitor"
+    },
+    {
+     "id": "3.T12",
+     "row": 51,
+     "group": "Component 4: Customer Segments & Personas",
+     "responsible": "CMO + CCO + CXO",
+     "input": "affected_users, Research Pack",
+     "slots": "customer_segments, icp",
+     "process": "Fill: editable segments, segment prioritisation and the ideal customer profile",
+     "flow": "After T5. Runs parallel with T6",
+     "output": "Segments + ICP",
+     "prompt": "segment_builder"
+    },
+    {
+     "id": "3.T13",
+     "row": 52,
+     "group": "Component 4: Customer Segments & Personas",
+     "responsible": "CXO + CCO",
+     "input": "Segments + ICP",
+     "slots": "personas, jobs_to_be_done, buyer_roles",
+     "process": "Generate: personas, JTBD and buyer, user and decision-maker roles. Each persona is labelled Synthetic. A persona built from User evidence names its evidence source instead",
+     "flow": "After T12",
+     "output": "Personas + JTBD + Roles",
+     "prompt": "persona_builder"
+    },
+    {
+     "id": "3.T14",
+     "row": 53,
+     "group": "Component 4: Customer Segments & Personas",
+     "responsible": "User",
+     "input": "Segments, ICP, Personas, Market Sizing assumptions",
+     "slots": "Edited slots",
+     "process": "Ask: review and edit. Only the downstream tasks that depend on an edited slot are re-run, not the whole phase",
+     "flow": "After T6, T7, T10, T13. CSO → User",
+     "output": "Confirmed Edits",
+     "prompt": "None"
+    },
+    {
+     "id": "3.T15",
+     "row": 55,
+     "group": "Component 5: Opportunity Decision",
+     "responsible": "CPO, CFO, CCO, CTO, CSO",
+     "input": "All component outputs",
+     "slots": "market_gap, willingness_to_pay, opportunity_score (problem fit, market size, urgency, feasibility)",
+     "process": "Fill: each role scores its own dimension. CPO scores problem fit, CFO market size and willingness to pay, CCO urgency, CTO feasibility, CSO the market gap",
+     "flow": "After T14",
+     "output": "Opportunity Analysis",
+     "prompt": "opportunity_analyst"
+    },
+    {
+     "id": "3.T16",
+     "row": 56,
+     "group": "Component 5: Opportunity Decision",
+     "responsible": "CSO",
+     "input": "Opportunity Analysis",
+     "slots": "go_no_go, value_hypothesis",
+     "process": "Generate: the Opportunity Signal with rationale: Go, Needs refinement or Weak. Also the strategic positioning and value hypothesis. A Weak signal suggests alternative problem framings",
+     "flow": "After T15",
+     "output": "Opportunity Signal + Value Hypothesis",
+     "prompt": "go_no_go_writer"
+    },
+    {
+     "id": "3.T17",
+     "row": 58,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "CSO + CQRO",
+     "input": "All slots",
+     "slots": "assumptions (register)",
+     "process": "Fill: assumption register across the phase, riskiest first. Every item gets a confidence and provenance label",
+     "flow": "After T16",
+     "output": "Assumption Register",
+     "prompt": "assumption_labeller"
+    },
+    {
+     "id": "3.T18",
+     "row": 59,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "CSO",
+     "input": "All documents",
+     "slots": "All Phase 3 slots",
+     "process": "Generate: Discovery Summary, with export",
+     "flow": "After T17",
+     "output": "Discovery Summary",
+     "prompt": "discovery_summary_writer"
+    },
+    {
+     "id": "3.T19",
+     "row": 60,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "Domain Agents + CQRO",
+     "input": "Each document + Summary",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: completeness, consistency, source quality, conflicts, labels. A fail returns to the task that produced it",
+     "flow": "After T18",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "3.T20",
+     "row": 61,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "CEO",
+     "input": "Reviewed Summary + Findings",
+     "slots": "None",
+     "process": "Strategic approval of the summary and the signal",
+     "flow": "After T19. Changes return to T18",
+     "output": "Approved Summary",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "3.T21",
+     "row": 62,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "User",
+     "input": "Approved Summary (with the Opportunity Signal)",
+     "slots": "All slots",
+     "process": "Confirm: the Gate 1 User Decision: Go, Needs refinement or Stop",
+     "flow": "After T20. CEO → User. Needs refinement returns to T14, then T15. Stop ends the journey and keeps all research. A Weak signal with a try-another-problem choice returns to Phase 2 T3",
+     "output": "Gate 1 Decision",
+     "prompt": "None"
+    },
+    {
+     "id": "3.T22",
+     "row": 63,
+     "group": "Component 6: Assumptions & Handoff",
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Summary + Context",
+     "slots": "All slots",
+     "process": "Handoff to Solution Discovery",
+     "flow": "After T21 (Go only)",
+     "output": "Next Phase Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "market_findings, sources",
+     "owner": "CDO",
+     "supporting": "CSO + BA, CMO"
+    },
+    {
+     "slot": "market_size",
+     "owner": "CFO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "market_trends",
+     "owner": "CMO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "regulatory_risks",
+     "owner": "CISO",
+     "supporting": "COO"
+    },
+    {
+     "slot": "industry_structure",
+     "owner": "CSO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "competitors",
+     "owner": "CMO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "competitor_profiles, feature_matrix",
+     "owner": "CPO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "pricing_table",
+     "owner": "CFO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "swot_differentiation",
+     "owner": "CSO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "customer_segments, icp",
+     "owner": "CMO",
+     "supporting": "CCO"
+    },
+    {
+     "slot": "personas",
+     "owner": "CXO",
+     "supporting": "CCO"
+    },
+    {
+     "slot": "jobs_to_be_done, buyer_roles",
+     "owner": "CCO",
+     "supporting": "CXO"
+    },
+    {
+     "slot": "market_gap",
+     "owner": "CSO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "willingness_to_pay",
+     "owner": "CFO",
+     "supporting": "CMO"
+    },
+    {
+     "slot": "opportunity_score",
+     "owner": "CSO",
+     "supporting": "CPO, CFO, CCO, CTO"
+    },
+    {
+     "slot": "go_no_go, value_hypothesis",
+     "owner": "CSO",
+     "supporting": "CEO, CPO"
+    }
+   ],
+   "sheetEpic": 2
+  },
+  {
+   "epic": 4,
+   "name": "Solution Discovery",
+   "mappingTitle": "Solution Discovery",
+   "features": [
+    "AI-Written and User-Written Options Comparison",
+    "Option Linking to Root Causes",
+    "Capability Definition",
+    "Evidence-Based Evaluation",
+    "Solution Confirmation"
+   ],
+   "tasks": [
+    {
+     "id": "4.T1",
+     "row": 67,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Discovery Summary + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team, with more weight on CTO and CPO",
+     "flow": "After Phase 3 handoff (Go only)",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "4.T2",
+     "row": 68,
+     "group": null,
+     "responsible": "CPO + CSO",
+     "input": "Discovery Summary, problem_statement, root_causes, the Idea Brief’s idea",
+     "slots": "solution_options",
+     "process": "Generate: the User’s original idea becomes User Option 1, and the agents generate 2 to 4 more. Each option is labelled ai_written or user_written",
+     "flow": "After T1",
+     "output": "Option List",
+     "prompt": "option_generator"
+    },
+    {
+     "id": "4.T3",
+     "row": 69,
+     "group": null,
+     "responsible": "User (optional)",
+     "input": "Option List",
+     "slots": "solution_options",
+     "process": "Ask: add or edit your own options. User-written options are never dropped",
+     "flow": "After T2. CSO → User",
+     "output": "Merged Option List",
+     "prompt": "None"
+    },
+    {
+     "id": "4.T4",
+     "row": 70,
+     "group": null,
+     "responsible": "CPO + CSO",
+     "input": "Merged Option List + root_causes",
+     "slots": "option_root_cause_links",
+     "process": "Fill: link each option to the root causes it addresses. Flag root causes no option covers, and options that link to none",
+     "flow": "After T3",
+     "output": "Option-to-Root-Cause Map",
+     "prompt": "option_linker"
+    },
+    {
+     "id": "4.T5",
+     "row": 71,
+     "group": null,
+     "responsible": "CTO + CPO, CDO",
+     "input": "Merged Option List + Map",
+     "slots": "capabilities",
+     "process": "Fill: define the capabilities each option needs, in plain terms",
+     "flow": "After T4",
+     "output": "Capability List per Option",
+     "prompt": "capability_definer"
+    },
+    {
+     "id": "4.T6",
+     "row": 72,
+     "group": null,
+     "responsible": "CSO + CFO, CTO, CCO, CMO",
+     "input": "Options, Map, Capabilities, Phase 2 and 3 evidence",
+     "slots": "option_evaluation",
+     "process": "Fill: score every option on root-cause coverage, feasibility, cost, user fit and market fit. Each score carries an evidence label. The same criteria apply to AI and User options. Unscored criteria are marked assumed",
+     "flow": "After T5",
+     "output": "Evaluation Matrix + Evidence",
+     "prompt": "option_evaluator"
+    },
+    {
+     "id": "4.T7",
+     "row": 73,
+     "group": null,
+     "responsible": "CSO",
+     "input": "Evaluation Matrix + the 4 input slots",
+     "slots": "All 4 input slots",
+     "process": "Generate: the Solution Discovery document, with the side-by-side comparison, a recommendation with rationale (not just a score), and open risks",
+     "flow": "After T6",
+     "output": "Solution Discovery Draft",
+     "prompt": "solution_doc_writer"
+    },
+    {
+     "id": "4.T8",
+     "row": 74,
+     "group": null,
+     "responsible": "Assigned Domain Agents + CQRO",
+     "input": "Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every option is linked to a root cause, evidence labels are present, criteria were applied equally to AI and User options. A fail returns to the task that produced the gap",
+     "flow": "After T7",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "4.T9",
+     "row": 75,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Document + Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T8. Changes return to T7",
+     "output": "Approved Document",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "4.T10",
+     "row": 76,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Document",
+     "slots": "selected_solution",
+     "process": "Confirm: the User picks one option or a hybrid, including one the AI ranked lower. If so, the rationale and the extra risk are recorded",
+     "flow": "After T9. CEO → User. A rejected shortlist returns to T3",
+     "output": "Confirmed Solution",
+     "prompt": "None"
+    },
+    {
+     "id": "4.T11",
+     "row": 77,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Document + Context",
+     "slots": "selected_solution, capabilities",
+     "process": "Handoff to Business Model & Feasibility",
+     "flow": "After T10",
+     "output": "Next Phase Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "solution_options, option_root_cause_links",
+     "owner": "CPO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "capabilities",
+     "owner": "CTO",
+     "supporting": "CPO, CDO"
+    },
+    {
+     "slot": "option_evaluation",
+     "owner": "CSO",
+     "supporting": "CFO, CTO, CCO, CMO"
+    },
+    {
+     "slot": "selected_solution",
+     "owner": "CSO",
+     "supporting": "CPO"
+    }
+   ],
+   "sheetEpic": 4
+  },
+  {
+   "epic": 5,
+   "name": "Business Model & Feasibility",
+   "mappingTitle": "Business Model & Feasibility",
+   "features": [
+    "Business Model Canvas (BMC)",
+    "Business Case",
+    "Risk Analysis",
+    "Feasibility Estimate",
+    "User-Only Financials",
+    "Single Confirmation"
+   ],
+   "tasks": [
+    {
+     "id": "5.T1",
+     "row": 81,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Solution Discovery doc + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team, with more weight on CFO, CTO, COO and CISO",
+     "flow": "After Phase 4 handoff",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "5.T2",
+     "row": 82,
+     "group": null,
+     "responsible": "CSO + CMO, CPO, CFO",
+     "input": "selected_solution, capabilities, Phase 3 icp, value_hypothesis, pricing_table",
+     "slots": "business_model_canvas (9 blocks)",
+     "process": "Fill: populate the 9 canvas blocks from earlier phases. Carried-over blocks keep their source. Unknown blocks stay empty",
+     "flow": "After T1",
+     "output": "Canvas Draft",
+     "prompt": "bmc_builder"
+    },
+    {
+     "id": "5.T3",
+     "row": 83,
+     "group": null,
+     "responsible": "Slot Owners + CSO",
+     "input": "Empty or low-confidence canvas blocks",
+     "slots": "Missing blocks",
+     "process": "Ask: each owner writes a question for its block. CSO ranks them and asks the top 3. The rest become assumptions",
+     "flow": "After T2",
+     "output": "Prioritized Questions",
+     "prompt": "slot_question, cso_ranker"
+    },
+    {
+     "id": "5.T4",
+     "row": 84,
+     "group": null,
+     "responsible": "User",
+     "input": "Questions",
+     "slots": "Asked blocks",
+     "process": "Ask: User answers. Only the answered blocks become confirmed. Maximum 2 rounds",
+     "flow": "After T3. Unfilled blocks return to T3 (round 2 only)",
+     "output": "Updated Canvas",
+     "prompt": "None"
+    },
+    {
+     "id": "5.T5",
+     "row": 85,
+     "group": null,
+     "responsible": "CFO",
+     "input": "Updated Canvas + selected_solution",
+     "slots": "financial_inputs",
+     "process": "Ask: prepare the financial input request: price, unit cost, expected volume, fixed costs, funding available. Sourced reference ranges may be shown beside each field, labelled sourced, and are never auto-filled",
+     "flow": "After T4. CFO → User",
+     "output": "Financial Input Request",
+     "prompt": "financial_request"
+    },
+    {
+     "id": "5.T6",
+     "row": 86,
+     "group": null,
+     "responsible": "User",
+     "input": "Financial Input Request",
+     "slots": "financial_inputs",
+     "process": "Ask: User provides the figures. Each one is labelled user_provided. Skipped fields stay empty",
+     "flow": "After T5. CFO → User",
+     "output": "Financial Inputs",
+     "prompt": "None"
+    },
+    {
+     "id": "5.T7",
+     "row": 87,
+     "group": null,
+     "responsible": "CFO + CSO",
+     "input": "financial_inputs, Canvas, selected_solution",
+     "slots": "business_case",
+     "process": "Generate: unit economics, break-even and scenarios, calculated by formulas from user_provided figures only. If inputs are missing, produce a qualitative case and state that no figures were computed",
+     "flow": "After T6",
+     "output": "Business Case",
+     "prompt": "business_case_writer"
+    },
+    {
+     "id": "5.T8",
+     "row": 88,
+     "group": null,
+     "responsible": "COO + CISO, CTO, CFO, CMO",
+     "input": "Canvas, Phase 3 regulatory_risks, Phase 3 assumption register",
+     "slots": "risks",
+     "process": "Fill: risks by category (market, technical, financial, operational, regulatory, security), each with likelihood, impact and a mitigation. Link each to the assumption it comes from",
+     "flow": "After T4. Runs parallel with T7",
+     "output": "Risk Register",
+     "prompt": "risk_analyst"
+    },
+    {
+     "id": "5.T9",
+     "row": 89,
+     "group": null,
+     "responsible": "CTO + COO, CFO",
+     "input": "Canvas, Business Case, Risk Register, capabilities",
+     "slots": "feasibility",
+     "process": "Fill: technical, operational and financial feasibility, with effort and time ranges labelled ai_estimated. The verdict is Feasible, Feasible with conditions or Not feasible, with rationale. Financial feasibility uses only user_provided figures",
+     "flow": "After T7 and T8",
+     "output": "Feasibility Estimate",
+     "prompt": "feasibility_estimator"
+    },
+    {
+     "id": "5.T10",
+     "row": 90,
+     "group": null,
+     "responsible": "CSO",
+     "input": "All slots",
+     "slots": "All 5 slots",
+     "process": "Generate: the Business Model & Feasibility document",
+     "flow": "After T9",
+     "output": "Document Draft",
+     "prompt": "bm_doc_writer"
+    },
+    {
+     "id": "5.T11",
+     "row": 91,
+     "group": null,
+     "responsible": "Domain Agents + CQRO",
+     "input": "Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: no financial figure is without a user_provided label, the canvas is consistent with Phases 3 and 4, every risk is linked, and the feasibility basis is stated. A fail returns to the task that produced the gap",
+     "flow": "After T10",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "5.T12",
+     "row": 92,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Document + Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T11. Changes return to T10",
+     "output": "Approved Document",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "5.T13",
+     "row": 93,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Document",
+     "slots": "All slots",
+     "process": "Confirm: single confirmation for the whole phase (canvas, financials, business case, risks, feasibility), or request changes",
+     "flow": "After T12. Changes return to the producing task and repeat T11 and T12",
+     "output": "User-Confirmed Document",
+     "prompt": "None"
+    },
+    {
+     "id": "5.T14",
+     "row": 94,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Document + Context",
+     "slots": "All slots",
+     "process": "Handoff to Product Definition",
+     "flow": "After T13",
+     "output": "Next Phase Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "business_model_canvas",
+     "owner": "CSO",
+     "supporting": "CMO, CPO"
+    },
+    {
+     "slot": "financial_inputs",
+     "owner": "CFO",
+     "supporting": "the User provides every value"
+    },
+    {
+     "slot": "business_case",
+     "owner": "CFO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "risks",
+     "owner": "COO",
+     "supporting": "CISO, CTO, CFO"
+    },
+    {
+     "slot": "feasibility",
+     "owner": "CTO",
+     "supporting": "COO, CFO"
+    }
+   ],
+   "sheetEpic": 5
+  },
+  {
+   "epic": 6,
+   "name": "Product Definition",
+   "mappingTitle": "Product Definition",
+   "features": [
+    "Target Users",
+    "Scope Definition",
+    "Feature Definition",
+    "User Journeys",
+    "UX Principles",
+    "Outcome Goals and Success Metrics"
+   ],
+   "tasks": [
+    {
+     "id": "6.T1",
+     "row": 98,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Business Model & Feasibility doc + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team, with more weight on CPO, CXO and CTO",
+     "flow": "After Phase 5 handoff",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "6.T2",
+     "row": 99,
+     "group": null,
+     "responsible": "CPO + CCO, CXO",
+     "input": "Phase 3 personas, icp, buyer_roles, Phase 1 target_users",
+     "slots": "product_users",
+     "process": "Fill: carry over and refine the personas into primary and secondary product users. Each is linked to its persona and keeps its label (Synthetic or evidence source)",
+     "flow": "After T1",
+     "output": "Product Users",
+     "prompt": "product_user_definer"
+    },
+    {
+     "id": "6.T3",
+     "row": 100,
+     "group": null,
+     "responsible": "CPO + CFO, CMO, CDO",
+     "input": "Phase 1 expected_outcome, product_users, business_case",
+     "slots": "outcome_goals, success_metrics",
+     "process": "Fill: outcome goals, each traced to expected_outcome. Success metrics with baseline, target and measurement method. Targets are proposals and stay assumed until the User confirms",
+     "flow": "After T2",
+     "output": "Outcome Goals + Success Metrics",
+     "prompt": "outcome_metric_builder"
+    },
+    {
+     "id": "6.T4",
+     "row": 101,
+     "group": null,
+     "responsible": "CPO + CTO, CFO",
+     "input": "selected_solution, capabilities, Phase 1 constraints, feasibility, financial_inputs",
+     "slots": "scope",
+     "process": "Generate: in scope, out of scope and the MVP boundary. Every exclusion states its reason",
+     "flow": "After T3",
+     "output": "Scope Draft",
+     "prompt": "scope_definer"
+    },
+    {
+     "id": "6.T5",
+     "row": 102,
+     "group": null,
+     "responsible": "Slot Owners + CPO",
+     "input": "Gaps in users, outcomes, metrics and scope",
+     "slots": "Missing slots",
+     "process": "Ask: each owner writes a question for its slot. CPO ranks them and asks the top 3. The rest become assumptions",
+     "flow": "After T4",
+     "output": "Prioritized Questions",
+     "prompt": "slot_question, cpo_ranker"
+    },
+    {
+     "id": "6.T6",
+     "row": 103,
+     "group": null,
+     "responsible": "User",
+     "input": "Questions",
+     "slots": "Asked slots",
+     "process": "Ask: User answers. Only the answered slots become confirmed. Maximum 2 rounds",
+     "flow": "After T5. Unfilled slots return to T5 (round 2 only)",
+     "output": "Updated Slot Values",
+     "prompt": "None"
+    },
+    {
+     "id": "6.T7",
+     "row": 104,
+     "group": null,
+     "responsible": "CPO + CTO, CXO",
+     "input": "Scope, capabilities, product_users, root_causes",
+     "slots": "product_features",
+     "process": "Fill: define the product features. Each links to a capability and a root cause, with a priority (must, should, could). Flag capabilities with no feature and features with no capability",
+     "flow": "After T6",
+     "output": "Product Feature List",
+     "prompt": "feature_definer"
+    },
+    {
+     "id": "6.T8",
+     "row": 105,
+     "group": null,
+     "responsible": "CXO + CPO, CCO",
+     "input": "product_users, product_features, Phase 2 pain_points",
+     "slots": "user_journeys",
+     "process": "Generate: a journey per product user and key goal. Each has steps, touchpoints, the pain points it removes and the features used",
+     "flow": "After T7",
+     "output": "User Journeys",
+     "prompt": "journey_builder"
+    },
+    {
+     "id": "6.T9",
+     "row": 106,
+     "group": null,
+     "responsible": "CXO + CPO",
+     "input": "Personas, Journeys, constraints, domain",
+     "slots": "ux_principles",
+     "process": "Fill: 3 to 7 UX principles, each with a rationale tied to a user, a journey or a constraint",
+     "flow": "After T8",
+     "output": "UX Principles",
+     "prompt": "ux_principle_writer"
+    },
+    {
+     "id": "6.T10",
+     "row": 107,
+     "group": null,
+     "responsible": "CPO",
+     "input": "All slots",
+     "slots": "All 7 slots",
+     "process": "Generate: the Product Definition document",
+     "flow": "After T9",
+     "output": "Document Draft",
+     "prompt": "product_doc_writer"
+    },
+    {
+     "id": "6.T11",
+     "row": 108,
+     "group": null,
+     "responsible": "Domain Agents + CQRO",
+     "input": "Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review the traceability chain: every feature links to a capability and a root cause, every outcome goal links to expected_outcome, every journey links to a product user, and scope respects constraints and feasibility. Metrics must be measurable. A fail returns to the task that produced the gap",
+     "flow": "After T10",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "6.T12",
+     "row": 109,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Document + Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T11. Changes return to T10",
+     "output": "Approved Document",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "6.T13",
+     "row": 110,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Document",
+     "slots": "All slots",
+     "process": "Confirm, or request changes",
+     "flow": "After T12. Wording changes return to T10 and repeat T11 and T12. Scope changes return to T4",
+     "output": "User-Confirmed Document",
+     "prompt": "None"
+    },
+    {
+     "id": "6.T14",
+     "row": 111,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Document + Context",
+     "slots": "All slots",
+     "process": "Handoff to the Requirement Register",
+     "flow": "After T13",
+     "output": "Next Phase Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "product_users",
+     "owner": "CPO",
+     "supporting": "CCO, CXO"
+    },
+    {
+     "slot": "outcome_goals",
+     "owner": "CPO",
+     "supporting": "CFO, CMO"
+    },
+    {
+     "slot": "success_metrics",
+     "owner": "CPO",
+     "supporting": "CDO, CFO"
+    },
+    {
+     "slot": "scope",
+     "owner": "CPO",
+     "supporting": "CTO, CFO"
+    },
+    {
+     "slot": "product_features",
+     "owner": "CPO",
+     "supporting": "CTO, CXO"
+    },
+    {
+     "slot": "user_journeys",
+     "owner": "CXO",
+     "supporting": "CPO, CCO"
+    },
+    {
+     "slot": "ux_principles",
+     "owner": "CXO",
+     "supporting": "CPO"
+    }
+   ],
+   "sheetEpic": 6
+  },
+  {
+   "epic": 7,
+   "name": "Requirement Register",
+   "mappingTitle": "Requirement Register",
+   "features": [
+    "Business Requirements",
+    "User Requirements",
+    "Functional Requirements",
+    "AI Requirements",
+    "Non-Functional Requirements",
+    "IDs and Traceability",
+    "Bulk Approval",
+    "Requirements Baseline Publishing",
+    "Requirement Validation",
+    "Requirement Dependency Analysis"
+   ],
+   "tasks": [
+    {
+     "id": "7.T1",
+     "row": 115,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Product Definition doc + all earlier phase documents",
+     "slots": "None",
+     "process": "Allocate: confirm the team, with more weight on CTO, CISO, CDO and CPO",
+     "flow": "After Phase 6 handoff",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "7.T2",
+     "row": 116,
+     "group": null,
+     "responsible": "CSO + CFO, COO, CMO",
+     "input": "constraints, Phase 3 market slots, Phase 5 business_model_canvas, business_case, risks",
+     "slots": "business_requirements",
+     "process": "Fill: business requirements. Each is one statement with a priority, an acceptance criterion and a link to its source slot",
+     "flow": "After T1",
+     "output": "Business Requirements",
+     "prompt": "br_writer"
+    },
+    {
+     "id": "7.T3",
+     "row": 117,
+     "group": null,
+     "responsible": "CPO + CXO, CCO",
+     "input": "product_users, user_journeys, outcome_goals, success_metrics",
+     "slots": "user_requirements",
+     "process": "Fill: user requirements (a [user] can [goal] so that [outcome]), each linked to a journey step",
+     "flow": "After T1. Runs parallel with T2",
+     "output": "User Requirements",
+     "prompt": "ur_writer"
+    },
+    {
+     "id": "7.T4",
+     "row": 118,
+     "group": null,
+     "responsible": "CPO + CTO, BA",
+     "input": "product_features, scope, capabilities, user_requirements",
+     "slots": "functional_requirements",
+     "process": "Fill: functional requirements, each linked to a product feature and a user requirement, with acceptance criteria",
+     "flow": "After T3",
+     "output": "Functional Requirements",
+     "prompt": "fr_writer"
+    },
+    {
+     "id": "7.T5",
+     "row": 119,
+     "group": null,
+     "responsible": "CTO + CDO, CISO",
+     "input": "capabilities, product_features, risks, regulatory_risks",
+     "slots": "ai_requirements",
+     "process": "Fill: for each AI feature: accuracy target, data needs, human oversight, transparency and fallback. Marked not applicable if the product uses no AI. Targets are proposals",
+     "flow": "After T4. Runs parallel with T6",
+     "output": "AI Requirements",
+     "prompt": "air_writer"
+    },
+    {
+     "id": "7.T6",
+     "row": 120,
+     "group": null,
+     "responsible": "CTO + CISO, COO, CXO, CDO",
+     "input": "constraints, feasibility, risks, regulatory_risks, ux_principles",
+     "slots": "nonfunctional_requirements",
+     "process": "Fill: performance, security, privacy, compliance, availability, scalability, accessibility and usability requirements. Each has a measurable target that stays assumed until confirmed",
+     "flow": "After T4. Runs parallel with T5",
+     "output": "Non-Functional Requirements",
+     "prompt": "nfr_writer"
+    },
+    {
+     "id": "7.T7",
+     "row": 121,
+     "group": null,
+     "responsible": "CDO + Orchestrator",
+     "input": "All requirement slots",
+     "slots": "requirement_traceability",
+     "process": "Fill: the system assigns stable IDs (BR, UR, FR, AIR, NFR) and links each requirement to its source and to related requirements. Flag requirements with no source, and sources (features, capabilities, risks) with no requirement",
+     "flow": "After T2 to T6",
+     "output": "Traceability Matrix + Gap List",
+     "prompt": "trace_linker"
+    },
+    {
+     "id": "7.T8",
+     "row": 122,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Requirements + Matrix",
+     "slots": "requirement_dependencies",
+     "process": "Fill: dependencies, conflicts and sequencing between requirements. Flag circular dependencies and conflicting pairs",
+     "flow": "After T7",
+     "output": "Dependency Map",
+     "prompt": "dependency_analyst"
+    },
+    {
+     "id": "7.T9",
+     "row": 123,
+     "group": null,
+     "responsible": "CQRO + Domain Agents",
+     "input": "Requirements + Matrix + Dependency Map",
+     "slots": "Validation status per requirement",
+     "process": "Review: each requirement is atomic, testable, unambiguous, measurable, prioritised and traceable. Pass or fail per requirement",
+     "flow": "After T8. A fail returns to the writer of that requirement",
+     "output": "Validation Report",
+     "prompt": "requirement_validator, cqro_reviewer"
+    },
+    {
+     "id": "7.T10",
+     "row": 124,
+     "group": null,
+     "responsible": "User",
+     "input": "Questions on failed requirements, grouped by theme",
+     "slots": "Asked requirements",
+     "process": "Ask: User resolves the open questions. Limit per round to be set. Maximum 2 rounds; unresolved items stay open and cannot be baselined",
+     "flow": "After T9. CSO → User. Answers return to T9",
+     "output": "Updated Requirements",
+     "prompt": "None"
+    },
+    {
+     "id": "7.T11",
+     "row": 125,
+     "group": null,
+     "responsible": "CPO",
+     "input": "All requirement slots + Validation Report",
+     "slots": "All slots",
+     "process": "Generate: the Requirement Register, one table with ID, type, priority, source, acceptance criterion and status",
+     "flow": "After T10",
+     "output": "Register Draft",
+     "prompt": "register_writer"
+    },
+    {
+     "id": "7.T12",
+     "row": 126,
+     "group": null,
+     "responsible": "Domain Agents + CQRO",
+     "input": "Register Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: coverage of every Product Definition feature, duplicates, consistency, dependency conflicts. A fail returns to the writer",
+     "flow": "After T11",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "7.T13",
+     "row": 127,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Register + Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T12. Changes return to T11",
+     "output": "Approved Register",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "7.T14",
+     "row": 128,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Register",
+     "slots": "All requirement slots",
+     "process": "Confirm: bulk approval by group (business, user, functional, AI, non-functional) or all at once. Exceptions are sent back or left open",
+     "flow": "After T13. Exceptions return to the writer and repeat T9",
+     "output": "Approved Requirements",
+     "prompt": "None"
+    },
+    {
+     "id": "7.T15",
+     "row": 129,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Approved Requirements",
+     "slots": "requirements_baseline",
+     "process": "Publish: lock the approved requirements as Baseline v1 with frozen IDs. Later edits go through Change Management",
+     "flow": "After T14",
+     "output": "Requirements Baseline v1",
+     "prompt": "cso_baseline_publisher"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "business_requirements",
+     "owner": "CSO",
+     "supporting": "CFO, COO, CMO"
+    },
+    {
+     "slot": "user_requirements",
+     "owner": "CPO",
+     "supporting": "CXO, CCO"
+    },
+    {
+     "slot": "functional_requirements",
+     "owner": "CPO",
+     "supporting": "CTO, BA"
+    },
+    {
+     "slot": "ai_requirements",
+     "owner": "CTO",
+     "supporting": "CDO, CISO"
+    },
+    {
+     "slot": "nonfunctional_requirements",
+     "owner": "CTO",
+     "supporting": "CISO, COO, CXO"
+    },
+    {
+     "slot": "requirement_traceability",
+     "owner": "CDO",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "requirement_dependencies",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "requirements_baseline (output)",
+     "owner": "CSO",
+     "supporting": "CPO, CTO"
+    }
+   ],
+   "sheetEpic": 7
+  },
+  {
+   "epic": 8,
+   "name": "Documents & Handoff",
+   "mappingTitle": "Documents & Handoff",
+   "features": [
+    "Business Requirements Document (BRD)",
+    "Product Requirements Document (PRD)",
+    "Software Requirements Specification (SRS)",
+    "Market Requirements Document - MRD",
+    "Functional Requirement Specification - FRS",
+    "Consistency and Traceability Checks",
+    "Document Set Approval",
+    "Handoff Package"
+   ],
+   "tasks": [
+    {
+     "id": "8.T1",
+     "row": 133,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Requirements Baseline v1 + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team and the document set (default: BRD, PRD, SRS, MRD, FRS)",
+     "flow": "After Phase 7 baseline",
+     "output": "Agent Team + Document Set",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "8.T2",
+     "row": 134,
+     "group": null,
+     "responsible": "CSO + CFO, COO, CMO",
+     "input": "Baseline (business requirements), Phase 1 and Phase 5 documents",
+     "slots": "business_requirements and Phase 5 slots",
+     "process": "Generate: the BRD from the baseline, citing every requirement ID",
+     "flow": "After T1",
+     "output": "BRD Draft",
+     "prompt": "brd_writer"
+    },
+    {
+     "id": "8.T3",
+     "row": 135,
+     "group": null,
+     "responsible": "CMO + CSO, CFO",
+     "input": "Baseline (business requirements), Phase 3 market, competitor and segment slots",
+     "slots": "business_requirements and Phase 3 slots",
+     "process": "Generate: the MRD",
+     "flow": "After T1. Runs parallel with T2",
+     "output": "MRD Draft",
+     "prompt": "mrd_writer"
+    },
+    {
+     "id": "8.T4",
+     "row": 136,
+     "group": null,
+     "responsible": "CPO + CXO, CTO",
+     "input": "Baseline (user and functional requirements), Phase 6 slots",
+     "slots": "user_requirements, functional_requirements and Phase 6 slots",
+     "process": "Generate: the PRD",
+     "flow": "After T1. Runs parallel with T2",
+     "output": "PRD Draft",
+     "prompt": "prd_writer"
+    },
+    {
+     "id": "8.T5",
+     "row": 137,
+     "group": null,
+     "responsible": "CTO + CISO, CDO, CPO",
+     "input": "Baseline (functional, AI, non-functional), capabilities, feasibility",
+     "slots": "functional_requirements, ai_requirements, nonfunctional_requirements",
+     "process": "Generate: the SRS",
+     "flow": "After T1. Runs parallel with T2",
+     "output": "SRS Draft",
+     "prompt": "srs_writer"
+    },
+    {
+     "id": "8.T6",
+     "row": 138,
+     "group": null,
+     "responsible": "CPO + BA, CTO, CXO",
+     "input": "Baseline (functional), user_journeys",
+     "slots": "functional_requirements",
+     "process": "Generate: the FRS. For each function: inputs, outputs, rules, error cases and acceptance criteria",
+     "flow": "After T1. Runs parallel with T2",
+     "output": "FRS Draft",
+     "prompt": "frs_writer"
+    },
+    {
+     "id": "8.T7",
+     "row": 139,
+     "group": null,
+     "responsible": "CQRO + CDO",
+     "input": "All drafts + Traceability Matrix",
+     "slots": "None",
+     "process": "Check: IDs resolve, every baseline requirement appears in the documents it belongs to, no contradictory statements, terms are used the same way, every document cites Baseline v1. Issues are blocking or warning",
+     "flow": "After T2 to T6. A blocking issue returns to the owner of that document (maximum 2 loops)",
+     "output": "Consistency Report",
+     "prompt": "consistency_checker"
+    },
+    {
+     "id": "8.T8",
+     "row": 140,
+     "group": null,
+     "responsible": "Domain Agents + CQRO",
+     "input": "Documents + Consistency Report",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: each document is complete against its template, readable and free of unflagged risk. A fail returns to the owner",
+     "flow": "After T7",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "8.T9",
+     "row": 141,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Document Set + Findings",
+     "slots": "None",
+     "process": "Strategic approval of the set",
+     "flow": "After T8. Changes return to the owner and repeat T7 and T8",
+     "output": "Approved Document Set",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "8.T10",
+     "row": 142,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Document Set",
+     "slots": "None",
+     "process": "Confirm: approve the set as a whole, or request changes to one document",
+     "flow": "After T9. A change request returns to that document's owner and repeats T7 to T9",
+     "output": "User-Approved Document Set",
+     "prompt": "None"
+    },
+    {
+     "id": "8.T11",
+     "row": 143,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Approved Documents + Baseline + Matrix + Assumption Register",
+     "slots": "None",
+     "process": "Assemble the Handoff Package: documents, baseline, traceability matrix, open assumptions, decision log, version stamps, and exports",
+     "flow": "After T10",
+     "output": "Handoff Package v1",
+     "prompt": "package_builder"
+    },
+    {
+     "id": "8.T12",
+     "row": 144,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Handoff Package v1",
+     "slots": "None",
+     "process": "Handoff to the next stage. From here Change Management watches the baseline",
+     "flow": "After T11",
+     "output": "Next Stage Input",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "BRD",
+     "owner": "CSO",
+     "supporting": "CFO, COO, CMO"
+    },
+    {
+     "slot": "MRD",
+     "owner": "CMO",
+     "supporting": "CSO, CFO"
+    },
+    {
+     "slot": "PRD",
+     "owner": "CPO",
+     "supporting": "CXO, CTO"
+    },
+    {
+     "slot": "SRS",
+     "owner": "CTO",
+     "supporting": "CISO, CDO, CPO"
+    },
+    {
+     "slot": "FRS",
+     "owner": "CPO + BA",
+     "supporting": "CTO, CXO"
+    }
+   ],
+   "sheetEpic": 8
+  },
+  {
+   "epic": 9,
+   "name": "Change Management",
+   "mappingTitle": "Change Management (runs when a change happens)",
+   "features": [
+    "Change Detection",
+    "Reopen & Change Request",
+    "Out-of-Date Marking",
+    "Change Impact Analysis",
+    "Guided Updates",
+    "Re-Confirmation",
+    "Version History & Comparison"
+   ],
+   "tasks": [
+    {
+     "id": "9.T1",
+     "row": 149,
+     "group": null,
+     "responsible": "Orchestrator + CDO",
+     "input": "Edits to confirmed slots or documents, stale sources, new evidence, competitor alerts",
+     "slots": "None",
+     "process": "Detect: watch for changes and record each as a Change Event. Some of this exists in the prototype: an edit to a confirmed document is detected",
+     "flow": "Triggered by a change",
+     "output": "Change Event",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "9.T2",
+     "row": 150,
+     "group": null,
+     "responsible": "User (or an agent proposal)",
+     "input": "Change Event",
+     "slots": "change_request",
+     "process": "Reopen: reopen the item and record the reason, requester and scope. A change proposed by an agent needs the User's acceptance",
+     "flow": "After T1. CSO ↔ User",
+     "output": "Change Request",
+     "prompt": "change_request_writer"
+    },
+    {
+     "id": "9.T3",
+     "row": 151,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Change Request + dependency graph",
+     "slots": "impact_set",
+     "process": "Mark out of date: flag every dependent slot and document as out of date, and pause their approvals. Some of this exists in the prototype",
+     "flow": "After T2",
+     "output": "Impact Set (flagged items)",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "9.T4",
+     "row": 152,
+     "group": null,
+     "responsible": "CSO + CPO, CTO, CFO and the owners of affected slots",
+     "input": "Impact Set + Baseline",
+     "slots": "impact_report",
+     "process": "Analyse impact: what changes, severity (minor or major), effort, cost, risk, and the baseline version affected. Recommend apply, defer or reject",
+     "flow": "After T3",
+     "output": "Impact Report",
+     "prompt": "impact_analyst"
+    },
+    {
+     "id": "9.T5",
+     "row": 153,
+     "group": null,
+     "responsible": "User (with CEO for major changes)",
+     "input": "Impact Report",
+     "slots": "change_decision",
+     "process": "Decide: apply, defer or reject the change. Major changes also need the CEO's approval",
+     "flow": "After T4. Defer or reject closes the request",
+     "output": "Change Decision",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "9.T6",
+     "row": 154,
+     "group": null,
+     "responsible": "Owner agents, guided by the Orchestrator",
+     "input": "Change Decision + Impact Set",
+     "slots": "The affected slots",
+     "process": "Guided update: the owners update the affected items in dependency order. Each update shows a before-and-after difference. The User is asked only where needed",
+     "flow": "After T5 (apply only)",
+     "output": "Updated Slots + Documents",
+     "prompt": "guided_updater"
+    },
+    {
+     "id": "9.T7",
+     "row": 155,
+     "group": null,
+     "responsible": "CQRO + CDO",
+     "input": "Updated items",
+     "slots": "None",
+     "process": "Review: the consistency and traceability checks run again on what changed",
+     "flow": "After T6. A fail returns to T6",
+     "output": "Review Result",
+     "prompt": "consistency_checker, cqro_reviewer"
+    },
+    {
+     "id": "9.T8",
+     "row": 156,
+     "group": null,
+     "responsible": "User",
+     "input": "Updated items",
+     "slots": "The affected slots",
+     "process": "Re-confirm: the User re-confirms only the affected items. Unaffected items stay confirmed. Major changes also need the CEO",
+     "flow": "After T7",
+     "output": "Re-Confirmed Items",
+     "prompt": "None"
+    },
+    {
+     "id": "9.T9",
+     "row": 157,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Re-Confirmed Items",
+     "slots": "version_history",
+     "process": "Version and close: publish the new baseline version, record who changed what, why and under which request, and add a comparison with the previous version. Update the Handoff Package",
+     "flow": "After T8",
+     "output": "Baseline vN+1 + Version History",
+     "prompt": "version_recorder"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "change_request",
+     "owner": "CSO",
+     "supporting": "the User, or the agent that proposed it"
+    },
+    {
+     "slot": "impact_set",
+     "owner": "Orchestrator",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "impact_report",
+     "owner": "CSO",
+     "supporting": "CPO, CTO, CFO"
+    },
+    {
+     "slot": "change_decision",
+     "owner": "the User",
+     "supporting": "CEO for major changes"
+    },
+    {
+     "slot": "version_history",
+     "owner": "CDO",
+     "supporting": "CSO"
+    }
+   ],
+   "sheetEpic": 9
+  },
+  {
+   "epic": 10,
+   "name": "Skill Integration",
+   "mappingTitle": "Skill Integration (platform layer, used by every step)",
+   "features": [
+    "Skill and KB Catalog (list from the KB service; browse by phase and role)",
+    "Skill Recommendation for the current step",
+    "Enable / Disable per project and per step",
+    "Skill Configuration (tone, depth, output format)",
+    "Skill Preview before enabling",
+    "Version Pinning per project (use a chosen version, switch back to an earlier one)",
+    "Skill Permissions (who can enable a skill in a project)",
+    "Service Connection with connection test and status",
+    "KB Grounding (use KB content in a step and show the cited sources)",
+    "Skill Usage Log (which skill shaped which output)",
+    "Fallback and Conflict Order",
+    "Skill Availability Status (shows if a skill is retired or unavailable)"
+   ],
+   "tasks": [
+    {
+     "id": "10.T1",
+     "row": 161,
+     "group": null,
+     "responsible": "Project Admin (User) + CDO",
+     "input": "KB service details entered in secure settings, never in chat or documents",
+     "slots": "service_connection",
+     "process": "Connect the KB service, run a connection test and show the status (connected, failing, unavailable). Retry on demand",
+     "flow": "Starts at project setup. CDO → Orchestrator",
+     "output": "Connection Status",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "10.T2",
+     "row": 162,
+     "group": null,
+     "responsible": "CDO + Orchestrator",
+     "input": "Connected service",
+     "slots": "skill_catalog",
+     "process": "Fetch the skill and KB catalog from the KB service. Browse by phase and role. Each entry shows version and status",
+     "flow": "After T1",
+     "output": "Skill and KB Catalog",
+     "prompt": "catalog_loader"
+    },
+    {
+     "id": "10.T3",
+     "row": 163,
+     "group": null,
+     "responsible": "CSO + role agents",
+     "input": "Catalog + current phase, step and slots",
+     "slots": "skill_recommendations",
+     "process": "Recommend skills for the current step, ranked, each with a reason tied to the phase, role or slot. A recommendation never enables anything",
+     "flow": "After T2. Runs at the start of each step",
+     "output": "Skill Recommendations",
+     "prompt": "skill_recommender"
+    },
+    {
+     "id": "10.T4",
+     "row": 164,
+     "group": null,
+     "responsible": "Orchestrator + the step's owner agent",
+     "input": "A selected skill + a sample from the current step",
+     "slots": "None",
+     "process": "Preview: run the skill on the sample and show its effect, labelled Preview. Nothing is saved to project documents",
+     "flow": "After T3. User → Orchestrator",
+     "output": "Skill Preview",
+     "prompt": "skill_previewer"
+    },
+    {
+     "id": "10.T5",
+     "row": 165,
+     "group": null,
+     "responsible": "User",
+     "input": "Skill + preview",
+     "slots": "skill_settings",
+     "process": "Configure tone, depth and output format, per skill, project or step",
+     "flow": "After T4",
+     "output": "Skill Configuration",
+     "prompt": "None"
+    },
+    {
+     "id": "10.T6",
+     "row": 166,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "User's role + skill",
+     "slots": "skill_permissions",
+     "process": "Check the User's role may enable this skill in this project. If not, send an approval request to the project owner",
+     "flow": "After T5. Orchestrator → project owner",
+     "output": "Permission Result",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "10.T7",
+     "row": 167,
+     "group": null,
+     "responsible": "User (if permitted)",
+     "input": "Permission Result + Configuration",
+     "slots": "skill_settings",
+     "process": "Enable or disable the skill for the project or for one step",
+     "flow": "After T6",
+     "output": "Enabled Skill Set",
+     "prompt": "None"
+    },
+    {
+     "id": "10.T8",
+     "row": 168,
+     "group": null,
+     "responsible": "User + Orchestrator",
+     "input": "Enabled Skill Set + skill versions",
+     "slots": "skill_settings",
+     "process": "Pin a chosen version for the project. Switching back to an earlier version is allowed. A switch is a change event, and outputs shaped by the old version are flagged",
+     "flow": "After T7. A switch triggers Change Management T1",
+     "output": "Pinned Versions",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "10.T9",
+     "row": 169,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Enabled Skill Set for the task",
+     "slots": "skill_settings",
+     "process": "At the start of each task, resolve the skills for this project, step and agent. Apply the fallback and conflict order",
+     "flow": "Before every task in every phase",
+     "output": "Resolved Skill Set",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "10.T10",
+     "row": 170,
+     "group": null,
+     "responsible": "Step's owner agent + CDO",
+     "input": "Resolved Skill Set + KB content",
+     "slots": "kb_citations",
+     "process": "Use KB content in the step. Every passage used is cited (title, version, date, link). KB claims without a citation are flagged, and conflicting sources are flagged",
+     "flow": "After T9. Inside the task that uses it",
+     "output": "Grounded Output + Citations",
+     "prompt": "kb_grounder"
+    },
+    {
+     "id": "10.T11",
+     "row": 171,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Every task that used a skill",
+     "slots": "skill_usage_log",
+     "process": "Record which skill and version, with which configuration, shaped which output (document and section), by which agent, and when",
+     "flow": "After each task",
+     "output": "Usage Log Entry",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "10.T12",
+     "row": 172,
+     "group": null,
+     "responsible": "Orchestrator + CDO",
+     "input": "Catalog status + service status",
+     "slots": "skill_status",
+     "process": "Detect a retired or unavailable skill or a KB outage. Mark its status, list the outputs it shaped, apply the fallback, and notify the User",
+     "flow": "Continuous. A retirement triggers Change Management T1",
+     "output": "Availability Report",
+     "prompt": "availability_monitor"
+    },
+    {
+     "id": "10.T13",
+     "row": 173,
+     "group": null,
+     "responsible": "CQRO",
+     "input": "Outputs that used a skill + Usage Log",
+     "slots": "None",
+     "process": "Review: citations are present, the configuration was respected, the usage log is complete, and no skill outside the enabled set was used",
+     "flow": "After any phase's Generate task",
+     "output": "Review Result",
+     "prompt": "cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "service_connection",
+     "owner": "CDO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "skill_catalog",
+     "owner": "CDO",
+     "supporting": "Orchestrator"
+    },
+    {
+     "slot": "skill_recommendations",
+     "owner": "CSO",
+     "supporting": "role agents"
+    },
+    {
+     "slot": "skill_settings",
+     "owner": "the User",
+     "supporting": "Orchestrator"
+    },
+    {
+     "slot": "skill_permissions",
+     "owner": "Orchestrator",
+     "supporting": "project owner"
+    },
+    {
+     "slot": "kb_citations",
+     "owner": "CDO",
+     "supporting": "step owner agent"
+    },
+    {
+     "slot": "skill_usage_log",
+     "owner": "Orchestrator",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "skill_status",
+     "owner": "Orchestrator",
+     "supporting": "CDO"
+    }
+   ],
+   "sheetEpic": 10
+  },
+  {
+   "epic": 11,
+   "name": "C-Suite Integration",
+   "mappingTitle": "C-Suite Integration (human executive review, applied at each phase gate)",
+   "features": [
+    "Executive Role Selection (which roles review a project)",
+    "Role-Specific Review Lens",
+    "Executive Summary View per phase (one page)",
+    "Review Request and Assignment",
+    "Comments and Questions on items",
+    "Approve / Request Changes / Reject at gates",
+    "Validation Checklist per role",
+    "Consolidated Risk Register (across all phases)",
+    "Solution Outcomes View (expected outcomes against success measures and KPIs)",
+    "Decision Log (decision, reason, who, when)",
+    "AI Challenge Mode (AI questions assumptions from each role's view, clearly labelled)",
+    "Board-Ready Brief Export (PDF or slides)",
+    "Review Status Dashboard",
+    "Notifications for review requests and decisions"
+   ],
+   "tasks": [
+    {
+     "id": "11.T1",
+     "row": 177,
+     "group": null,
+     "responsible": "User (project owner) with CSO",
+     "input": "Project domain + phase list",
+     "slots": "reviewer_roles",
+     "process": "Select which executive roles review this project and which people hold them. The CSO suggests defaults. Mark which roles are required at each gate",
+     "flow": "At project setup",
+     "output": "Reviewer Roles",
+     "prompt": "role_suggester"
+    },
+    {
+     "id": "11.T2",
+     "row": 178,
+     "group": null,
+     "responsible": "CSO + the role agents",
+     "input": "Reviewer Roles",
+     "slots": "review_lens",
+     "process": "Define each role's lens per phase (for example CFO: financials, CTO: feasibility, CISO: security)",
+     "flow": "After T1",
+     "output": "Role Lens Table",
+     "prompt": "review_lens_builder"
+    },
+    {
+     "id": "11.T3",
+     "row": 179,
+     "group": null,
+     "responsible": "Each role agent + CQRO",
+     "input": "Role Lens Table",
+     "slots": "validation_checklists",
+     "process": "Draft a validation checklist per role, per phase",
+     "flow": "After T2",
+     "output": "Checklists",
+     "prompt": "checklist_builder"
+    },
+    {
+     "id": "11.T4",
+     "row": 180,
+     "group": null,
+     "responsible": "CSO",
+     "input": "The approved phase document",
+     "slots": "None",
+     "process": "Generate a one-page Executive Summary for the phase, with each role's lens highlights",
+     "flow": "After each phase's CEO approval step",
+     "output": "Executive Summary",
+     "prompt": "exec_summary_writer"
+    },
+    {
+     "id": "11.T5",
+     "row": 181,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Executive Summary + Reviewer Roles + Checklists",
+     "slots": "review_requests",
+     "process": "Create one review request per required role, assign the person, attach the checklist and due date",
+     "flow": "After T4. Orchestrator → Executive Reviewers",
+     "output": "Review Requests",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "11.T6",
+     "row": 182,
+     "group": null,
+     "responsible": "Role agents",
+     "input": "Executive Summary + phase document",
+     "slots": "review_comments",
+     "process": "AI Challenge Mode (optional): each role agent questions the assumptions from its role's view. Every item is labelled AI challenge and can be dismissed",
+     "flow": "After T4. Runs parallel with T5",
+     "output": "Challenge Questions (labelled)",
+     "prompt": "ai_challenger"
+    },
+    {
+     "id": "11.T7",
+     "row": 183,
+     "group": null,
+     "responsible": "Executive Reviewers",
+     "input": "Executive Summary + document + Checklist + Challenge Questions",
+     "slots": "review_comments, review_decisions",
+     "process": "Review: add comments and questions on items, tick the checklist, then Approve, Request changes or Reject",
+     "flow": "After T5. Reviewer → owner agent",
+     "output": "Comments + Decision per role",
+     "prompt": "None"
+    },
+    {
+     "id": "11.T8",
+     "row": 184,
+     "group": null,
+     "responsible": "Owner agents + User",
+     "input": "Comments and Questions",
+     "slots": "review_comments",
+     "process": "Answer questions and resolve comments. Changes return to the task that produced the item",
+     "flow": "After T7. Changes return to the phase's generating task",
+     "output": "Resolved Comments",
+     "prompt": "comment_responder"
+    },
+    {
+     "id": "11.T9",
+     "row": 185,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Decisions from required roles",
+     "slots": "review_decisions",
+     "process": "Combine the decisions: all required roles Approve, the gate can pass. Any Request changes, rework. Any Reject, the gate stops",
+     "flow": "After T7 and T8",
+     "output": "Gate Result",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "11.T10",
+     "row": 186,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Every decision",
+     "slots": "decision_log",
+     "process": "Record decision, reason, who and when. Append only",
+     "flow": "After T9",
+     "output": "Decision Log",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "11.T11",
+     "row": 187,
+     "group": null,
+     "responsible": "CSO + COO, CISO, CQRO",
+     "input": "Risks and assumptions from all phases",
+     "slots": "risk_register",
+     "process": "Roll up the risks of all phases into one register with owner, severity, status and source",
+     "flow": "After each phase, kept in sync",
+     "output": "Consolidated Risk Register",
+     "prompt": "risk_consolidator"
+    },
+    {
+     "id": "11.T12",
+     "row": 188,
+     "group": null,
+     "responsible": "CPO + CFO",
+     "input": "outcome_goals, success_metrics, business_case",
+     "slots": "outcomes_view",
+     "process": "Show expected outcomes against success measures and KPIs, with status and the source of each target",
+     "flow": "After Product Definition, updated after each change",
+     "output": "Solution Outcomes View",
+     "prompt": "outcomes_viewer"
+    },
+    {
+     "id": "11.T13",
+     "row": 189,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Review Requests + Decisions",
+     "slots": "None",
+     "process": "Show the review status by phase and role (requested, in review, approved, changes requested, rejected, overdue)",
+     "flow": "Continuous",
+     "output": "Review Status Dashboard",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "11.T14",
+     "row": 190,
+     "group": null,
+     "responsible": "Orchestrator",
+     "input": "Requests, comments, decisions",
+     "slots": "None",
+     "process": "Notify on review requests, comments, mentions and decisions",
+     "flow": "After T5, T7, T9",
+     "output": "Notifications",
+     "prompt": "None (system rule)"
+    },
+    {
+     "id": "11.T15",
+     "row": 191,
+     "group": null,
+     "responsible": "CSO + CFO, CPO, then CQRO",
+     "input": "Approved documents, Executive Summaries, Risk Register, Outcomes View, Decision Log",
+     "slots": "None",
+     "process": "Generate the Board-Ready Brief for export as PDF or slides. CQRO reviews it. The User approves before export",
+     "flow": "On request, after Gate 1 or any later gate",
+     "output": "Board-Ready Brief",
+     "prompt": "board_brief_writer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "reviewer_roles",
+     "owner": "the User",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "review_lens, validation_checklists",
+     "owner": "CSO",
+     "supporting": "each role agent"
+    },
+    {
+     "slot": "review_requests",
+     "owner": "Orchestrator",
+     "supporting": "CSO"
+    },
+    {
+     "slot": "review_comments",
+     "owner": "Executive Reviewers",
+     "supporting": "owner agents"
+    },
+    {
+     "slot": "review_decisions",
+     "owner": "Executive Reviewers",
+     "supporting": "Orchestrator"
+    },
+    {
+     "slot": "risk_register",
+     "owner": "CSO",
+     "supporting": "COO, CISO, CQRO"
+    },
+    {
+     "slot": "outcomes_view",
+     "owner": "CPO",
+     "supporting": "CFO"
+    },
+    {
+     "slot": "decision_log",
+     "owner": "Orchestrator",
+     "supporting": "CDO"
+    }
+   ],
+   "sheetEpic": 11
+  },
+  {
+   "epic": 12,
+   "name": "Solution Architecture Design",
+   "mappingTitle": "Solution Architecture Design",
+   "features": [
+    "Architecture Inputs Confirmation",
+    "Solution Architecture Generation",
+    "Architecture Layer & Component Identification",
+    "Component Dependency Mapping",
+    "Architecture Pattern Selection",
+    "Architecture Decision Records"
+   ],
+   "tasks": [
+    {
+     "id": "12.T1",
+     "row": 196,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Requirements Baseline v1 + SRS + Context",
+     "slots": "None",
+     "process": "Allocate: confirm the team, with more weight on CTO, CISO, CDO and COO",
+     "flow": "After Phase 8 handoff",
+     "output": "Agent Team",
+     "prompt": "cso_team_check"
+    },
+    {
+     "id": "12.T2",
+     "row": 197,
+     "group": null,
+     "responsible": "CTO + BA, CPO",
+     "input": "functional_requirements, ai_requirements, nonfunctional_requirements, constraints, feasibility, regulatory_risks",
+     "slots": "architecture_inputs",
+     "process": "Fill: gather the inputs the architecture must satisfy and show them with their requirement IDs",
+     "flow": "After T1",
+     "output": "Architecture Inputs",
+     "prompt": "input_collector"
+    },
+    {
+     "id": "12.T3",
+     "row": 198,
+     "group": null,
+     "responsible": "User",
+     "input": "Architecture Inputs",
+     "slots": "architecture_inputs",
+     "process": "Confirm the inputs, and add constraints (existing systems, hosting, team skills, budget). Only added items become confirmed",
+     "flow": "After T2. CTO → User",
+     "output": "Confirmed Inputs",
+     "prompt": "None"
+    },
+    {
+     "id": "12.T4",
+     "row": 199,
+     "group": null,
+     "responsible": "CTO + CISO, CDO, COO, CFO",
+     "input": "Confirmed Inputs",
+     "slots": "architecture_pattern",
+     "process": "Generate 2 to 3 candidate patterns and score them against the non-functional requirements, cost and team skills, with evidence labels. Recommend one",
+     "flow": "After T3",
+     "output": "Pattern Options + Evaluation",
+     "prompt": "pattern_evaluator"
+    },
+    {
+     "id": "12.T5",
+     "row": 200,
+     "group": null,
+     "responsible": "User (with CTO)",
+     "input": "Pattern Options + Evaluation",
+     "slots": "architecture_pattern",
+     "process": "Confirm: choose a pattern, or a different one with the rationale recorded",
+     "flow": "After T4. CTO → User",
+     "output": "Selected Pattern",
+     "prompt": "None"
+    },
+    {
+     "id": "12.T6",
+     "row": 201,
+     "group": null,
+     "responsible": "CTO + CDO, CISO, CXO",
+     "input": "Selected Pattern + requirements",
+     "slots": "architecture_layers, architecture_components",
+     "process": "Fill: identify the layers and the components in each, every one linked to requirement IDs. Flag requirements with no component and components with no requirement",
+     "flow": "After T5",
+     "output": "Layers + Component Catalog",
+     "prompt": "component_identifier"
+    },
+    {
+     "id": "12.T7",
+     "row": 202,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Component Catalog",
+     "slots": "component_dependencies",
+     "process": "Fill: map dependencies, data flows and external services. Flag circular dependencies and single points of failure",
+     "flow": "After T6",
+     "output": "Dependency Map",
+     "prompt": "dependency_mapper"
+    },
+    {
+     "id": "12.T8",
+     "row": 203,
+     "group": null,
+     "responsible": "CTO + CQRO",
+     "input": "Decisions from T4 to T7",
+     "slots": "architecture_decisions",
+     "process": "Generate: one Architecture Decision Record per significant decision, with context, options, decision, consequences, status and linked requirement IDs",
+     "flow": "After T7",
+     "output": "ADR Set",
+     "prompt": "adr_writer"
+    },
+    {
+     "id": "12.T9",
+     "row": 204,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All slots + ADR Set",
+     "slots": "All architecture slots",
+     "process": "Generate: the Solution Architecture document: overview, layer view, component catalog, dependency map, data and security views, and a traceability table to requirement IDs",
+     "flow": "After T8",
+     "output": "Architecture Draft",
+     "prompt": "architecture_writer"
+    },
+    {
+     "id": "12.T10",
+     "row": 205,
+     "group": null,
+     "responsible": "CISO, CDO, COO + CQRO",
+     "input": "Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every non-functional requirement is addressed, security and data views are complete, traceability is complete, ADRs are consistent with the SRS. A fail returns to the producing task",
+     "flow": "After T9",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "12.T11",
+     "row": 206,
+     "group": null,
+     "responsible": "CEO",
+     "input": "Reviewed Architecture + Findings",
+     "slots": "None",
+     "process": "Strategic approval",
+     "flow": "After T10. Changes return to T9",
+     "output": "Approved Architecture",
+     "prompt": "ceo_signoff"
+    },
+    {
+     "id": "12.T12",
+     "row": 207,
+     "group": null,
+     "responsible": "User",
+     "input": "Approved Architecture",
+     "slots": "All slots",
+     "process": "Confirm, or request changes",
+     "flow": "After T11. Wording changes return to T9 and repeat T10 and T11. A different pattern returns to T4",
+     "output": "User-Confirmed Architecture",
+     "prompt": "None"
+    },
+    {
+     "id": "12.T13",
+     "row": 208,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Confirmed Architecture + Context",
+     "slots": "All slots",
+     "process": "Publish Architecture Baseline v1, add it to the Handoff Package as a new version, and hand off",
+     "flow": "After T12. CSO → next stage",
+     "output": "Architecture Baseline v1",
+     "prompt": "cso_handoff"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "architecture_inputs",
+     "owner": "CTO",
+     "supporting": "BA, CPO"
+    },
+    {
+     "slot": "architecture_pattern",
+     "owner": "CTO",
+     "supporting": "CISO, CDO, COO, CFO"
+    },
+    {
+     "slot": "architecture_layers, architecture_components",
+     "owner": "CTO",
+     "supporting": "CDO, CISO, CXO"
+    },
+    {
+     "slot": "component_dependencies",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "architecture_decisions",
+     "owner": "CTO",
+     "supporting": "CQRO"
+    }
+   ],
+   "sheetEpic": 12
+  },
+  {
+   "epic": 13,
+   "name": "High-Level Design",
+   "mappingTitle": "High-Level Design",
+   "features": [
+    "HLD Generation",
+    "Service Identification",
+    "Component Interaction Design",
+    "System Flow & Sequence Diagrams",
+    "Technology Stack Recommendation"
+   ],
+   "tasks": [
+    {
+     "id": "13.1",
+     "row": 213,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Architecture Baseline v1 (layers and components), functional_requirements",
+     "slots": "hld_services",
+     "process": "Fill: identify the services from the architecture components, each with its responsibility and the requirement IDs it serves",
+     "flow": "After S.1",
+     "output": "Service List",
+     "prompt": "service_identifier"
+    },
+    {
+     "id": "13.2",
+     "row": 214,
+     "group": null,
+     "responsible": "CTO + CDO",
+     "input": "Service List",
+     "slots": "hld_interactions, hld_flows",
+     "process": "Fill: define how services interact (calls, events, data exchanged) and draw the main system flows and sequence diagrams",
+     "flow": "After 13.1",
+     "output": "Interaction Map + Flow and Sequence Diagrams",
+     "prompt": "interaction_designer, sequence_diagrammer"
+    },
+    {
+     "id": "13.3",
+     "row": 215,
+     "group": null,
+     "responsible": "CTO + CISO, COO, CFO",
+     "input": "Selected architecture pattern, nonfunctional_requirements, constraints, financial_inputs",
+     "slots": "hld_stack_recommendation",
+     "process": "Fill: recommend a stack per layer with alternatives and reasons, scored against non-functional requirements, cost and team skills. This is a recommendation only. 21.2 freezes it",
+     "flow": "After 13.1. Runs parallel with 13.2",
+     "output": "Stack Recommendation",
+     "prompt": "stack_recommender"
+    },
+    {
+     "id": "13.4",
+     "row": 216,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All HLD slots",
+     "slots": "hld_services, hld_interactions, hld_flows, hld_stack_recommendation",
+     "process": "Generate: the HLD document, with a traceability table to requirement IDs",
+     "flow": "After 13.2 and 13.3",
+     "output": "HLD Draft",
+     "prompt": "hld_writer"
+    },
+    {
+     "id": "13.5",
+     "row": 217,
+     "group": null,
+     "responsible": "CQRO + CISO, CDO, COO",
+     "input": "HLD Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every service traces to a component and a requirement, flows are complete, stack choices are justified. A fail returns to the producing task",
+     "flow": "After 13.4",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "hld_services",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "hld_interactions, hld_flows",
+     "owner": "CTO",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "hld_stack_recommendation",
+     "owner": "CTO",
+     "supporting": "CISO, COO, CFO"
+    }
+   ],
+   "sheetEpic": 13
+  },
+  {
+   "epic": 14,
+   "name": "AI Solution Design",
+   "mappingTitle": "AI Solution Design",
+   "features": [
+    "AI Requirement Analysis",
+    "Agent Identification & Classification",
+    "AI Workflow Design",
+    "Model Requirements & Selection",
+    "Model Routing Design",
+    "Prompt Architecture Design",
+    "Skill Architecture Design",
+    "Tool & Function Design",
+    "Knowledge Architecture Design",
+    "Memory Design",
+    "Multi-Agent Architecture",
+    "AI Guardrail Design",
+    "AI Evaluation Design",
+    "AI Observability Design",
+    "AI Cost Optimization Design"
+   ],
+   "tasks": [
+    {
+     "id": "14.1",
+     "row": 221,
+     "group": null,
+     "responsible": "CTO + CDO, CPO",
+     "input": "ai_requirements, product_features, capabilities",
+     "slots": "ai_use_cases, agent_catalog",
+     "process": "Fill: list every AI use case from the AI requirements, identify the agents needed and classify them (for example assistant, workflow, reviewer, tool-using). Not applicable if the product uses no AI",
+     "flow": "After 13.1",
+     "output": "AI Use Cases + Agent Catalog",
+     "prompt": "ai_requirement_analyst, agent_classifier"
+    },
+    {
+     "id": "14.2",
+     "row": 222,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Agent Catalog, hld_flows",
+     "slots": "ai_workflows, multi_agent_architecture",
+     "process": "Fill: design each AI workflow step by step and how the agents coordinate (handoffs, shared context, who decides)",
+     "flow": "After 14.1",
+     "output": "AI Workflows + Multi-Agent Architecture",
+     "prompt": "ai_workflow_designer"
+    },
+    {
+     "id": "14.3",
+     "row": 223,
+     "group": null,
+     "responsible": "CTO + CFO, CDO",
+     "input": "AI Workflows, nonfunctional_requirements, financial_inputs",
+     "slots": "model_selection, model_routing, ai_cost_plan",
+     "process": "Fill: state what each workflow needs from a model (quality, latency, privacy), shortlist models, design routing between them, and estimate cost with ai_estimated labels",
+     "flow": "After 14.2",
+     "output": "Model Plan + Routing + Cost Plan",
+     "prompt": "model_selector, ai_cost_optimizer"
+    },
+    {
+     "id": "14.4",
+     "row": 224,
+     "group": null,
+     "responsible": "CTO + CDO, CPO",
+     "input": "AI Workflows, skill settings (Skill Integration)",
+     "slots": "prompt_architecture, skill_architecture, tool_definitions, knowledge_architecture, memory_design",
+     "process": "Fill: design the prompt structure, which skills apply, the tools and functions agents may call, where knowledge comes from, and how memory is kept and limited",
+     "flow": "After 14.2. Runs parallel with 14.3",
+     "output": "AI Building Blocks",
+     "prompt": "prompt_architect, tool_designer"
+    },
+    {
+     "id": "14.5",
+     "row": 225,
+     "group": null,
+     "responsible": "CTO + CISO, CQRO, CDO",
+     "input": "AI Workflows, ai_requirements, risks",
+     "slots": "ai_guardrails, ai_evaluation, ai_observability",
+     "process": "Fill: define guardrails and human-oversight points, the test sets and pass criteria for evaluating AI output, and what is logged and monitored",
+     "flow": "After 14.3 and 14.4",
+     "output": "Guardrails + Evaluation Plan + Observability Plan",
+     "prompt": "guardrail_designer, ai_eval_designer"
+    },
+    {
+     "id": "14.6",
+     "row": 226,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All AI slots",
+     "slots": "All AI slots",
+     "process": "Generate: the AI Solution Design document",
+     "flow": "After 14.5",
+     "output": "AI Design Draft",
+     "prompt": "ai_design_writer"
+    },
+    {
+     "id": "14.7",
+     "row": 227,
+     "group": null,
+     "responsible": "CQRO + CISO, CDO",
+     "input": "AI Design Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every AI requirement is addressed, guardrails cover the identified risks, evaluation is measurable. A fail returns to the producing task",
+     "flow": "After 14.6",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "ai_use_cases, agent_catalog",
+     "owner": "CTO",
+     "supporting": "CDO, CPO"
+    },
+    {
+     "slot": "ai_workflows, multi_agent_architecture",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "model_selection, model_routing, ai_cost_plan",
+     "owner": "CTO",
+     "supporting": "CFO, CDO"
+    },
+    {
+     "slot": "prompt_architecture, skill_architecture, tool_definitions, knowledge_architecture, memory_design",
+     "owner": "CTO",
+     "supporting": "CDO, CPO"
+    },
+    {
+     "slot": "ai_guardrails, ai_evaluation, ai_observability",
+     "owner": "CTO",
+     "supporting": "CISO, CQRO, CDO"
+    }
+   ],
+   "sheetEpic": 14
+  },
+  {
+   "epic": 15,
+   "name": "Integration Design",
+   "mappingTitle": "Integration Design",
+   "features": [
+    "Integration Requirement Extraction",
+    "SaaS Integration Design",
+    "API Integration Design",
+    "Webhook Design",
+    "Authentication Design",
+    "Request/Response Mapping",
+    "Error & Retry Design",
+    "Rate Limit Design",
+    "Integration Dependency Mapping"
+   ],
+   "tasks": [
+    {
+     "id": "15.1",
+     "row": 232,
+     "group": null,
+     "responsible": "CTO + CDO, BA",
+     "input": "functional_requirements, constraints, hld_interactions",
+     "slots": "integration_requirements, integration_dependencies",
+     "process": "Fill: extract what must connect to what (SaaS tools, external APIs, internal services) and map the dependencies between integrations",
+     "flow": "After 13.2",
+     "output": "Integration Requirements + Dependency Map",
+     "prompt": "integration_extractor"
+    },
+    {
+     "id": "15.2",
+     "row": 233,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Integration Requirements",
+     "slots": "saas_integrations, api_integrations, webhooks",
+     "process": "Fill: design each SaaS and API integration (direction, data, trigger) and each webhook (events, payload, delivery, retries)",
+     "flow": "After 15.1",
+     "output": "Integration Designs",
+     "prompt": "integration_designer, webhook_designer"
+    },
+    {
+     "id": "15.3",
+     "row": 234,
+     "group": null,
+     "responsible": "CTO + CISO, CDO",
+     "input": "Integration Designs, nonfunctional_requirements",
+     "slots": "integration_auth, request_response_mappings",
+     "process": "Fill: choose the authentication for each integration (no secrets in documents) and map fields between our data model and each external API",
+     "flow": "After 15.2",
+     "output": "Auth Design + Field Mappings",
+     "prompt": "integration_auth_designer, mapping_builder"
+    },
+    {
+     "id": "15.4",
+     "row": 235,
+     "group": null,
+     "responsible": "CTO + COO",
+     "input": "Integration Designs",
+     "slots": "error_retry_design, rate_limits",
+     "process": "Fill: define what happens on failure (retry, back-off, fallback, alert) and how each external rate limit is respected",
+     "flow": "After 15.2. Runs parallel with 15.3",
+     "output": "Error and Rate Limit Design",
+     "prompt": "resilience_designer"
+    },
+    {
+     "id": "15.5",
+     "row": 236,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All integration slots",
+     "slots": "All integration slots",
+     "process": "Generate: the Integration Design document",
+     "flow": "After 15.3 and 15.4",
+     "output": "Integration Design Draft",
+     "prompt": "integration_doc_writer"
+    },
+    {
+     "id": "15.6",
+     "row": 237,
+     "group": null,
+     "responsible": "CQRO + CISO, CDO",
+     "input": "Integration Design Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every integration requirement is addressed, authentication and error handling are defined for each integration, no secrets appear in the document. A fail returns to the producing task",
+     "flow": "After 15.5",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "integration_requirements, integration_dependencies",
+     "owner": "CTO",
+     "supporting": "CDO, BA"
+    },
+    {
+     "slot": "saas_integrations, api_integrations, webhooks",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "integration_auth, request_response_mappings",
+     "owner": "CTO",
+     "supporting": "CISO, CDO"
+    },
+    {
+     "slot": "error_retry_design, rate_limits",
+     "owner": "CTO",
+     "supporting": "COO"
+    }
+   ],
+   "sheetEpic": 15
+  },
+  {
+   "epic": 16,
+   "name": "Database Design",
+   "mappingTitle": "16. Database Design",
+   "features": [
+    "Data Requirement Analysis",
+    "Entity Identification",
+    "ER Model Generation",
+    "Relational Schema Design",
+    "NoSQL Schema Design",
+    "Vector Database Design",
+    "Data Lake/Storage Design",
+    "Data Relationship Mapping",
+    "Data Migration Design",
+    "Data Retention Design"
+   ],
+   "tasks": [
+    {
+     "id": "16.1",
+     "row": 242,
+     "group": null,
+     "responsible": "CDO + BA, CPO",
+     "input": "functional_requirements, nonfunctional_requirements, product_features, hld_services",
+     "slots": "data_requirements, entities, data_relationships",
+     "process": "Fill: extract what data the product must store and query, identify the entities with their attributes, and map the relationships between them",
+     "flow": "After 13.1",
+     "output": "Data Requirements + Entity List + Relationship Map",
+     "prompt": "data_analyst, entity_identifier"
+    },
+    {
+     "id": "16.2",
+     "row": 243,
+     "group": null,
+     "responsible": "CDO + CTO",
+     "input": "Entity List + Relationship Map",
+     "slots": "er_model, relational_schema",
+     "process": "Generate: the ER model and the relational schema (tables, keys, constraints, indexes)",
+     "flow": "After 16.1",
+     "output": "ER Model + Relational Schema",
+     "prompt": "er_modeler, schema_designer"
+    },
+    {
+     "id": "16.3",
+     "row": 244,
+     "group": null,
+     "responsible": "CDO + CTO",
+     "input": "Data Requirements, ai_requirements, AI Solution Design if applicable",
+     "slots": "nosql_schema, vector_schema, storage_design",
+     "process": "Fill: design document stores, vector stores (only if AI search or memory needs them) and file or data-lake storage. Each is marked not applicable if unused",
+     "flow": "After 16.1. Runs parallel with 16.2",
+     "output": "Non-Relational and Storage Designs",
+     "prompt": "nosql_designer, vector_db_designer, storage_designer"
+    },
+    {
+     "id": "16.4",
+     "row": 245,
+     "group": null,
+     "responsible": "CDO + CISO, COO",
+     "input": "Schemas, constraints, regulatory_risks",
+     "slots": "migration_plan, retention_policy",
+     "process": "Fill: design the migration from any existing data, and the retention and deletion rules per entity, checked against the regulatory risks",
+     "flow": "After 16.2 and 16.3",
+     "output": "Migration Plan + Retention Policy",
+     "prompt": "migration_planner, retention_designer"
+    },
+    {
+     "id": "16.5",
+     "row": 246,
+     "group": null,
+     "responsible": "CDO",
+     "input": "All data slots",
+     "slots": "All data slots",
+     "process": "Generate: the Database Design document",
+     "flow": "After 16.4",
+     "output": "Database Design Draft",
+     "prompt": "database_doc_writer"
+    },
+    {
+     "id": "16.6",
+     "row": 247,
+     "group": null,
+     "responsible": "CQRO + CTO, CISO",
+     "input": "Database Design Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every entity traces to a requirement, schemas match the API and AI designs, retention meets the regulatory risks. A fail returns to the producing task",
+     "flow": "After 16.5",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "data_requirements, entities, data_relationships",
+     "owner": "CDO",
+     "supporting": "BA, CPO"
+    },
+    {
+     "slot": "er_model, relational_schema",
+     "owner": "CDO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "nosql_schema, vector_schema, storage_design",
+     "owner": "CDO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "migration_plan, retention_policy",
+     "owner": "CDO",
+     "supporting": "CISO, COO"
+    }
+   ],
+   "sheetEpic": 16
+  },
+  {
+   "epic": 17,
+   "name": "API Design",
+   "mappingTitle": "17. API Design",
+   "features": [
+    "API Requirement Extraction",
+    "REST API Design",
+    "GraphQL Design",
+    "API Endpoint Generation",
+    "Request Schema Design",
+    "Response Schema Design",
+    "Authentication & Authorization",
+    "Error Contract Design",
+    "API Versioning",
+    "API Documentation Generation"
+   ],
+   "tasks": [
+    {
+     "id": "17.1",
+     "row": 251,
+     "group": null,
+     "responsible": "CTO + BA",
+     "input": "functional_requirements, hld_interactions, entities",
+     "slots": "api_requirements",
+     "process": "Fill: extract the operations the API must offer, per consumer (own front end, partners, integrations)",
+     "flow": "After 13.2 and 16.1",
+     "output": "API Requirements",
+     "prompt": "api_requirement_extractor"
+    },
+    {
+     "id": "17.2",
+     "row": 252,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "API Requirements",
+     "slots": "rest_design, graphql_design, endpoints",
+     "process": "Generate: the REST design, the GraphQL design where it applies, and the endpoint list (method, path, purpose, requirement ID)",
+     "flow": "After 17.1",
+     "output": "API Style + Endpoint List",
+     "prompt": "rest_designer, graphql_designer, endpoint_generator"
+    },
+    {
+     "id": "17.3",
+     "row": 253,
+     "group": null,
+     "responsible": "CTO + CDO",
+     "input": "Endpoint List, entities",
+     "slots": "request_schemas, response_schemas, error_contract",
+     "process": "Generate: the request and response schemas for each endpoint, and one consistent error contract",
+     "flow": "After 17.2",
+     "output": "Schemas + Error Contract",
+     "prompt": "schema_designer"
+    },
+    {
+     "id": "17.4",
+     "row": 254,
+     "group": null,
+     "responsible": "CTO + CISO",
+     "input": "Endpoint List, authentication and authorization design from 18.2",
+     "slots": "api_auth, api_versioning",
+     "process": "Fill: state who may call each endpoint and how they authenticate, taken from the Security design, plus the versioning and deprecation rules",
+     "flow": "After 17.2 and 18.2. Runs parallel with 17.3",
+     "output": "API Access Rules + Versioning Policy",
+     "prompt": "api_auth_designer, versioning_designer"
+    },
+    {
+     "id": "17.5",
+     "row": 255,
+     "group": null,
+     "responsible": "CTO",
+     "input": "Endpoints + Schemas + Access Rules",
+     "slots": "api_documentation",
+     "process": "Generate: the API documentation (for example an OpenAPI specification) directly from the endpoints and schemas, never written separately",
+     "flow": "After 17.3 and 17.4",
+     "output": "API Documentation",
+     "prompt": "api_doc_generator"
+    },
+    {
+     "id": "17.6",
+     "row": 256,
+     "group": null,
+     "responsible": "CQRO + CISO, CDO",
+     "input": "API Documentation + API slots",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every endpoint traces to a requirement, schemas match the database design, every endpoint has an access rule, errors follow the contract. A fail returns to the producing task",
+     "flow": "After 17.5",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "api_requirements",
+     "owner": "CTO",
+     "supporting": "BA"
+    },
+    {
+     "slot": "rest_design, graphql_design, endpoints",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "request_schemas, response_schemas, error_contract",
+     "owner": "CTO",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "api_auth, api_versioning",
+     "owner": "CTO",
+     "supporting": "CISO"
+    },
+    {
+     "slot": "api_documentation",
+     "owner": "CTO",
+     "supporting": "CDO"
+    }
+   ],
+   "sheetEpic": 17
+  },
+  {
+   "epic": 18,
+   "name": "Security Design",
+   "mappingTitle": "Security Design",
+   "features": [
+    "Security Requirement Analysis",
+    "Authentication Architecture",
+    "Authorization Architecture",
+    "Identity & Access Design",
+    "Data Encryption Design",
+    "Secrets & Credential Design",
+    "API Security Design",
+    "AI Security Design",
+    "Prompt Injection Protection",
+    "Data Leakage Protection",
+    "Audit Logging Design",
+    "Compliance Mapping",
+    "Threat Modeling"
+   ],
+   "tasks": [
+    {
+     "id": "18.1",
+     "row": 260,
+     "group": null,
+     "responsible": "CISO + CTO, CQRO",
+     "input": "nonfunctional_requirements, regulatory_risks, risks, hld_flows",
+     "slots": "security_requirements, threat_model",
+     "process": "Fill: analyse the security requirements and model threats per component and data flow (assets, actors, threats, mitigations), ranked by severity",
+     "flow": "After 13.2",
+     "output": "Security Requirements + Threat Model",
+     "prompt": "security_analyst, threat_modeler"
+    },
+    {
+     "id": "18.2",
+     "row": 261,
+     "group": null,
+     "responsible": "CISO + CTO",
+     "input": "Security Requirements, product_users",
+     "slots": "authn_architecture, authz_architecture, identity_access_design",
+     "process": "Fill: design how users and services authenticate, what each role may do, and how identities and access are managed (roles, least privilege, session rules)",
+     "flow": "After 18.1",
+     "output": "Authentication, Authorization and IAM Design",
+     "prompt": "authn_designer, authz_designer, iam_designer"
+    },
+    {
+     "id": "18.3",
+     "row": 262,
+     "group": null,
+     "responsible": "CISO + CTO, CDO",
+     "input": "Threat Model, data design",
+     "slots": "encryption_design, secrets_design, api_security",
+     "process": "Fill: design encryption in transit and at rest, how secrets and credentials are stored and rotated (never in documents), and the API protections",
+     "flow": "After 18.1. Runs parallel with 18.2",
+     "output": "Encryption, Secrets and API Security Design",
+     "prompt": "crypto_designer, secrets_designer"
+    },
+    {
+     "id": "18.4",
+     "row": 263,
+     "group": null,
+     "responsible": "CISO + CTO, CDO",
+     "input": "Threat Model, AI Solution Design if applicable",
+     "slots": "ai_security, prompt_injection_protection, data_leakage_protection",
+     "process": "Fill: design protections for AI features: treat all retrieved and user text as data, not instructions; limit tool permissions; stop sensitive data leaking through prompts, logs or outputs. Not applicable if no AI",
+     "flow": "After 18.1 and 14.5",
+     "output": "AI Security Design",
+     "prompt": "ai_security_designer"
+    },
+    {
+     "id": "18.5",
+     "row": 264,
+     "group": null,
+     "responsible": "CISO + COO, CDO",
+     "input": "regulatory_risks, nonfunctional_requirements",
+     "slots": "audit_logging, compliance_mapping",
+     "process": "Fill: define what is logged (who, what, when), retention and tamper protection, and map each compliance obligation to a control. This is a control mapping, not legal advice",
+     "flow": "After 18.2",
+     "output": "Audit Logging Design + Compliance Map",
+     "prompt": "audit_designer, compliance_mapper"
+    },
+    {
+     "id": "18.6",
+     "row": 265,
+     "group": null,
+     "responsible": "CISO",
+     "input": "All security slots",
+     "slots": "All security slots",
+     "process": "Generate: the Security Design document",
+     "flow": "After 18.3, 18.4 and 18.5",
+     "output": "Security Design Draft",
+     "prompt": "security_doc_writer"
+    },
+    {
+     "id": "18.7",
+     "row": 266,
+     "group": null,
+     "responsible": "CQRO + CTO, CDO",
+     "input": "Security Design Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every security requirement and threat has a control, secret-handling rules are stated, the compliance map is complete. A fail returns to the producing task",
+     "flow": "After 18.6",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "security_requirements, threat_model",
+     "owner": "CISO",
+     "supporting": "CTO, CQRO"
+    },
+    {
+     "slot": "authn_architecture, authz_architecture, identity_access_design",
+     "owner": "CISO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "encryption_design, secrets_design, api_security",
+     "owner": "CISO",
+     "supporting": "CTO, CDO"
+    },
+    {
+     "slot": "ai_security, prompt_injection_protection, data_leakage_protection",
+     "owner": "CISO",
+     "supporting": "CTO, CDO"
+    },
+    {
+     "slot": "audit_logging, compliance_mapping",
+     "owner": "CISO",
+     "supporting": "COO, CDO"
+    }
+   ],
+   "sheetEpic": 18
+  },
+  {
+   "epic": 19,
+   "name": "Infrastructure Design",
+   "mappingTitle": "Infrastructure Design",
+   "features": [
+    "Infrastructure Requirement Analysis",
+    "Cloud Architecture Design",
+    "Network Architecture",
+    "Compute Architecture",
+    "Container Architecture",
+    "Storage Architecture",
+    "Database Infrastructure",
+    "Queue/Event Architecture",
+    "CI/CD Architecture",
+    "Environment Design",
+    "Scalability Design",
+    "Disaster Recovery Design"
+   ],
+   "tasks": [
+    {
+     "id": "19.1",
+     "row": 270,
+     "group": null,
+     "responsible": "CTO + COO, CFO",
+     "input": "nonfunctional_requirements, constraints, financial_inputs, feasibility",
+     "slots": "infra_requirements, cloud_architecture",
+     "process": "Fill: extract availability, scale, region, budget and compliance needs, and design the cloud architecture (provider, regions, main services)",
+     "flow": "After 13.3",
+     "output": "Infrastructure Requirements + Cloud Architecture",
+     "prompt": "infra_analyst, cloud_architect"
+    },
+    {
+     "id": "19.2",
+     "row": 271,
+     "group": null,
+     "responsible": "CTO + COO, CISO, CDO",
+     "input": "Cloud Architecture",
+     "slots": "network_architecture, compute_architecture, container_architecture, storage_architecture, database_infrastructure, queue_event_architecture",
+     "process": "Fill: design the network, compute, containers, storage, database hosting, and queues or events",
+     "flow": "After 19.1",
+     "output": "Infrastructure Components",
+     "prompt": "network_designer, compute_designer, container_designer, storage_designer"
+    },
+    {
+     "id": "19.3",
+     "row": 272,
+     "group": null,
+     "responsible": "CTO + COO",
+     "input": "Infrastructure Components",
+     "slots": "cicd_architecture, environments",
+     "process": "Fill: design the build and release pipeline and the environments (development, test, production), with promotion rules",
+     "flow": "After 19.2",
+     "output": "CI/CD + Environment Design",
+     "prompt": "cicd_designer"
+    },
+    {
+     "id": "19.4",
+     "row": 273,
+     "group": null,
+     "responsible": "CTO + COO, CFO",
+     "input": "Infrastructure Components, nonfunctional_requirements",
+     "slots": "infra_scalability, disaster_recovery",
+     "process": "Fill: design infrastructure scaling rules and limits, backup, recovery time and recovery point objectives, and the failover plan, with cost noted",
+     "flow": "After 19.2. Runs parallel with 19.3",
+     "output": "Scalability + DR Plan",
+     "prompt": "scalability_designer, dr_designer"
+    },
+    {
+     "id": "19.5",
+     "row": 274,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All infrastructure slots",
+     "slots": "All infrastructure slots",
+     "process": "Generate: the Infrastructure Design document",
+     "flow": "After 19.3 and 19.4",
+     "output": "Infrastructure Design Draft",
+     "prompt": "infra_doc_writer"
+    },
+    {
+     "id": "19.6",
+     "row": 275,
+     "group": null,
+     "responsible": "CQRO + COO, CISO, CFO",
+     "input": "Infrastructure Design Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: availability and recovery targets are met by the design, cost is noted, security controls are reflected. A fail returns to the producing task",
+     "flow": "After 19.5",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "infra_requirements, cloud_architecture",
+     "owner": "CTO",
+     "supporting": "COO, CFO"
+    },
+    {
+     "slot": "network_architecture, compute_architecture, container_architecture, storage_architecture, database_infrastructure, queue_event_architecture",
+     "owner": "CTO",
+     "supporting": "COO, CISO, CDO"
+    },
+    {
+     "slot": "cicd_architecture, environments",
+     "owner": "CTO",
+     "supporting": "COO"
+    },
+    {
+     "slot": "infra_scalability, disaster_recovery",
+     "owner": "CTO",
+     "supporting": "COO, CFO"
+    }
+   ],
+   "sheetEpic": 19
+  },
+  {
+   "epic": 20,
+   "name": "Low-Level Design",
+   "mappingTitle": "Low-Level Design",
+   "features": [
+    "LLD Generation",
+    "Module Design",
+    "Class/Service Design",
+    "Interface Design",
+    "Detailed Workflow Design",
+    "Sequence Diagram Generation",
+    "Business Logic Design",
+    "Validation Design",
+    "Error Handling Design",
+    "Dependency Design"
+   ],
+   "tasks": [
+    {
+     "id": "20.1",
+     "row": 279,
+     "group": null,
+     "responsible": "CTO + BA",
+     "input": "hld_services, endpoints, schemas, entities",
+     "slots": "modules, class_service_design, interfaces",
+     "process": "Fill: break each service into modules, define the classes or service units, and the interfaces between them",
+     "flow": "After 13.1, 16.2 and 17.2",
+     "output": "Module, Class and Interface Design",
+     "prompt": "module_designer, interface_designer"
+    },
+    {
+     "id": "20.2",
+     "row": 280,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "functional_requirements, user_journeys, hld_flows",
+     "slots": "detailed_workflows, sequence_diagrams, business_logic",
+     "process": "Fill: detail each workflow, draw sequence diagrams at class level, and write the business rules in plain form",
+     "flow": "After 20.1",
+     "output": "Workflows + Sequence Diagrams + Business Rules",
+     "prompt": "workflow_designer, sequence_diagrammer"
+    },
+    {
+     "id": "20.3",
+     "row": 281,
+     "group": null,
+     "responsible": "CTO + CISO",
+     "input": "Module design, error_contract",
+     "slots": "validation_design, error_handling, dependency_design",
+     "process": "Fill: define input validation rules, error handling per layer, and the dependencies between modules (no cycles)",
+     "flow": "After 20.1. Runs parallel with 20.2",
+     "output": "Validation, Error and Dependency Design",
+     "prompt": "validation_designer, error_handling_designer"
+    },
+    {
+     "id": "20.4",
+     "row": 282,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All LLD slots",
+     "slots": "All LLD slots",
+     "process": "Generate: the LLD document",
+     "flow": "After 20.2 and 20.3",
+     "output": "LLD Draft",
+     "prompt": "lld_writer"
+    },
+    {
+     "id": "20.5",
+     "row": 283,
+     "group": null,
+     "responsible": "CQRO + CPO, CISO",
+     "input": "LLD Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every module traces to a service and a requirement, workflows match the user journeys, error handling matches the API error contract. A fail returns to the producing task",
+     "flow": "After 20.4",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "modules, class_service_design, interfaces",
+     "owner": "CTO",
+     "supporting": "BA"
+    },
+    {
+     "slot": "detailed_workflows, sequence_diagrams, business_logic",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "validation_design, error_handling, dependency_design",
+     "owner": "CTO",
+     "supporting": "CISO"
+    }
+   ],
+   "sheetEpic": 20
+  },
+  {
+   "epic": 21,
+   "name": "Technical Design",
+   "mappingTitle": "Technical Design",
+   "features": [
+    "TDD Generation",
+    "Technology Selection",
+    "Framework Selection",
+    "Technical Dependency Mapping",
+    "Runtime Design",
+    "Performance Design",
+    "Scalability Design",
+    "Reliability Design",
+    "Technical Validation"
+   ],
+   "tasks": [
+    {
+     "id": "21.1",
+     "row": 287,
+     "group": null,
+     "responsible": "CTO + CISO, CFO, COO",
+     "input": "hld_stack_recommendation, constraints, team skills (from the User)",
+     "slots": "technology_selection, framework_selection, technical_dependencies",
+     "process": "Fill: turn the recommended stack into a selection of technologies and frameworks with versions, licences and support status, and map the technical dependencies",
+     "flow": "After 13.3 and 19.2",
+     "output": "Selected Stack + Dependency Map",
+     "prompt": "technology_selector, dependency_mapper"
+    },
+    {
+     "id": "21.2",
+     "row": 288,
+     "group": null,
+     "responsible": "User (with CTO)",
+     "input": "Selected Stack + Dependency Map",
+     "slots": "technology_selection, framework_selection",
+     "process": "Confirm: freeze the stack. The User confirms choices that affect cost or team skills, and each choice is recorded as an Architecture Decision Record",
+     "flow": "After 21.1. CTO → User",
+     "output": "Frozen Stack + ADRs",
+     "prompt": "None"
+    },
+    {
+     "id": "21.3",
+     "row": 289,
+     "group": null,
+     "responsible": "CTO + COO",
+     "input": "Frozen Stack, nonfunctional_requirements, infrastructure design",
+     "slots": "runtime_design, performance_design, scalability_design, reliability_design",
+     "process": "Fill: design runtime behaviour, set performance budgets, the application scaling approach and reliability targets, each tied to a non-functional requirement",
+     "flow": "After 21.2",
+     "output": "Technical Design Sections",
+     "prompt": "runtime_designer, performance_designer"
+    },
+    {
+     "id": "21.4",
+     "row": 290,
+     "group": null,
+     "responsible": "CQRO + CTO",
+     "input": "Technical Design Sections",
+     "slots": "technical_validation_status",
+     "process": "Review: performance budgets are measurable, the selected technologies support the requirements, there are no dependency conflicts",
+     "flow": "After 21.3",
+     "output": "Technical Validation Report",
+     "prompt": "technical_validator, cqro_reviewer"
+    },
+    {
+     "id": "21.5",
+     "row": 291,
+     "group": null,
+     "responsible": "CTO",
+     "input": "All technical slots",
+     "slots": "All technical slots",
+     "process": "Generate: the TDD document",
+     "flow": "After 21.4",
+     "output": "TDD Draft",
+     "prompt": "tdd_writer"
+    },
+    {
+     "id": "21.6",
+     "row": 292,
+     "group": null,
+     "responsible": "CQRO + CISO, CDO, COO",
+     "input": "TDD Draft",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every technical choice traces to a requirement, versions and licences are stated, scaling here is consistent with the infrastructure scaling in 19.4. A fail returns to the producing task",
+     "flow": "After 21.5",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "technology_selection, framework_selection, technical_dependencies",
+     "owner": "CTO",
+     "supporting": "CISO, CFO, COO"
+    },
+    {
+     "slot": "runtime_design, performance_design, scalability_design, reliability_design",
+     "owner": "CTO",
+     "supporting": "COO"
+    },
+    {
+     "slot": "technical_validation_status",
+     "owner": "CQRO",
+     "supporting": "CTO"
+    }
+   ],
+   "sheetEpic": 21
+  },
+  {
+   "epic": 22,
+   "name": "UX & Product Design",
+   "mappingTitle": "UX & Product Design",
+   "features": [
+    "Persona Generation",
+    "User Journey Generation",
+    "User Flow Design",
+    "Information Architecture",
+    "Navigation Design",
+    "Wireframe Generation",
+    "UI/UX Specification",
+    "Screen Specification",
+    "Responsive Design Requirements",
+    "Accessibility Requirements"
+   ],
+   "tasks": [
+    {
+     "id": "22.1",
+     "row": 296,
+     "group": null,
+     "responsible": "CXO + CPO, CCO",
+     "input": "product_users, Phase 3 personas, user_journeys (Phase 6), functional_requirements",
+     "slots": "ux_personas, ux_journeys, user_flows",
+     "process": "Fill: reuse the Phase 3 and Phase 6 personas and journeys with their labels, and design the user flows between screens. A new persona only if a user type is missing, labelled Synthetic",
+     "flow": "After S.1",
+     "output": "Personas + Journeys + User Flows",
+     "prompt": "persona_reuser, flow_designer"
+    },
+    {
+     "id": "22.2",
+     "row": 297,
+     "group": null,
+     "responsible": "CXO + CPO",
+     "input": "user_flows",
+     "slots": "information_architecture, navigation",
+     "process": "Fill: organize content and features into sections and design the navigation",
+     "flow": "After 22.1",
+     "output": "IA + Navigation Model",
+     "prompt": "ia_designer, navigation_designer"
+    },
+    {
+     "id": "22.3",
+     "row": 298,
+     "group": null,
+     "responsible": "CXO + CPO, CTO",
+     "input": "IA, user_flows, ux_principles",
+     "slots": "wireframes, ui_ux_specification, screen_specifications",
+     "process": "Generate: wireframes per screen, then the UI/UX and screen specifications (elements, states, content, validation messages)",
+     "flow": "After 22.2",
+     "output": "Wireframes + UI/UX + Screen Specs",
+     "prompt": "wireframe_generator, screen_spec_writer"
+    },
+    {
+     "id": "22.4",
+     "row": 299,
+     "group": null,
+     "responsible": "CXO + CTO",
+     "input": "screen_specifications, nonfunctional_requirements",
+     "slots": "responsive_requirements, accessibility_requirements",
+     "process": "Fill: define responsive behaviour per breakpoint and the accessibility requirements (contrast, keyboard, screen readers)",
+     "flow": "After 22.3",
+     "output": "Responsive + Accessibility Requirements",
+     "prompt": "responsive_designer, accessibility_analyst"
+    },
+    {
+     "id": "22.5",
+     "row": 300,
+     "group": null,
+     "responsible": "CQRO + CPO, CCO",
+     "input": "All UX outputs",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every screen traces to a user flow and a requirement, reused personas keep their labels, accessibility requirements are testable. A fail returns to the producing task",
+     "flow": "After 22.4",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "ux_personas, ux_journeys, user_flows",
+     "owner": "CXO",
+     "supporting": "CPO, CCO"
+    },
+    {
+     "slot": "information_architecture, navigation",
+     "owner": "CXO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "wireframes, ui_ux_specification, screen_specifications",
+     "owner": "CXO",
+     "supporting": "CPO, CTO"
+    },
+    {
+     "slot": "responsive_requirements, accessibility_requirements",
+     "owner": "CXO",
+     "supporting": "CTO"
+    }
+   ],
+   "sheetEpic": 22
+  },
+  {
+   "epic": 23,
+   "name": "Design Validation & Governance",
+   "mappingTitle": "Design Validation & Governance",
+   "features": [
+    "Requirement-to-Design Validation",
+    "Architecture Validation",
+    "AI Design Validation",
+    "Security Validation",
+    "Integration Validation",
+    "Data Validation",
+    "API Validation",
+    "UX Validation",
+    "Design Conflict Detection",
+    "Design Completeness Check",
+    "Approval Workflow"
+   ],
+   "tasks": [
+    {
+     "id": "23.1",
+     "row": 304,
+     "group": null,
+     "responsible": "CQRO + CDO",
+     "input": "Requirements Baseline v1 + design outputs from epics 13 to 22",
+     "slots": "design_validation_results",
+     "process": "Review: check that every requirement is addressed by at least one design element, and that every design element traces to a requirement",
+     "flow": "After the reviews in epics 13 to 22",
+     "output": "Coverage Findings",
+     "prompt": "requirement_design_validator"
+    },
+    {
+     "id": "23.2",
+     "row": 305,
+     "group": null,
+     "responsible": "CQRO + CTO, CISO, CDO, CXO",
+     "input": "Each design document",
+     "slots": "validation_status per domain",
+     "process": "Review: validate architecture, AI, security, integration, data, API and UX, each against its own checklist from C-Suite Integration",
+     "flow": "After 23.1",
+     "output": "Domain Validation Reports (7)",
+     "prompt": "architecture_validator, ai_design_validator, security_validator, integration_validator, data_validator, api_validator, ux_validator"
+    },
+    {
+     "id": "23.3",
+     "row": 306,
+     "group": null,
+     "responsible": "CQRO + CDO",
+     "input": "All design documents",
+     "slots": "design_conflicts, completeness_report",
+     "process": "Review: find contradictions between designs (for example an endpoint with no access rule, a table nothing uses) and check each design against its template",
+     "flow": "After 23.2",
+     "output": "Conflict List + Completeness Report",
+     "prompt": "conflict_detector, completeness_checker"
+    },
+    {
+     "id": "23.4",
+     "row": 307,
+     "group": null,
+     "responsible": "Owner agents",
+     "input": "Findings",
+     "slots": "None",
+     "process": "Fill: owners fix the findings. Blocking findings must be closed. A fix returns to the producing task and repeats the affected validation. Maximum 2 loops",
+     "flow": "After 23.3",
+     "output": "Resolved Findings",
+     "prompt": "finding_resolver"
+    },
+    {
+     "id": "23.5",
+     "row": 308,
+     "group": null,
+     "responsible": "Executive Reviewers + CEO + User",
+     "input": "Validated design set + Executive Summary",
+     "slots": "design_set_approval",
+     "process": "Confirm: approve the design set as a whole (Approval Workflow). Uses the review requests, gate rule and Decision Log from C-Suite Integration. Epics 13 to 22 have no separate approval",
+     "flow": "After 23.4. Orchestrator → Executive Reviewers",
+     "output": "Approved Design Set",
+     "prompt": "None"
+    },
+    {
+     "id": "23.6",
+     "row": 309,
+     "group": null,
+     "responsible": "CSO / Orchestrator",
+     "input": "Approved Design Set",
+     "slots": "design_baseline",
+     "process": "Publish: lock the approved design set as Design Baseline v1 and add it to the Handoff Package. Later edits go through Change Management",
+     "flow": "After 23.5",
+     "output": "Design Baseline v1",
+     "prompt": "cso_baseline_publisher"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "design_validation_results",
+     "owner": "CQRO",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "validation_status per domain",
+     "owner": "CQRO",
+     "supporting": "CTO, CISO, CDO, CXO"
+    },
+    {
+     "slot": "design_conflicts, completeness_report",
+     "owner": "CQRO",
+     "supporting": "CDO"
+    },
+    {
+     "slot": "design_set_approval",
+     "owner": "Executive Reviewers",
+     "supporting": "CEO, the User"
+    },
+    {
+     "slot": "design_baseline",
+     "owner": "CSO",
+     "supporting": "CTO"
+    }
+   ],
+   "sheetEpic": 23
+  },
+  {
+   "epic": 24,
+   "name": "Requirement Traceability",
+   "mappingTitle": "Requirement Traceability",
+   "features": [
+    "Requirement-to-Epic Mapping",
+    "Requirement-to-Feature Mapping",
+    "Requirement-to-Architecture Mapping",
+    "Requirement-to-Component Mapping",
+    "Requirement-to-API Mapping",
+    "Requirement-to-Database Mapping",
+    "Requirement-to-UX Mapping",
+    "Requirement-to-Task Mapping",
+    "Requirement-to-Test Mapping",
+    "Traceability Coverage Report"
+   ],
+   "tasks": [
+    {
+     "id": "24.1",
+     "row": 313,
+     "group": null,
+     "responsible": "CDO + CTO",
+     "input": "Requirements Register + Design Baseline v1",
+     "slots": "requirement_architecture_map, requirement_component_map, requirement_api_map, requirement_database_map, requirement_ux_map",
+     "process": "Fill: pass 1. Map every requirement ID to architecture elements, components, API endpoints, database entities and UX screens. Flag requirements with no mapping and design elements with no requirement",
+     "flow": "After 23.6",
+     "output": "Design Traceability Matrix",
+     "prompt": "trace_mapper"
+    },
+    {
+     "id": "24.2",
+     "row": 314,
+     "group": null,
+     "responsible": "CDO + CPO",
+     "input": "Requirements Register + Backlog from 25.5",
+     "slots": "requirement_epic_map, requirement_feature_map, requirement_task_map, requirement_test_map",
+     "process": "Fill: pass 2, after the backlog exists. Map every requirement to epics, features, tasks and tests",
+     "flow": "After 25.5",
+     "output": "Backlog Traceability Matrix",
+     "prompt": "trace_mapper"
+    },
+    {
+     "id": "24.3",
+     "row": 315,
+     "group": null,
+     "responsible": "CDO + CQRO",
+     "input": "Both matrices",
+     "slots": "traceability_coverage",
+     "process": "Generate: the Traceability Coverage Report: coverage per requirement type, gaps, orphans, and which gaps block handoff",
+     "flow": "After 24.2",
+     "output": "Coverage Report",
+     "prompt": "coverage_reporter"
+    },
+    {
+     "id": "24.4",
+     "row": 316,
+     "group": null,
+     "responsible": "CQRO",
+     "input": "Coverage Report",
+     "slots": "None",
+     "process": "Review: the matrices agree with each other and with the Requirement Register, and blocking gaps are listed. A fail returns to the producing task",
+     "flow": "After 24.3",
+     "output": "Review Result",
+     "prompt": "cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "requirement_architecture_map, requirement_component_map, requirement_api_map, requirement_database_map, requirement_ux_map",
+     "owner": "CDO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "requirement_epic_map, requirement_feature_map, requirement_task_map, requirement_test_map",
+     "owner": "CDO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "traceability_coverage",
+     "owner": "CDO",
+     "supporting": "CQRO"
+    }
+   ],
+   "sheetEpic": 24
+  },
+  {
+   "epic": 25,
+   "name": "Implementation Backlog Generation",
+   "mappingTitle": "Implementation Backlog Generation",
+   "features": [
+    "Epic Generation",
+    "Feature Generation",
+    "User Story Generation",
+    "Technical Story Generation",
+    "Backend Task Generation",
+    "Frontend Task Generation",
+    "AI Task Generation",
+    "Database Task Generation",
+    "API Task Generation",
+    "Integration Task Generation",
+    "Security Task Generation",
+    "Infrastructure Task Generation",
+    "UX Task Generation",
+    "Testing Task Generation",
+    "Observability Task Generation",
+    "Documentation Task Generation"
+   ],
+   "tasks": [
+    {
+     "id": "25.1",
+     "row": 320,
+     "group": null,
+     "responsible": "CPO + BA, CXO",
+     "input": "product_features, user_requirements, user_flows, scope",
+     "slots": "backlog_epics, backlog_features, user_stories",
+     "process": "Generate: group the Phase 6 product features into epics, map the features (not regenerated), and write user stories with acceptance criteria. Each story links to a requirement ID",
+     "flow": "After 23.6",
+     "output": "Epics + Features + User Stories",
+     "prompt": "epic_builder, story_writer"
+    },
+    {
+     "id": "25.2",
+     "row": 321,
+     "group": null,
+     "responsible": "CTO + CPO",
+     "input": "Design Baseline v1, user stories",
+     "slots": "technical_stories",
+     "process": "Generate: technical stories for work with no user story (infrastructure, migration, security hardening, observability), each linked to a design element and a requirement",
+     "flow": "After 25.1",
+     "output": "Technical Stories",
+     "prompt": "tech_story_writer"
+    },
+    {
+     "id": "25.3",
+     "row": 322,
+     "group": null,
+     "responsible": "CTO + CDO, CXO",
+     "input": "Stories, design documents",
+     "slots": "backend_tasks, frontend_tasks, ai_tasks, database_tasks, api_tasks, integration_tasks",
+     "process": "Generate: tasks for backend, frontend, AI, database, API and integration, each with a description, acceptance criteria, linked story and linked design element. Effort is left for 26.2",
+     "flow": "After 25.2",
+     "output": "Area Tasks (6 areas)",
+     "prompt": "task_generator"
+    },
+    {
+     "id": "25.4",
+     "row": 323,
+     "group": null,
+     "responsible": "CISO, CTO, CXO, CQRO, CDO",
+     "input": "Stories, design documents",
+     "slots": "security_tasks, infrastructure_tasks, ux_tasks, testing_tasks, observability_tasks, documentation_tasks",
+     "process": "Generate: tasks for security, infrastructure, UX, testing, observability and documentation, with the same fields as 25.3",
+     "flow": "After 25.2. Runs parallel with 25.3",
+     "output": "Area Tasks (6 areas)",
+     "prompt": "task_generator"
+    },
+    {
+     "id": "25.5",
+     "row": 324,
+     "group": null,
+     "responsible": "CQRO + CPO, CTO",
+     "input": "Backlog",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: every requirement has at least one story or task, no duplicate tasks, acceptance criteria are testable, tasks are small enough to estimate. A fail returns to the producing task",
+     "flow": "After 25.3 and 25.4",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "backlog_epics, backlog_features, user_stories",
+     "owner": "CPO",
+     "supporting": "BA, CXO"
+    },
+    {
+     "slot": "technical_stories",
+     "owner": "CTO",
+     "supporting": "CPO"
+    },
+    {
+     "slot": "backend_tasks, frontend_tasks, ai_tasks, database_tasks, api_tasks, integration_tasks",
+     "owner": "CTO",
+     "supporting": "CDO, CXO"
+    },
+    {
+     "slot": "security_tasks, infrastructure_tasks, ux_tasks, testing_tasks, observability_tasks, documentation_tasks",
+     "owner": "Per area owner (CISO, CTO, CXO, CQRO, CDO)",
+     "supporting": "CPO"
+    }
+   ],
+   "sheetEpic": 25
+  },
+  {
+   "epic": 26,
+   "name": "Task Dependency & Sequencing",
+   "mappingTitle": "Task Dependency & Sequencing",
+   "features": [
+    "Task Dependency & Ordering",
+    "Critical Path & Parallel Work",
+    "Sprint Candidate Generation",
+    "Team Assignment Recommendation",
+    "Effort Estimation",
+    "Release Plan (MVP, Release)"
+   ],
+   "tasks": [
+    {
+     "id": "26.1",
+     "row": 328,
+     "group": null,
+     "responsible": "CTO + COO",
+     "input": "Reviewed Backlog, design documents",
+     "slots": "task_dependencies, critical_path",
+     "process": "Fill: link tasks by dependency, order them, find the critical path and the work that can run in parallel. Flag circular dependencies",
+     "flow": "After 25.5",
+     "output": "Ordered Backlog + Critical Path",
+     "prompt": "dependency_sequencer"
+    },
+    {
+     "id": "26.2",
+     "row": 329,
+     "group": null,
+     "responsible": "CTO + CPO, CFO",
+     "input": "Ordered Backlog, team capacity (from the User)",
+     "slots": "effort_estimates",
+     "process": "Fill: estimate each task as a range, labelled ai_estimated. Team capacity and rates come from the User only",
+     "flow": "After 26.1",
+     "output": "Effort Estimates",
+     "prompt": "effort_estimator"
+    },
+    {
+     "id": "26.3",
+     "row": 330,
+     "group": null,
+     "responsible": "CTO + COO",
+     "input": "Estimates, the team (listed by the User)",
+     "slots": "sprint_candidates, team_assignments",
+     "process": "Fill: propose sprint candidates within capacity and recommend who takes which task, based only on the team the User lists",
+     "flow": "After 26.2",
+     "output": "Sprint Plan + Assignment Recommendation",
+     "prompt": "sprint_planner, assignment_recommender"
+    },
+    {
+     "id": "26.4",
+     "row": 331,
+     "group": null,
+     "responsible": "CPO + CTO, CFO",
+     "input": "Sprint Plan, scope, MVP boundary",
+     "slots": "release_plan",
+     "process": "Generate: the release plan (MVP and later releases), each with its scope, dependencies and risks",
+     "flow": "After 26.3",
+     "output": "Release Plan",
+     "prompt": "release_planner"
+    },
+    {
+     "id": "26.5",
+     "row": 332,
+     "group": null,
+     "responsible": "CQRO + COO",
+     "input": "Ordered Backlog, Estimates, Sprint Plan, Release Plan",
+     "slots": "The sections each reviewer owns",
+     "process": "Review: no circular dependencies, estimates are ranges with labels, no task is assigned to someone the User did not list, releases fit capacity. A fail returns to the producing task",
+     "flow": "After 26.4",
+     "output": "Review Result + Findings",
+     "prompt": "owner_section_check, cqro_reviewer"
+    },
+    {
+     "id": "26.6",
+     "row": 333,
+     "group": null,
+     "responsible": "User",
+     "input": "Reviewed sequencing and release plan",
+     "slots": "All sequencing slots",
+     "process": "Confirm: the User confirms the order, estimates and release plan, or requests changes",
+     "flow": "After 26.5. Changes return to the producing task and repeat 26.5",
+     "output": "User-Confirmed Plan",
+     "prompt": "None"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "task_dependencies, critical_path",
+     "owner": "CTO",
+     "supporting": "COO"
+    },
+    {
+     "slot": "effort_estimates",
+     "owner": "CTO",
+     "supporting": "CPO, CFO"
+    },
+    {
+     "slot": "sprint_candidates, team_assignments",
+     "owner": "CTO",
+     "supporting": "COO, the User"
+    },
+    {
+     "slot": "release_plan",
+     "owner": "CPO",
+     "supporting": "CTO, CFO"
+    }
+   ],
+   "sheetEpic": 26
+  },
+  {
+   "epic": 27,
+   "name": "Solution Builder Agent Handoff",
+   "mappingTitle": "Solution Builder Agent Handoff",
+   "features": [
+    "Implementation Blueprint Generation",
+    "Agent Task Package",
+    "Context Package Generation",
+    "Dependency Package",
+    "API Contract Package",
+    "Database Package",
+    "AI Configuration Package",
+    "UX Specification Package",
+    "Security Package",
+    "Infrastructure Package",
+    "Acceptance Criteria Package",
+    "Validation Rules Package",
+    "Handoff Review & Send"
+   ],
+   "tasks": [
+    {
+     "id": "27.1",
+     "row": 338,
+     "group": null,
+     "responsible": "CSO + CTO, CPO",
+     "input": "Design Baseline v1, confirmed plan, Traceability Coverage Report",
+     "slots": "implementation_blueprint",
+     "process": "Generate: the implementation blueprint: what to build, in what order, with the decisions, constraints and open assumptions",
+     "flow": "After 26.6 and 24.3",
+     "output": "Implementation Blueprint",
+     "prompt": "blueprint_writer"
+    },
+    {
+     "id": "27.2",
+     "row": 339,
+     "group": null,
+     "responsible": "CSO + CTO",
+     "input": "Backlog, ordered plan, blueprint",
+     "slots": "task_package, context_package, dependency_package",
+     "process": "Generate: one task package per set of work, with exactly the context each needs, and the dependency package listing what must exist first",
+     "flow": "After 27.1",
+     "output": "Agent Task, Context and Dependency Packages",
+     "prompt": "package_builder"
+    },
+    {
+     "id": "27.3",
+     "row": 340,
+     "group": null,
+     "responsible": "CTO, CDO, CXO",
+     "input": "Approved designs",
+     "slots": "api_contract_package, database_package, ai_configuration_package, ux_specification_package",
+     "process": "Generate: the API contract, database, AI configuration (prompts, models, guardrails) and UX specification packages, taken from the approved designs without editing them",
+     "flow": "After 27.1. Runs parallel with 27.2",
+     "output": "Four Packages",
+     "prompt": "package_builder"
+    },
+    {
+     "id": "27.4",
+     "row": 341,
+     "group": null,
+     "responsible": "CISO, CTO, COO",
+     "input": "Approved designs",
+     "slots": "security_package, infrastructure_package",
+     "process": "Generate: the security package (controls and secret-handling rules, never actual secrets) and the infrastructure package",
+     "flow": "After 27.1. Runs parallel with 27.2",
+     "output": "Two Packages",
+     "prompt": "package_builder"
+    },
+    {
+     "id": "27.5",
+     "row": 342,
+     "group": null,
+     "responsible": "CPO + CQRO",
+     "input": "User stories, requirements",
+     "slots": "acceptance_criteria_package, validation_rules_package",
+     "process": "Generate: the acceptance criteria and validation rules the builder's output will be checked against, traced to requirement IDs",
+     "flow": "After 27.1. Runs parallel with 27.2",
+     "output": "Two Packages",
+     "prompt": "package_builder"
+    },
+    {
+     "id": "27.6",
+     "row": 343,
+     "group": null,
+     "responsible": "CQRO + CSO, CTO",
+     "input": "All packages",
+     "slots": "handoff_review",
+     "process": "Review: the packages are complete, consistent with the baselines, contain no secrets, and cover every requirement. A fail returns to the producing task",
+     "flow": "After 27.2 to 27.5",
+     "output": "Review Result + Findings",
+     "prompt": "cqro_reviewer"
+    },
+    {
+     "id": "27.7",
+     "row": 344,
+     "group": null,
+     "responsible": "User",
+     "input": "Reviewed Packages",
+     "slots": "handoff_decision",
+     "process": "Confirm: the User reviews the package set and explicitly approves sending it. The send goes to the builder agent or system the User chooses, and nothing is sent without that approval",
+     "flow": "After 27.6. Send only after explicit approval",
+     "output": "Sent Handoff Package + Delivery Record",
+     "prompt": "None"
+    }
+   ],
+   "slots": [
+    {
+     "slot": "implementation_blueprint",
+     "owner": "CSO",
+     "supporting": "CTO, CPO"
+    },
+    {
+     "slot": "task_package, context_package, dependency_package",
+     "owner": "CSO",
+     "supporting": "CTO"
+    },
+    {
+     "slot": "api_contract_package, database_package, ai_configuration_package, ux_specification_package",
+     "owner": "CTO",
+     "supporting": "CDO, CXO"
+    },
+    {
+     "slot": "security_package, infrastructure_package",
+     "owner": "CISO",
+     "supporting": "CTO, COO"
+    },
+    {
+     "slot": "acceptance_criteria_package, validation_rules_package",
+     "owner": "CPO",
+     "supporting": "CQRO"
+    },
+    {
+     "slot": "handoff_review, handoff_decision",
+     "owner": "CQRO",
+     "supporting": "the User"
+    }
+   ],
+   "sheetEpic": 27
+  }
+ ]
+}

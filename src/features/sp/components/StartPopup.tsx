@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { EXAMPLE_IDEA, ideaContext, isIdeaReady, START_OPTIONS, type AnswerKey, type IdeaInput, type StartOption } from '../idea';
+import type { IdeaBrief } from '../ai/briefSchema';
+import { fetchBrief } from '../ai/client';
+import { sentenceList } from '../ai/text';
 import { Face } from './Avatar';
 import Modal from './Modal';
 
@@ -14,6 +17,9 @@ export default function StartPopup({ userName, onStart }: { userName: string; on
   const [name, setName] = useState('');
   const [answers, setAnswers] = useState<Partial<Record<AnswerKey, string>>>({});
   const [error, setError] = useState<string | null>(null);
+  const [brief, setBrief] = useState<IdeaBrief | null>(null);
+  const [reading, setReading] = useState(false);
+  const [briefNote, setBriefNote] = useState<string | null>(null);
 
   const ctx = ideaContext(text, option || 'idea');
   const chosen = START_OPTIONS.find(o => o.id === option);
@@ -22,8 +28,18 @@ export default function StartPopup({ userName, onStart }: { userName: string; on
   const submit = () => {
     if (!option || !ready) return;
     const q2 = ctx.questions[1].q;
-    const problem = onStart({ option, text: text.trim(), name: (name || ctx.name).trim(), q2, answers: { a1: answers.a1!, a2: answers.a2!, a3: answers.a3! } });
+    const problem = onStart({ option, text: text.trim(), name: (name || ctx.name).trim(), q2, answers: { a1: answers.a1!, a2: answers.a2!, a3: answers.a3! }, ...(brief ? { brief } : {}) });
     setError(problem);
+  };
+
+  /** Idea Definition: the founder's words go to the Idea Brief provider (Claude when it is switched on). */
+  const analyse = async () => {
+    if (!option || reading) return;
+    setReading(true); setBriefNote(null); setBrief(null);
+    const r = await fetchBrief(text.trim(), option);
+    setReading(false);
+    if (r.ok) setBrief(r.brief); else setBriefNote(`${r.error} Continuing with simulated analysis.`);
+    setStep(2);
   };
 
   if (step === 1) {
@@ -43,7 +59,7 @@ export default function StartPopup({ userName, onStart }: { userName: string; on
           <textarea id="sp-idea" value={text} onChange={e => setText(e.target.value)} placeholder={chosen?.placeholder ?? 'Your idea or problem'} />
           <div className="sp-row"><button type="button" className="btn btn-sm" onClick={() => { setText(EXAMPLE_IDEA); if (!option) setOption('idea'); }}>Use an example</button><span className="t-small" style={{ fontSize: 12 }}>At least a sentence, so the agents have something to work with.</span></div>
         </div>
-        <div className="sp-foot"><span className="sp-sim">SIMULATED OUTPUTS</span><span className="grow" /><button type="button" className="btn btn-primary" disabled={!isIdeaReady(option, text)} onClick={() => setStep(2)}>Continue</button></div>
+        <div className="sp-foot"><span className="sp-sim">SIMULATED OUTPUTS</span><span className="grow" /><button type="button" className="btn btn-primary" disabled={!isIdeaReady(option, text) || reading} onClick={analyse}>{reading ? 'Reading your idea…' : 'Continue'}</button></div>
       </Modal>
     );
   }
@@ -52,6 +68,13 @@ export default function StartPopup({ userName, onStart }: { userName: string; on
     <Modal locked label="Three questions">
       <div className="sp-who"><Face id="CSO" size={44} /><div><div className="t-caps">Asha · Strategy · Step 2 of 2</div><h2>Three quick questions</h2></div></div>
       <div className="sp-say">Thanks. I read “{text.trim().length > 110 ? text.trim().slice(0, 109) + '…' : text.trim()}”. These answers shape your Idea Brief, so pick the closest fit.</div>
+      {brief?.source === 'claude-cli' && (
+        <div className="sp-say" aria-label="What Claude understood">
+          <span className="sp-pill go">AI-GENERATED · Claude CLI (local)</span> {brief.summary}
+          {brief.missingInformation.length > 0 && <div className="t-small">Still unclear: {sentenceList(brief.missingInformation)}</div>}
+        </div>
+      )}
+      {briefNote && <div className="t-small" role="status">{briefNote}</div>}
       <div className="sp-field"><label htmlFor="sp-name">What shall we call it for now?</label><input id="sp-name" type="text" value={name || ctx.name} maxLength={60} onChange={e => setName(e.target.value)} /></div>
       {ctx.questions.map(q => (
         <div key={q.key} className="sp-field" role="group" aria-label={q.q}>

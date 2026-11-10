@@ -10,6 +10,7 @@ import { genSections, mergeEdited, parseInterviews } from './content';
 import type { DocStore } from './docStore';
 import type { IdeaInput } from './idea';
 import { agentLook } from './model';
+import { AI_WRITTEN_TASKS, makerTag, providerOf } from './provenance';
 import { taskStatus, type RunPhase } from './viewModel';
 
 export const AGENT_TASKS = ['brief', 'research', 'problem', 'market', 'personas', 'competitors'] as const;
@@ -39,7 +40,9 @@ export function createRunner(deps: RunnerDeps) {
     const redo = e.project.workflows.SP.tasks[tid].versions.length > 0;
     const note = docs.takeNote(tid);
     const fresh = genSections(tid, { idea, interviews: parseInterviews(docs.latest('interviews')?.secs) });
-    docs.add(tid, { by: `${agentLook(TASK[tid].owner).name} (simulated)`, note: note ? `Revised: ${note}` : redo ? 'Re-checked against updated inputs' : 'First draft', secs: [...(note ? [{ h: 'Your note, applied', b: note }] : []), ...mergeEdited(fresh, docs.latest(tid)?.secs)] });
+    const provider = providerOf(tid, idea);
+    const outdated = AI_WRITTEN_TASKS.includes(tid) && idea.brief && idea.briefStale ? ' (Claude brief is out of date, so this draft is simulated)' : '';
+    docs.add(tid, { by: makerTag(agentLook(TASK[tid].owner).name, provider), provider, note: (note ? `Revised: ${note}` : redo ? 'Re-checked against updated inputs' : 'First draft') + outdated, secs: [...(note ? [{ h: 'Your note, applied', b: note }] : []), ...mergeEdited(fresh, docs.latest(tid)?.secs)] });
   }
 
   const set = (tid: string, phase: RunPhase, ms: number) => { const t = { phase, left: ms, total: ms }; timers.set(tid, t); return t; };
@@ -54,7 +57,7 @@ export function createRunner(deps: RunnerDeps) {
         if (st === 'ready') {
           const w = t?.phase === 'walk' ? t : set(tid, 'walk', WALK_MS);
           w.left -= dt;
-          if (w.left <= 0) { if (run((c, p) => c.startTask(p, tid, 'simulated'))) set(tid, 'work', workMs(tid)); else set(tid, 'walk', RETRY_MS); }
+          if (w.left <= 0) { if (run((c, p) => c.startTask(p, tid, providerOf(tid, deps.idea()) === 'claude-cli' ? 'ai' : 'simulated'))) set(tid, 'work', workMs(tid)); else set(tid, 'walk', RETRY_MS); }
         } else if (st === 'working') {
           const w = t?.phase === 'work' ? t : set(tid, 'work', workMs(tid));
           w.left -= dt;

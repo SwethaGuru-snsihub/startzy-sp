@@ -4,8 +4,10 @@
 // this browser only, behind the same replaceable adapter, with listeners so screens update.
 import { localStorageAdapter, MemoryAdapter, type KeyValueAdapter } from '@/services/coreStorage';
 import type { Section } from './content';
+import type { Provider } from './provenance';
 
-export type DocVersion = { v: number; by: string; note: string; at: string; secs: Section[] };
+/** `provider` is who wrote the content. Absent on versions saved before it was recorded: those were simulated. */
+export type DocVersion = { v: number; by: string; note: string; at: string; secs: Section[]; provider?: Provider };
 type Data = { docs: Record<string, DocVersion[]>; notes: Record<string, string>; takenUp: string[]; rechecks: string[] };
 export const DOC_KEY_PREFIX = 'startzy_sp_docs_v1:';
 const empty = (): Data => ({ docs: {}, notes: {}, takenUp: [], rechecks: [] });
@@ -20,6 +22,25 @@ function parse(raw: string | null): Data | null {
   } catch { return null; }
 }
 
+/**
+ * Versions drafted before providers were recorded: they carry Claude's "(Claude)" sections but no `provider`
+ * and are tagged "(simulated)". Only the Claude path writes those headings, so they are corrected in place.
+ * Returns whether anything changed. Core events cannot be rewritten: the old `started` event keeps its method.
+ */
+export function migrateLegacy(d: { docs: Record<string, DocVersion[]> }): boolean {
+  let changed = false;
+  for (const list of Object.values(d.docs)) {
+    for (const v of list) {
+      if (v.provider === undefined && v.secs.some(s => /\(Claude\)$/.test(s.h))) {
+        v.provider = 'claude-cli';
+        v.by = v.by.replace(/\(simulated\)$/, '(Claude CLI)');
+        changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
 export function createDocStore(adapter: KeyValueAdapter, projectId: string, now: () => string = () => new Date().toISOString()) {
   const key = `${DOC_KEY_PREFIX}${projectId}`;
   const listeners = new Set<() => void>();
@@ -32,6 +53,7 @@ export function createDocStore(adapter: KeyValueAdapter, projectId: string, now:
     let d = parse(raw);
     if (!d && raw != null) { try { adapter.set(`${key}:corrupt:${Date.now()}`, raw); } catch { /* storage blocked */ } }   // keep an unreadable copy aside
     d = d ?? empty();
+    if (migrateLegacy(d)) { try { adapter.set(key, JSON.stringify(d)); } catch { /* storage blocked: corrected in memory only */ } }
     cache = d;
     return d;
   }
@@ -44,9 +66,9 @@ export function createDocStore(adapter: KeyValueAdapter, projectId: string, now:
   return {
     versions: (task: string): DocVersion[] => read().docs[task] ?? [],
     latest: (task: string): DocVersion | null => (read().docs[task] ?? []).at(-1) ?? null,
-    add(task: string, v: { by: string; note: string; secs: Section[] }): DocVersion {
+    add(task: string, v: { by: string; note: string; secs: Section[]; provider?: Provider }): DocVersion {
       const d = read(); const list = d.docs[task] ?? [];
-      const next: DocVersion = { v: list.length + 1, by: v.by, note: v.note, at: now(), secs: v.secs };
+      const next: DocVersion = { v: list.length + 1, by: v.by, note: v.note, at: now(), secs: v.secs, ...(v.provider ? { provider: v.provider } : {}) };
       write({ ...d, docs: { ...d.docs, [task]: [...list, next] } });
       return next;
     },

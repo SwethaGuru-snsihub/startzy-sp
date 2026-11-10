@@ -10,6 +10,7 @@ import StartPopup from '@/features/sp/components/StartPopup';
 import { getDocStore } from '@/features/sp/docStore';
 import type { IdeaInput } from '@/features/sp/idea';
 import { PHASES } from '@/features/sp/model';
+import { providerOf } from '@/features/sp/provenance';
 import { createRunner } from '@/features/sp/runner';
 import { SpContext, type ModalSpec, type SpValue } from '@/features/sp/SpContext';
 import { isStarted } from '@/features/sp/startIdea';
@@ -120,7 +121,9 @@ function SpProjectFrame({ id, children }: { id: string; children: React.ReactNod
             <div className="sp-row" aria-label="Discover steps">{steps.map(s => <span key={s.id} className={`sp-step ${s.status === 'complete' ? 'done' : s.status === 'in-progress' ? 'on' : ''}`}>{s.label}</span>)}</div>
             <div className="sp-meter"><span>Discover · {stepsDone} of {steps.length} steps done</span><span className="sp-bar"><i style={{ width: `${(stepsDone / steps.length) * 100}%` }} /></span></div>
             <span style={{ flex: 1 }} />
-            <span className="sp-sim">SIMULATED OUTPUTS</span>
+            {providerOf('brief', record.idea) === 'claude-cli'
+              ? <span className="sp-sim" title="The Idea Brief is written by Claude through the local CLI. Every other output is still simulated.">CLAUDE BRIEF · OTHER OUTPUTS SIMULATED</span>
+              : <span className="sp-sim">SIMULATED OUTPUTS</span>}
             <div className="sp-filter" role="group" aria-label="Office speed">{[1, 3].map(n => <button key={n} type="button" aria-pressed={speed === n} onClick={() => setSpeed(n)}>{n}×</button>)}</div>
             <button type="button" className="btn btn-sm" onClick={() => router.push(`/sp/${store.create().id}`)}>New idea</button>
             <button type="button" className="btn btn-sm" onClick={() => { logout(); router.replace('/sp'); }} title={`Signed in as ${user.name}`}>Sign out</button>

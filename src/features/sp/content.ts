@@ -2,6 +2,7 @@
 // from the documents it depends on. No model is called: this is deterministic template text, and every
 // screen that shows it says it is simulated. Pure functions, so they are testable and reusable.
 import { ideaContext, START_OPTIONS, type IdeaInput } from './idea';
+import { providerOf, usableBrief } from './provenance';
 
 export type Section = { h: string; b: string; hint?: string; edited?: boolean; locked?: boolean };
 export type Interviews = { n: number; strong: number; notes: string };
@@ -47,9 +48,23 @@ export function genSections(task: string, ctx: ContentCtx): Section[] {
   switch (task) {
     case 'goal': return [{ h: 'Idea', b: idea.text }, { h: 'Where you started', b: start, locked: true }, { h: 'Working name', b: idea.name }];
     case 'clarify': { const q = c.questions; return [{ h: 'Who it is for', hint: q[0].q, b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', hint: q[2].q, b: idea.answers.a3 }]; }
-    case 'brief': return [
-      { h: 'Idea', b: idea.text }, { h: 'Working name', b: idea.name }, { h: 'Who it is for', b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', b: idea.answers.a3 },
-      { h: 'Starting assumptions', b: `• ${cap(w)} will change how they ${c.doing} if the new way is clearly better.\n• The problem is frequent enough to pay for.` }];
+    case 'brief': {
+      const base: Section[] = [
+        { h: 'Idea', b: idea.text }, { h: 'Working name', b: idea.name }, { h: 'Who it is for', b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', b: idea.answers.a3 },
+        { h: 'Starting assumptions', b: `• ${cap(w)} will change how they ${c.doing} if the new way is clearly better.\n• The problem is frequent enough to pay for.` }];
+      const ai = providerOf('brief', idea) === 'claude-cli' ? usableBrief(idea) : null;
+      if (!ai) return base;
+      const bullets = (xs: string[]) => xs.map(x => '• ' + x).join('\n');
+      const slotText = (id: string) => ai.slots.find(s => s.slot === id)?.value || 'Not known yet';
+      return [
+        { h: 'Summary (Claude)', b: ai.summary }, ...base.slice(1, 5),
+        { h: 'Problem (Claude)', b: slotText('problem') }, { h: 'Target customers (Claude)', b: slotText('target_users') },
+        ...(ai.opportunity ? [{ h: 'Business opportunity (Claude)', b: ai.opportunity }] : []),
+        { h: 'Desired outcome (Claude)', b: slotText('expected_outcome') },
+        { h: 'Assumptions (Claude)', b: ai.assumptions.length ? bullets(ai.assumptions) : 'None stated.' },
+        { h: 'Missing information (Claude)', b: ai.missingInformation.length ? bullets(ai.missingInformation) : 'None.' },
+        { h: 'Open questions (Claude)', b: ai.clarifyingQuestions.length ? bullets(ai.clarifyingQuestions) : 'None.' }];
+    }
     case 'research': return [
       { h: 'What we found (simulated)', b: `• Today, ${w} handle this by: ${idea.answers.a2.toLowerCase()}.\n• Existing options: ${t.direct}; ${t.indirect}.\n• Most people fall back on ${t.sub}.` },
       { h: 'Gaps', b: `• No option is built around ${idea.name}'s approach.\n• Switching cost looks low for ${w}.` }];

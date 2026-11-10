@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { TASK, TASKS, consumers, requiredInputs } from '@/engine/core/register';
 import { saveDocEdit, restoreVersion } from '@/features/sp/actions';
 import type { Section } from '@/features/sp/content';
+import Provenance from '@/features/sp/components/Provenance';
 import { agentLook, DISCOVER_TASKS } from '@/features/sp/model';
+import { providerOf, versionProvider } from '@/features/sp/provenance';
 import { useSp } from '@/features/sp/SpContext';
 import { recheckScope, STATUS_LABEL, statusTone } from '@/features/sp/viewModel';
 import { FEATURES_OF_TASK } from '@/features/sp/workflow';
@@ -51,6 +53,7 @@ export default function DocumentationPage() {
   const cur = versions[shownV - 1], prev = versions[shownV - 2];
   const old = shownV !== latestV;
   const generated = rows.filter(r => r.status === 'done').length;
+  const provider = cur ? versionProvider(cur) : providerOf(sel, env.idea());   // the version shown, or who will write it
   const owners = [t.owner, ...t.contributors].map(a => agentLook(a).name).join(', ');
   const name = (x: string) => TASK[x]?.artifact ?? x;
   const verOf = (x: string) => project.workflows[TASK[x].workflow].tasks[x].versions.length;
@@ -109,7 +112,8 @@ export default function DocumentationPage() {
       const founder = t.owner === 'FOUNDER';
       const steps: [string, string][] = founder
         ? [['You provide it', 'Only you can enter this. Atlas asks for it in Notifications.'], ['Saved as a version', 'Every save is a new version with who made it and why.'], ['Documents built on it re-check', 'They are flagged and re-run after you approve the re-check.']]
-        : [['Inputs gathered', requiredInputs(sel).length ? `From: ${requiredInputs(sel).map(name).join(', ')}.` : 'From your idea and answers.'], [`Drafted by ${agentLook(t.owner).name}`, 'Simulated draft. In the real product a model writes this.'], ...(t.reviewer ? [[`Reviewed by ${agentLook(t.reviewer).name}`, 'Simulated quality review before it reaches you.'] as [string, string]] : []), ['You approve', 'Approve, or send back with a note for a new version.'], ['Kept up to date', 'If an input changes, it is flagged and re-checked after you approve.']];
+        : [['Inputs gathered', requiredInputs(sel).length ? `From: ${requiredInputs(sel).map(name).join(', ')}.` : 'From your idea and answers.'], provider === 'claude-cli'
+          ? [`Drafted by ${agentLook(t.owner).name}, written by Claude`, 'Your words went to Claude through the local Claude Code CLI. The answer was checked against a fixed format, and any quote that is not in your words was dropped.'] : [`Drafted by ${agentLook(t.owner).name}`, 'Simulated draft. In the real product a model writes this.'], ...(t.reviewer ? [[`${agentLook(t.reviewer).name}'s check`, provider === 'claude-cli' ? 'A placeholder that passes automatically. It does not read Claude\'s text; your approval is the real review.' : 'Simulated quality review before it reaches you.'] as [string, string]] : []), ['You approve', 'Approve, or send back with a note for a new version.'], ['Kept up to date', 'If an input changes, it is flagged and re-checked after you approve.']];
       return <div className="sp-sec"><h5>Generation steps</h5>{steps.map((s, i) => <div key={i} className="sp-flowrow"><i>{i + 1}</i><span><b>{s[0]}</b><br /><span className="t-small" style={{ fontSize: 12.5 }}>{s[1]}</span></span></div>)}</div>;
     }
     // content
@@ -163,7 +167,7 @@ export default function DocumentationPage() {
           <div className="t-caps">{t.home} · {t.kind === 'gate' ? 'Gate decision' : 'Document'}</div>
           <div className="sp-row" style={{ justifyContent: 'space-between' }}>
             <h2 className="t-h2" style={{ margin: 0 }}>{t.artifact}</h2>
-            <span className="sp-row"><span className={`sp-pill ${row ? statusTone(row.status) : ''}`}>{status}</span>{latestV > 0 && <span className="sp-pill">v{latestV}</span>}{isDiscover && <span className="sp-sim">SIMULATED</span>}</span>
+            <span className="sp-row"><span className={`sp-pill ${row ? statusTone(row.status) : ''}`}>{status}</span>{latestV > 0 && <span className="sp-pill">v{latestV}</span>}{isDiscover && <Provenance provider={provider} />}</span>
           </div>
           <div className="t-small" style={{ marginTop: 4 }}>Made by {owners}{t.reviewer ? ` · reviewed by ${agentLook(t.reviewer).name}` : ''} · approved by you</div>
           {FEATURES_OF_TASK[sel] && <div className="t-small" style={{ marginTop: 2 }}>Feature{FEATURES_OF_TASK[sel].length > 1 ? 's' : ''}: {FEATURES_OF_TASK[sel].join(', ')}</div>}

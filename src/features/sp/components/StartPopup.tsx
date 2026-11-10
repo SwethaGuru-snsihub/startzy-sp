@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import { EXAMPLE_IDEA, ideaContext, isIdeaReady, START_OPTIONS, type AnswerKey, type IdeaInput, type StartOption } from '../idea';
 import type { IdeaBrief } from '../ai/briefSchema';
-import { fetchBrief } from '../ai/client';import { Face } from './Avatar';
+import { fetchBrief } from '../ai/client';
+import { sentenceList } from '../ai/text';
+import { Face } from './Avatar';
 import Modal from './Modal';
 
 /* The first step of Solution Planning, over the Agent Office: Atlas asks where the founder is starting
@@ -69,7 +71,7 @@ export default function StartPopup({ userName, onStart }: { userName: string; on
       {brief?.source === 'claude-cli' && (
         <div className="sp-say" aria-label="What Claude understood">
           <span className="sp-pill go">AI-GENERATED · Claude CLI (local)</span> {brief.summary}
-          {brief.missingInformation.length > 0 && <div className="t-small">Still unclear: {brief.missingInformation.join('; ')}.</div>}
+          {brief.missingInformation.length > 0 && <div className="t-small">Still unclear: {sentenceList(brief.missingInformation)}</div>}
         </div>
       )}
       {briefNote && <div className="t-small" role="status">{briefNote}</div>}

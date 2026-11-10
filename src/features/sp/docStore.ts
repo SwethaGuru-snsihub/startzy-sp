@@ -22,6 +22,25 @@ function parse(raw: string | null): Data | null {
   } catch { return null; }
 }
 
+/**
+ * Versions drafted before providers were recorded: they carry Claude's "(Claude)" sections but no `provider`
+ * and are tagged "(simulated)". Only the Claude path writes those headings, so they are corrected in place.
+ * Returns whether anything changed. Core events cannot be rewritten: the old `started` event keeps its method.
+ */
+export function migrateLegacy(d: { docs: Record<string, DocVersion[]> }): boolean {
+  let changed = false;
+  for (const list of Object.values(d.docs)) {
+    for (const v of list) {
+      if (v.provider === undefined && v.secs.some(s => /\(Claude\)$/.test(s.h))) {
+        v.provider = 'claude-cli';
+        v.by = v.by.replace(/\(simulated\)$/, '(Claude CLI)');
+        changed = true;
+      }
+    }
+  }
+  return changed;
+}
+
 export function createDocStore(adapter: KeyValueAdapter, projectId: string, now: () => string = () => new Date().toISOString()) {
   const key = `${DOC_KEY_PREFIX}${projectId}`;
   const listeners = new Set<() => void>();
@@ -34,6 +53,7 @@ export function createDocStore(adapter: KeyValueAdapter, projectId: string, now:
     let d = parse(raw);
     if (!d && raw != null) { try { adapter.set(`${key}:corrupt:${Date.now()}`, raw); } catch { /* storage blocked */ } }   // keep an unreadable copy aside
     d = d ?? empty();
+    if (migrateLegacy(d)) { try { adapter.set(key, JSON.stringify(d)); } catch { /* storage blocked: corrected in memory only */ } }
     cache = d;
     return d;
   }

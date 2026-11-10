@@ -32,6 +32,11 @@ export type AiTaskSpec<I = unknown, O = unknown> = {
   validate(raw: unknown, input: I, provider: Provider): Validated<O>;
   /** The deterministic answer used offline and in tests. */
   simulate(input: I): O;
+  /**
+   * A cheap check of an answer read back from the network or from browser storage, which must not be trusted
+   * just because it is there. It is not a replacement for `validate`, which sees the model's raw output.
+   */
+  checkResult?(value: unknown): boolean;
 };
 
 export type AiRunOptions = {

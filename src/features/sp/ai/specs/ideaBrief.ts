@@ -1,7 +1,7 @@
 // The Idea Brief task (epic 1), described as a spec. Its prompt, schema, request checks, answer
 // validation and simulated answer are the ones Epic 1 has always used, only gathered in one place.
 import { ideaContext, MIN_IDEA_LENGTH, START_OPTIONS, type StartOption } from '../../idea';
-import { extractSlots, SLOT_LABEL } from '../../slots';
+import { extractSlots, SLOT_IDS, SLOT_LABEL } from '../../slots';
 import { BRIEF_JSON_SCHEMA, MAX_QUESTIONS, validateBrief, type IdeaBrief } from '../briefSchema';
 import { MAX_IDEA_CHARS, SYSTEM_PROMPT, userMessage } from '../prompt';
 import type { AiTaskSpec } from '../task';
@@ -44,4 +44,12 @@ export const ideaBriefSpec: AiTaskSpec<IdeaBriefInput, IdeaBrief> = {
     return r.ok ? { ok: true, value: r.brief } : { ok: false, error: r.error };
   },
   simulate: simulateBrief,
+  checkResult(value) {
+    const b = value as Partial<IdeaBrief> | null;
+    return typeof b === 'object' && b !== null
+      && (b.source === 'simulated' || b.source === 'claude-cli')
+      && typeof b.summary === 'string' && typeof b.opportunity === 'string'
+      && Array.isArray(b.slots) && b.slots.length === SLOT_IDS.length && SLOT_IDS.every((id, i) => b.slots?.[i]?.slot === id)
+      && [b.assumptions, b.missingInformation, b.clarifyingQuestions].every(l => Array.isArray(l) && l.every(x => typeof x === 'string'));
+  },
 };

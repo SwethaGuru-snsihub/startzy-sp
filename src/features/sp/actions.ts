@@ -8,6 +8,7 @@ import type { CoreRuntime, MutationResult } from '@/services/coreRuntime';
 import { gateChecks, genSections, interviewSections, NO_INTERVIEWS, parseInterviews, type ContentCtx, type Interviews, type Section } from './content';
 import type { DocStore } from './docStore';
 import { goalFactOf, type IdeaInput } from './idea';
+import { versionProvider, type Provider } from './provenance';
 import { startIdea } from './startIdea';
 import { recheckScope } from './viewModel';
 
@@ -94,7 +95,9 @@ function applyEdit(task: string, secs: Section[], idea: IdeaInput): { idea: Idea
   const g = (h: string) => (secs.find(s => s.h === h)?.b ?? '').trim();
   if (task === 'goal') {
     if (!g('Idea')) return { idea, error: 'The idea cannot be empty.' };
-    return { idea: { ...idea, text: g('Idea'), name: g('Working name') || idea.name } };
+    const text = g('Idea');
+    // The brief was written from the old words: once they change it no longer matches, and is not shown as current.
+    return { idea: { ...idea, text, name: g('Working name') || idea.name, ...(idea.brief && text !== idea.text.trim() ? { briefStale: true } : {}) } };
   }
   if (task === 'clarify') {
     const fact = goalFactOf(g('Goal'));
@@ -109,7 +112,7 @@ function applyEdit(task: string, secs: Section[], idea: IdeaInput): { idea: Idea
  * answers, becomes what the agents read), the core records it as a new approved version, and whatever
  * was built on the old one is flagged for re-check. Nothing re-runs until the founder approves the re-check.
  */
-export function saveDocEdit(env: Env, task: string, secs: Section[], note: string): string | null {
+export function saveDocEdit(env: Env, task: string, secs: Section[], note: string, provider?: Provider): string | null {
   const pr = project(env), prev = env.docs.latest(task), idea = env.idea();
   if (!pr || !prev || !idea) return 'This document cannot be edited yet.';
   const st = pr.core.state(pr.p, task);
@@ -129,13 +132,15 @@ export function saveDocEdit(env: Env, task: string, secs: Section[], note: strin
   }));
   if (bad) return bad;
   if (task === 'goal' || task === 'clarify') env.setIdea(next.idea);
-  env.docs.add(task, { by: 'You', note: note.trim() || 'Edited by you', secs: secs.map((s, i) => ({ ...s, edited: s.edited || s.b !== prev.secs[i]?.b })) });
+  // Editing does not change who wrote the rest of the content: the provider carries over (or is the restored version's).
+  const kept = provider ?? versionProvider(prev);
+  env.docs.add(task, { by: 'You', note: note.trim() || 'Edited by you', secs: secs.map((s, i) => ({ ...s, edited: s.edited || s.b !== prev.secs[i]?.b })), ...(kept === 'claude-cli' ? { provider: kept } : {}) });
   return null;
 }
 
 export function restoreVersion(env: Env, task: string, v: number): string | null {
   const old = env.docs.versions(task).find(x => x.v === v);
-  return old ? saveDocEdit(env, task, old.secs.map(s => ({ ...s })), `Restored v${v}`) : 'That version no longer exists.';
+  return old ? saveDocEdit(env, task, old.secs.map(s => ({ ...s })), `Restored v${v}`, versionProvider(old)) : 'That version no longer exists.';
 }
 
 /** The founder approves the re-check: the agents redo what is flagged, and what is built on it as each is approved again. */

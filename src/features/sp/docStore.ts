@@ -4,8 +4,10 @@
 // this browser only, behind the same replaceable adapter, with listeners so screens update.
 import { localStorageAdapter, MemoryAdapter, type KeyValueAdapter } from '@/services/coreStorage';
 import type { Section } from './content';
+import type { Provider } from './provenance';
 
-export type DocVersion = { v: number; by: string; note: string; at: string; secs: Section[] };
+/** `provider` is who wrote the content. Absent on versions saved before it was recorded: those were simulated. */
+export type DocVersion = { v: number; by: string; note: string; at: string; secs: Section[]; provider?: Provider };
 type Data = { docs: Record<string, DocVersion[]>; notes: Record<string, string>; takenUp: string[]; rechecks: string[] };
 export const DOC_KEY_PREFIX = 'startzy_sp_docs_v1:';
 const empty = (): Data => ({ docs: {}, notes: {}, takenUp: [], rechecks: [] });
@@ -44,9 +46,9 @@ export function createDocStore(adapter: KeyValueAdapter, projectId: string, now:
   return {
     versions: (task: string): DocVersion[] => read().docs[task] ?? [],
     latest: (task: string): DocVersion | null => (read().docs[task] ?? []).at(-1) ?? null,
-    add(task: string, v: { by: string; note: string; secs: Section[] }): DocVersion {
+    add(task: string, v: { by: string; note: string; secs: Section[]; provider?: Provider }): DocVersion {
       const d = read(); const list = d.docs[task] ?? [];
-      const next: DocVersion = { v: list.length + 1, by: v.by, note: v.note, at: now(), secs: v.secs };
+      const next: DocVersion = { v: list.length + 1, by: v.by, note: v.note, at: now(), secs: v.secs, ...(v.provider ? { provider: v.provider } : {}) };
       write({ ...d, docs: { ...d.docs, [task]: [...list, next] } });
       return next;
     },

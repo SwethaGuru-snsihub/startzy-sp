@@ -2,6 +2,8 @@
 // from the documents it depends on. No model is called: this is deterministic template text, and every
 // screen that shows it says it is simulated. Pure functions, so they are testable and reusable.
 import { ideaContext, START_OPTIONS, type IdeaInput } from './idea';
+import { providerOf, usableBrief } from './provenance';
+
 export type Section = { h: string; b: string; hint?: string; edited?: boolean; locked?: boolean };
 export type Interviews = { n: number; strong: number; notes: string };
 export type ContentCtx = { idea: IdeaInput; interviews: Interviews };
@@ -50,7 +52,7 @@ export function genSections(task: string, ctx: ContentCtx): Section[] {
       const base: Section[] = [
         { h: 'Idea', b: idea.text }, { h: 'Working name', b: idea.name }, { h: 'Who it is for', b: idea.answers.a1 }, { h: 'Context', hint: idea.q2, b: idea.answers.a2 }, { h: 'Goal', b: idea.answers.a3 },
         { h: 'Starting assumptions', b: `• ${cap(w)} will change how they ${c.doing} if the new way is clearly better.\n• The problem is frequent enough to pay for.` }];
-      const ai = idea.brief?.source === 'claude-cli' ? idea.brief : null;
+      const ai = providerOf('brief', idea) === 'claude-cli' ? usableBrief(idea) : null;
       if (!ai) return base;
       const bullets = (xs: string[]) => xs.map(x => '• ' + x).join('\n');
       const slotText = (id: string) => ai.slots.find(s => s.slot === id)?.value || 'Not known yet';

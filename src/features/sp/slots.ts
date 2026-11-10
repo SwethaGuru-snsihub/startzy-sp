@@ -85,7 +85,8 @@ export const SLOT_LABEL: Record<SlotId, string> = { idea: 'Idea', problem: 'Prob
 export const PROVENANCE_LABEL: Record<Provenance, string> = { explicit: 'From your words', inferred: 'Inferred', confirmed: 'Confirmed by you', assumption: 'Assumption', empty: 'Not known' };
 
 /** The slots as a screen shows them: extracted from the idea, and once the questions are answered, confirmed with assumptions filled in. */
-export function slotsFor(idea: { option: StartOption; text: string; answers: { a1: string; a2: string }; brief?: { slots: SlotValue[] } }, clarified: boolean): SlotValue[] {
-  const extracted = idea.brief ? idea.brief.slots : extractSlots(idea.text, idea.option);   // a provider's brief wins over the local guess
+export function slotsFor(idea: { option: StartOption; text: string; answers: { a1: string; a2: string }; brief?: { slots: SlotValue[] }; briefStale?: boolean }, clarified: boolean): SlotValue[] {
+  // a provider's brief wins over the local guess, until the founder changes the words it was written from
+  const extracted = idea.brief && !idea.briefStale ? idea.brief.slots : extractSlots(idea.text, idea.option);
   return clarified ? resolveAssumptions(applyAnswers(extracted, idea.option, idea.answers)) : extracted;
 }

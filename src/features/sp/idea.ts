@@ -14,6 +14,7 @@ export type IdeaInput = {
   q2: string;                                  // the wording of the second question the founder was asked
   answers: Record<AnswerKey, string>;
   brief?: IdeaBrief;                           // what the Idea Definition provider wrote from the founder's words, when it ran
+  briefStale?: boolean;                        // the founder changed the idea text after the brief was written, so it no longer matches
 };
 
 export const START_OPTIONS: { id: StartOption; title: string; hint: string; placeholder: string }[] = [

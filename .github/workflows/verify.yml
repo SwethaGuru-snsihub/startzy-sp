@@ -1,0 +1,54 @@
+name: verify
+
+# Runs the project's own checks on every pull request and on pushes to master:
+#   verify = legacy-freeze check, typecheck, lint, tests (npm run verify)
+#   build  = next build (typecheck does not compile the API routes)
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The legacy-freeze check diffs against commit 6974845, so it needs the full history.
+          fetch-depth: 0
+      - name: Legacy-freeze baseline commit is present
+        run: |
+          git cat-file -e 6974845^{commit} || {
+            echo "::error::Full git history is required: scripts/check-legacy-freeze.mjs compares against 6974845"
+            exit 1
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build

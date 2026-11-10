@@ -7,11 +7,12 @@ import { TASK } from '@/engine/core/register';
 import { approve, approveRecheck, declineOptional, decideGate, gateChecksNow, reconfirm, saveInterviews, sendBack, takeUp } from '../actions';
 import { parseInterviews, resultOf } from '../content';
 import { agentLook, ROOM, type SpRoomId } from '../model';
-import { versionProvider } from '../provenance';
+import { versionFallback, versionProvider } from '../provenance';
 import { useSp } from '../SpContext';
 import { recheckScope, STATUS_LABEL, statusTone, type TaskRow } from '../viewModel';
 import { FEATURES_OF_TASK } from '../workflow';
 import { Face } from './Avatar';
+import FallbackBanner from './FallbackBanner';
 import Modal from './Modal';
 import Provenance from './Provenance';
 import { Sections } from './Sections';
@@ -45,18 +46,19 @@ function ReviewPopup({ row }: { row: TaskRow }) {
   const [chat, setChat] = useState<string[]>([]);
   const versions = docs.versions(row.id), cur = versions.at(-1), prev = versions.at(-2);
   const maker = agentLook(row.owner), checker = row.reviewer ? agentLook(row.reviewer) : null;
-  const provider = versionProvider(cur);
+  const provider = versionProvider(cur), fallback = versionFallback(cur);
   // The review step is a timed placeholder in every case; for Claude's text it must not read as a review of it.
   const reviewNote = !checker ? '' : provider === 'claude-cli' ? ` · ${checker.name}'s check: placeholder, passed (it did not read this text)` : ` · reviewed by ${checker.name} (simulated, passed)`;
   if (!cur) return <Modal label="Review" onClose={() => open(null)}><p>The draft is not saved yet.</p><div className="sp-foot"><button className="btn" onClick={() => open(null)}>Close</button></div></Modal>;
   return (
     <Modal label={`Review ${row.artifact}`} onClose={() => open(null)}>
-      <div className="sp-row"><span className="sp-pill you">Needs founder</span><span className="sp-pill sp">{row.step}</span><span className="sp-pill">Artifact review</span><Provenance provider={provider} simulatedText="SIMULATED OUTPUT" /></div>
+      <div className="sp-row"><span className="sp-pill you">Needs founder</span><span className="sp-pill sp">{row.step}</span><span className="sp-pill">Artifact review</span><Provenance provider={provider} fallback={fallback} simulatedText="SIMULATED OUTPUT" /></div>
       <div>
         <div className="t-caps">{row.step} · {TASK[row.id].artifact}</div>
         <h2>{row.artifact} v{cur.v}</h2>
         <div className="t-small" style={{ marginTop: 6 }}>Prepared by {maker.name}{provider === 'claude-cli' ? ' (Claude CLI)' : ''}{reviewNote} · {cur.note}</div>
       </div>
+      {fallback && <FallbackBanner fallback={fallback} />}
       <Sections secs={cur.secs} prev={prev?.secs} />
       <div className="sp-field"><label htmlFor="sp-note">Note for {maker.name} (needed to send back)</label><textarea id="sp-note" value={note} onChange={e => setNote(e.target.value)} placeholder="What should change?" /></div>
       {chat.map((c, i) => <div key={i} className="sp-say">{c}</div>)}
@@ -213,7 +215,7 @@ function TaskPopup({ row }: { row: TaskRow }) {
       <div className="t-small">Made by {agentLook(row.owner).name}{row.support.length ? ` with ${row.support.map(a => agentLook(a).name).join(', ')}` : ''}{row.reviewer ? ` · reviewed by ${agentLook(row.reviewer).name}` : ''} · {ROOM[row.room].name}</div>
       {FEATURES_OF_TASK[row.id] && <div className="t-small">Feature{FEATURES_OF_TASK[row.id].length > 1 ? 's' : ''}: {FEATURES_OF_TASK[row.id].join(', ')}</div>}
       {(row.status === 'working' || row.status === 'review') && <div className="sp-bar blue" style={{ height: 8 }}><i style={{ width: `${runner.progress(row.id)}%` }} /></div>}
-      {row.status === 'done' && ctx && <div className="sp-sec"><h5>Result <Provenance provider={versionProvider(doc)} /></h5><p>{resultOf(row.id, ctx)}</p></div>}
+      {row.status === 'done' && ctx && <div className="sp-sec"><h5>Result <Provenance provider={versionProvider(doc)} fallback={versionFallback(doc)} /></h5><p>{resultOf(row.id, ctx)}</p></div>}
       <div className="sp-foot">
         {mine && <button className="btn btn-primary" onClick={() => openTask(row)}>Open</button>}
         {doc && <button className="btn" onClick={() => { open(null); goDoc(row.id); }}>Open document</button>}

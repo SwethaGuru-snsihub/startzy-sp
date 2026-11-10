@@ -38,3 +38,6 @@ export const makerTag = (name: string, p: Provider) => `${name} (${p === 'claude
 
 /** A stored version's provider; versions saved before providers were recorded were all simulated. */
 export const versionProvider = (v: { provider?: Provider } | null | undefined): Provider => v?.provider ?? 'simulated';
+
+/** Why a version is simulated when Claude was meant to write it, or undefined if it is not a fallback. */
+export const versionFallback = (v: { fallback?: AiFallback } | null | undefined): AiFallback | undefined => v?.fallback;

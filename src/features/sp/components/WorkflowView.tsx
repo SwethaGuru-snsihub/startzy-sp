@@ -13,7 +13,7 @@ import { actionFor, recheckScope, STATUS_LABEL, statusTone, type TaskStatus } fr
 import { answersOf, defaultItem, detect, doneIn, featureOf, itemOf, itemStatuses, questionsOf, STEP_LABEL, STEPS, stepStates, type FeatureId, type Item } from '../workflow';
 import EpicTimeline from './EpicTimeline';
 import { Sections } from './Sections';
-import { providerOf, versionProvider, type Provider } from '../provenance';
+import { providerOf, versionFallback, versionProvider, type Provider } from '../provenance';
 import Provenance from './Provenance';
 import SlotsPanel from './SlotsPanel';
 
@@ -70,7 +70,7 @@ export default function WorkflowView({ initial }: { initial?: string } = {}) {
       <div className="sp-wf-main">
         <div>
           <div className="t-small" style={{ fontSize: 12 }}>Discover › {stepName(step.id, step.label)} › {sel.kind === 'feature' ? 'Feature' : 'Task'} {n} of {step.items.length}</div>
-          <div className="sp-row" style={{ marginTop: 6, gap: 12 }}><h2 className="t-h2" style={{ margin: 0 }}>{sel.name}</h2><span className={`sp-pill ${statusTone(status[sel.key])}`}>{STATUS_LABEL[status[sel.key]]}</span><Provenance provider={itemProvider} /></div>
+          <div className="sp-row" style={{ marginTop: 6, gap: 12 }}><h2 className="t-h2" style={{ margin: 0 }}>{sel.name}</h2><span className={`sp-pill ${statusTone(status[sel.key])}`}>{STATUS_LABEL[status[sel.key]]}</span><Provenance provider={itemProvider} fallback={versionFallback(docs.latest(sel.task))} /></div>
           {f && <p className="t-small" style={{ marginTop: 6, maxWidth: '70ch' }}>{f.does}</p>}
           {f && <p className="t-small" style={{ fontSize: 12, marginTop: 2, opacity: .8 }}>{f.meta}</p>}
           <p className="t-small" style={{ fontSize: 12, marginTop: 4 }}>

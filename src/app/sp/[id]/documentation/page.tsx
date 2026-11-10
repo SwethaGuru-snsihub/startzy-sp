@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { TASK, TASKS, consumers, requiredInputs } from '@/engine/core/register';
 import { saveDocEdit, restoreVersion } from '@/features/sp/actions';
 import type { Section } from '@/features/sp/content';
+import FallbackBanner from '@/features/sp/components/FallbackBanner';
 import Provenance from '@/features/sp/components/Provenance';
 import { agentLook, DISCOVER_TASKS } from '@/features/sp/model';
-import { providerOf, versionProvider } from '@/features/sp/provenance';
+import { providerOf, versionFallback, versionProvider } from '@/features/sp/provenance';
 import { useSp } from '@/features/sp/SpContext';
 import { recheckScope, STATUS_LABEL, statusTone } from '@/features/sp/viewModel';
 import { FEATURES_OF_TASK } from '@/features/sp/workflow';
@@ -119,6 +120,7 @@ export default function DocumentationPage() {
     // content
     return (
       <>
+        {cur.fallback && <FallbackBanner fallback={cur.fallback} />}
         {row && (row.status === 'recheck' || row.status === 'reconfirm' || row.status === 'paused') && !old && (
           <div className="sp-banner bad"><span><b>{STATUS_LABEL[row.status]}.</b> {t.artifact} v{latestV} was built on an older version of what it depends on.</span><button type="button" className="btn btn-sm btn-primary" onClick={() => open({ kind: 'impact' })}>Review impact</button></div>
         )}
@@ -167,7 +169,7 @@ export default function DocumentationPage() {
           <div className="t-caps">{t.home} · {t.kind === 'gate' ? 'Gate decision' : 'Document'}</div>
           <div className="sp-row" style={{ justifyContent: 'space-between' }}>
             <h2 className="t-h2" style={{ margin: 0 }}>{t.artifact}</h2>
-            <span className="sp-row"><span className={`sp-pill ${row ? statusTone(row.status) : ''}`}>{status}</span>{latestV > 0 && <span className="sp-pill">v{latestV}</span>}{isDiscover && <Provenance provider={provider} />}</span>
+            <span className="sp-row"><span className={`sp-pill ${row ? statusTone(row.status) : ''}`}>{status}</span>{latestV > 0 && <span className="sp-pill">v{latestV}</span>}{isDiscover && <Provenance provider={provider} fallback={versionFallback(cur)} />}</span>
           </div>
           <div className="t-small" style={{ marginTop: 4 }}>Made by {owners}{t.reviewer ? ` · reviewed by ${agentLook(t.reviewer).name}` : ''} · approved by you</div>
           {FEATURES_OF_TASK[sel] && <div className="t-small" style={{ marginTop: 2 }}>Feature{FEATURES_OF_TASK[sel].length > 1 ? 's' : ''}: {FEATURES_OF_TASK[sel].join(', ')}</div>}
